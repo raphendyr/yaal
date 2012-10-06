@@ -6,5 +6,6 @@
 *.map
 *.sym
 *.i
+*.lst
 *.o
 *.so
