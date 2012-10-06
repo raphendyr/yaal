@@ -10,19 +10,19 @@ About
 
 Trying to make avr coding super easy. Result should be able to replace arduino library in usability.
 
-     #include <yaal/io>
+    #include <yaal/io>
 
-     PortB3 led;
+    PortB3 led;
 
-     loop() {
-       led.on();
-     }
+    loop() {
+      led.on();
+    }
 
 Or:
 
-     #include <yaal/arduino>
+    #include <yaal/arduino>
 
-     D1 led;
+    D1 led;
 
     loop() {
       led.on();
