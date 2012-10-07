@@ -1,6 +1,8 @@
 #ifndef __YAAL_IO_H__
 #define __YAAL_IO_H__ 1
 
+#include "requirements.h"
+
 #include <avr/io.h>
 #include <inttypes.h>
 
@@ -18,6 +20,7 @@
 #define YAAL_REG(addr) (*reinterpret_cast<reg_t>(addr))
 #define YAAL_ADDR(reg) (reinterpret_cast<reg_a_t(reg))
 
+
 namespace yaal {
 
     typedef uint8_t reg_a_t;
@@ -32,11 +35,18 @@ namespace yaal {
 
         // TODO: kokeile kääntyykö
         uint8_t operator uint8_t(void) const {
-            // reand: Tegister x; y = x;
+            // read: Register x; y = x;
             return YAAL_REG(reg);
         }
     };
 
+    template<reg_a_t reg>
+    struct WriteonlyRegister {
+        static void set(uint8_t value) {
+            YAAL_REG(reg) = value;
+        }
+        
+    };
 
     template<reg_a_t reg>
     struct Register : public ReadonlyRegister {
