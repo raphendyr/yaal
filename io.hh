@@ -146,6 +146,7 @@ namespace yaal {
 
 }
 
-#include "io_definitions.hpp"
+#include "io/ports.hh"
+#include "io/other.hh"
 
 #endif

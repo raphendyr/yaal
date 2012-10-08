@@ -2,11 +2,12 @@
 #define __YAAL_IO__PORTS__ 1
 /* Generated using ports.sh */
 
+#include "../requirements.hh"
 #include <avr/io.h>
 
 namespace yaal {
 
-    namespace registers {
+    namespace register {
 #       ifdef PORTA
             typdef Register<PORTA> PortA;
 #       endif
