@@ -26,19 +26,19 @@ echo "#include \"../requirements.hh\""
 echo "#include <avr/io.h>"
 echo ""
 echo "namespace yaal {"
-echo "    namespace register {"
+echo "    namespace registers {"
 echo ""
 while read r16; do
 	echo "#       ifdef $r16"
 	r16o=$(python -c "print '$r16'.lower().capitalize()")
-	echo "            typedef Register<YAAL_ADDR($r16), uint16_t> $r16o;"
+	echo "            typedef Register<YAAL_ADDR($r16), reg16_t> $r16o;"
 	echo "#       endif"
 	echo ""
 done < registers_16.txt
 while read r8; do
 	echo "#       ifdef $r8"
 	r8o=$(python -c "print '$r8'.lower().capitalize()")
-	echo "            typedef Register<YAAL_ADDR($r8), uint8_t> $r8o;"
+	echo "            typedef Register<YAAL_ADDR($r8), reg8_t> $r8o;"
 	echo "#       endif"
 	echo ""
 done < registers_8.txt

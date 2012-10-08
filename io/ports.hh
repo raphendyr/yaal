@@ -7,7 +7,7 @@
 
 namespace yaal {
 
-    namespace register {
+    namespace registers {
 #       ifdef PORTA
             typdef Register<PORTA> PortA;
 #       endif
@@ -73,7 +73,7 @@ namespace yaal {
 #       endif
     }
 #   if defined(PORTA) && defined(DDRA) && defined(PINA)
-        typedef Port<register::PortA, register::DdrA, register::PinA> PortA;
+        typedef Port<registers::PortA, registers::DdrA, registers::PinA> PortA;
 #       ifdef PORTA0
             typedef Pin<PortA, 0> PortA0;
 #       endif
@@ -101,7 +101,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTB) && defined(DDRB) && defined(PINB)
-        typedef Port<register::PortB, register::DdrB, register::PinB> PortB;
+        typedef Port<registers::PortB, registers::DdrB, registers::PinB> PortB;
 #       ifdef PORTB0
             typedef Pin<PortB, 0> PortB0;
 #       endif
@@ -129,7 +129,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTC) && defined(DDRC) && defined(PINC)
-        typedef Port<register::PortC, register::DdrC, register::PinC> PortC;
+        typedef Port<registers::PortC, registers::DdrC, registers::PinC> PortC;
 #       ifdef PORTC0
             typedef Pin<PortC, 0> PortC0;
 #       endif
@@ -157,7 +157,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTD) && defined(DDRD) && defined(PIND)
-        typedef Port<register::PortD, register::DdrD, register::PinD> PortD;
+        typedef Port<registers::PortD, registers::DdrD, registers::PinD> PortD;
 #       ifdef PORTD0
             typedef Pin<PortD, 0> PortD0;
 #       endif
@@ -185,7 +185,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTE) && defined(DDRE) && defined(PINE)
-        typedef Port<register::PortE, register::DdrE, register::PinE> PortE;
+        typedef Port<registers::PortE, registers::DdrE, registers::PinE> PortE;
 #       ifdef PORTE0
             typedef Pin<PortE, 0> PortE0;
 #       endif
@@ -213,7 +213,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTF) && defined(DDRF) && defined(PINF)
-        typedef Port<register::PortF, register::DdrF, register::PinF> PortF;
+        typedef Port<registers::PortF, registers::DdrF, registers::PinF> PortF;
 #       ifdef PORTF0
             typedef Pin<PortF, 0> PortF0;
 #       endif
@@ -241,7 +241,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTG) && defined(DDRG) && defined(PING)
-        typedef Port<register::PortG, register::DdrG, register::PinG> PortG;
+        typedef Port<registers::PortG, registers::DdrG, registers::PinG> PortG;
 #       ifdef PORTG0
             typedef Pin<PortG, 0> PortG0;
 #       endif
@@ -269,7 +269,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTH) && defined(DDRH) && defined(PINH)
-        typedef Port<register::PortH, register::DdrH, register::PinH> PortH;
+        typedef Port<registers::PortH, registers::DdrH, registers::PinH> PortH;
 #       ifdef PORTH0
             typedef Pin<PortH, 0> PortH0;
 #       endif
@@ -297,7 +297,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTI) && defined(DDRI) && defined(PINI)
-        typedef Port<register::PortI, register::DdrI, register::PinI> PortI;
+        typedef Port<registers::PortI, registers::DdrI, registers::PinI> PortI;
 #       ifdef PORTI0
             typedef Pin<PortI, 0> PortI0;
 #       endif
@@ -325,7 +325,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTJ) && defined(DDRJ) && defined(PINJ)
-        typedef Port<register::PortJ, register::DdrJ, register::PinJ> PortJ;
+        typedef Port<registers::PortJ, registers::DdrJ, registers::PinJ> PortJ;
 #       ifdef PORTJ0
             typedef Pin<PortJ, 0> PortJ0;
 #       endif
@@ -353,7 +353,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTK) && defined(DDRK) && defined(PINK)
-        typedef Port<register::PortK, register::DdrK, register::PinK> PortK;
+        typedef Port<registers::PortK, registers::DdrK, registers::PinK> PortK;
 #       ifdef PORTK0
             typedef Pin<PortK, 0> PortK0;
 #       endif
@@ -381,7 +381,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTL) && defined(DDRL) && defined(PINL)
-        typedef Port<register::PortL, register::DdrL, register::PinL> PortL;
+        typedef Port<registers::PortL, registers::DdrL, registers::PinL> PortL;
 #       ifdef PORTL0
             typedef Pin<PortL, 0> PortL0;
 #       endif
@@ -409,7 +409,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTM) && defined(DDRM) && defined(PINM)
-        typedef Port<register::PortM, register::DdrM, register::PinM> PortM;
+        typedef Port<registers::PortM, registers::DdrM, registers::PinM> PortM;
 #       ifdef PORTM0
             typedef Pin<PortM, 0> PortM0;
 #       endif
@@ -437,7 +437,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTN) && defined(DDRN) && defined(PINN)
-        typedef Port<register::PortN, register::DdrN, register::PinN> PortN;
+        typedef Port<registers::PortN, registers::DdrN, registers::PinN> PortN;
 #       ifdef PORTN0
             typedef Pin<PortN, 0> PortN0;
 #       endif
@@ -465,7 +465,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTO) && defined(DDRO) && defined(PINO)
-        typedef Port<register::PortO, register::DdrO, register::PinO> PortO;
+        typedef Port<registers::PortO, registers::DdrO, registers::PinO> PortO;
 #       ifdef PORTO0
             typedef Pin<PortO, 0> PortO0;
 #       endif
@@ -493,7 +493,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTP) && defined(DDRP) && defined(PINP)
-        typedef Port<register::PortP, register::DdrP, register::PinP> PortP;
+        typedef Port<registers::PortP, registers::DdrP, registers::PinP> PortP;
 #       ifdef PORTP0
             typedef Pin<PortP, 0> PortP0;
 #       endif
@@ -521,7 +521,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTQ) && defined(DDRQ) && defined(PINQ)
-        typedef Port<register::PortQ, register::DdrQ, register::PinQ> PortQ;
+        typedef Port<registers::PortQ, registers::DdrQ, registers::PinQ> PortQ;
 #       ifdef PORTQ0
             typedef Pin<PortQ, 0> PortQ0;
 #       endif
@@ -549,7 +549,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTR) && defined(DDRR) && defined(PINR)
-        typedef Port<register::PortR, register::DdrR, register::PinR> PortR;
+        typedef Port<registers::PortR, registers::DdrR, registers::PinR> PortR;
 #       ifdef PORTR0
             typedef Pin<PortR, 0> PortR0;
 #       endif
@@ -577,7 +577,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTS) && defined(DDRS) && defined(PINS)
-        typedef Port<register::PortS, register::DdrS, register::PinS> PortS;
+        typedef Port<registers::PortS, registers::DdrS, registers::PinS> PortS;
 #       ifdef PORTS0
             typedef Pin<PortS, 0> PortS0;
 #       endif
@@ -605,7 +605,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTT) && defined(DDRT) && defined(PINT)
-        typedef Port<register::PortT, register::DdrT, register::PinT> PortT;
+        typedef Port<registers::PortT, registers::DdrT, registers::PinT> PortT;
 #       ifdef PORTT0
             typedef Pin<PortT, 0> PortT0;
 #       endif
@@ -633,7 +633,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTU) && defined(DDRU) && defined(PINU)
-        typedef Port<register::PortU, register::DdrU, register::PinU> PortU;
+        typedef Port<registers::PortU, registers::DdrU, registers::PinU> PortU;
 #       ifdef PORTU0
             typedef Pin<PortU, 0> PortU0;
 #       endif
@@ -661,7 +661,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTV) && defined(DDRV) && defined(PINV)
-        typedef Port<register::PortV, register::DdrV, register::PinV> PortV;
+        typedef Port<registers::PortV, registers::DdrV, registers::PinV> PortV;
 #       ifdef PORTV0
             typedef Pin<PortV, 0> PortV0;
 #       endif
@@ -689,7 +689,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTW) && defined(DDRW) && defined(PINW)
-        typedef Port<register::PortW, register::DdrW, register::PinW> PortW;
+        typedef Port<registers::PortW, registers::DdrW, registers::PinW> PortW;
 #       ifdef PORTW0
             typedef Pin<PortW, 0> PortW0;
 #       endif
@@ -717,7 +717,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTX) && defined(DDRX) && defined(PINX)
-        typedef Port<register::PortX, register::DdrX, register::PinX> PortX;
+        typedef Port<registers::PortX, registers::DdrX, registers::PinX> PortX;
 #       ifdef PORTX0
             typedef Pin<PortX, 0> PortX0;
 #       endif
@@ -745,7 +745,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTY) && defined(DDRY) && defined(PINY)
-        typedef Port<register::PortY, register::DdrY, register::PinY> PortY;
+        typedef Port<registers::PortY, registers::DdrY, registers::PinY> PortY;
 #       ifdef PORTY0
             typedef Pin<PortY, 0> PortY0;
 #       endif
@@ -773,7 +773,7 @@ namespace yaal {
 #   endif
 
 #   if defined(PORTZ) && defined(DDRZ) && defined(PINZ)
-        typedef Port<register::PortZ, register::DdrZ, register::PinZ> PortZ;
+        typedef Port<registers::PortZ, registers::DdrZ, registers::PinZ> PortZ;
 #       ifdef PORTZ0
             typedef Pin<PortZ, 0> PortZ0;
 #       endif
