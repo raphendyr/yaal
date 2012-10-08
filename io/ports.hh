@@ -15,7 +15,7 @@ namespace yaal {
             typdef Register<DDRA> DdrA;
 #       endif
 #       ifdef PINA
-            typdef Register<PINA> PinA;
+            typdef ReadonlyRegister<PINA> PinA;
 #       endif
 #       ifdef PORTB
             typdef Register<PORTB> PortB;
@@ -24,7 +24,7 @@ namespace yaal {
             typdef Register<DDRB> DdrB;
 #       endif
 #       ifdef PINB
-            typdef Register<PINB> PinB;
+            typdef ReadonlyRegister<PINB> PinB;
 #       endif
 #       ifdef PORTC
             typdef Register<PORTC> PortC;
@@ -33,7 +33,7 @@ namespace yaal {
             typdef Register<DDRC> DdrC;
 #       endif
 #       ifdef PINC
-            typdef Register<PINC> PinC;
+            typdef ReadonlyRegister<PINC> PinC;
 #       endif
 #       ifdef PORTD
             typdef Register<PORTD> PortD;
@@ -42,7 +42,7 @@ namespace yaal {
             typdef Register<DDRD> DdrD;
 #       endif
 #       ifdef PIND
-            typdef Register<PIND> PinD;
+            typdef ReadonlyRegister<PIND> PinD;
 #       endif
 #       ifdef PORTE
             typdef Register<PORTE> PortE;
@@ -51,7 +51,7 @@ namespace yaal {
             typdef Register<DDRE> DdrE;
 #       endif
 #       ifdef PINE
-            typdef Register<PINE> PinE;
+            typdef ReadonlyRegister<PINE> PinE;
 #       endif
 #       ifdef PORTF
             typdef Register<PORTF> PortF;
@@ -60,7 +60,7 @@ namespace yaal {
             typdef Register<DDRF> DdrF;
 #       endif
 #       ifdef PINF
-            typdef Register<PINF> PinF;
+            typdef ReadonlyRegister<PINF> PinF;
 #       endif
 #       ifdef PORTG
             typdef Register<PORTG> PortG;
@@ -69,7 +69,7 @@ namespace yaal {
             typdef Register<DDRG> DdrG;
 #       endif
 #       ifdef PING
-            typdef Register<PING> PinG;
+            typdef ReadonlyRegister<PING> PinG;
 #       endif
     }
 #   if defined(PORTA) && defined(DDRA) && defined(PINA)

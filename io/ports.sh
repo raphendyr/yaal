@@ -22,7 +22,7 @@ for c in $PORTS; do
 	echo "            typdef Register<DDR$c> Ddr$c;"
 	echo "#       endif"
 	echo "#       ifdef PIN$c"
-	echo "            typdef Register<PIN$c> Pin$c;"
+	echo "            typdef ReadonlyRegister<PIN$c> Pin$c;"
 	echo "#       endif"
 done
 echo "    }"
