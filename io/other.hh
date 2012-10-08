@@ -16,16 +16,56 @@ namespace yaal {
             typedef Register<YAAL_ADDR(ADCW), reg16_t> Adcw;
 #       endif
 
+#       ifdef ADRSLT
+            typedef Register<YAAL_ADDR(ADRSLT), reg16_t> Adrslt;
+#       endif
+
 #       ifdef DAC
             typedef Register<YAAL_ADDR(DAC), reg16_t> Dac;
+#       endif
+
+#       ifdef DACVAL
+            typedef Register<YAAL_ADDR(DACVAL), reg16_t> Dacval;
 #       endif
 
 #       ifdef EEAR
             typedef Register<YAAL_ADDR(EEAR), reg16_t> Eear;
 #       endif
 
+#       ifdef EXOCR1A
+            typedef Register<YAAL_ADDR(EXOCR1A), reg16_t> Exocr1a;
+#       endif
+
+#       ifdef EXOCR1B
+            typedef Register<YAAL_ADDR(EXOCR1B), reg16_t> Exocr1b;
+#       endif
+
+#       ifdef EXTCNT1
+            typedef Register<YAAL_ADDR(EXTCNT1), reg16_t> Extcnt1;
+#       endif
+
+#       ifdef ICR0
+            typedef Register<YAAL_ADDR(ICR0), reg16_t> Icr0;
+#       endif
+
 #       ifdef ICR1
             typedef Register<YAAL_ADDR(ICR1), reg16_t> Icr1;
+#       endif
+
+#       ifdef IPA
+            typedef Register<YAAL_ADDR(IPA), reg16_t> Ipa;
+#       endif
+
+#       ifdef IPD
+            typedef Register<YAAL_ADDR(IPD), reg16_t> Ipd;
+#       endif
+
+#       ifdef OCR0A
+            typedef Register<YAAL_ADDR(OCR0A), reg16_t> Ocr0a;
+#       endif
+
+#       ifdef OCR0B
+            typedef Register<YAAL_ADDR(OCR0B), reg16_t> Ocr0b;
 #       endif
 
 #       ifdef OCR0RA
@@ -112,12 +152,40 @@ namespace yaal {
             typedef Register<YAAL_ADDR(ADMUX), reg8_t> Admux;
 #       endif
 
+#       ifdef AGPDDR
+            typedef Register<YAAL_ADDR(AGPDDR), reg8_t> Agpddr;
+#       endif
+
+#       ifdef AGPPIN
+            typedef Register<YAAL_ADDR(AGPPIN), reg8_t> Agppin;
+#       endif
+
+#       ifdef AGPPORT
+            typedef Register<YAAL_ADDR(AGPPORT), reg8_t> Agpport;
+#       endif
+
+#       ifdef AMUXCTL
+            typedef Register<YAAL_ADDR(AMUXCTL), reg8_t> Amuxctl;
+#       endif
+
 #       ifdef ASSR
             typedef Register<YAAL_ADDR(ASSR), reg8_t> Assr;
 #       endif
 
 #       ifdef B_DET
             typedef Register<YAAL_ADDR(B_DET), reg8_t> B_det;
+#       endif
+
+#       ifdef BGPDDR
+            typedef Register<YAAL_ADDR(BGPDDR), reg8_t> Bgpddr;
+#       endif
+
+#       ifdef BGPPIN
+            typedef Register<YAAL_ADDR(BGPPIN), reg8_t> Bgppin;
+#       endif
+
+#       ifdef BGPPORT
+            typedef Register<YAAL_ADDR(BGPPORT), reg8_t> Bgpport;
 #       endif
 
 #       ifdef BODCR
@@ -132,12 +200,36 @@ namespace yaal {
             typedef Register<YAAL_ADDR(BTCR), reg8_t> Btcr;
 #       endif
 
+#       ifdef CCP
+            typedef Register<YAAL_ADDR(CCP), reg8_t> Ccp;
+#       endif
+
+#       ifdef CGPDDR
+            typedef Register<YAAL_ADDR(CGPDDR), reg8_t> Cgpddr;
+#       endif
+
+#       ifdef CGPPIN
+            typedef Register<YAAL_ADDR(CGPPIN), reg8_t> Cgppin;
+#       endif
+
+#       ifdef CGPPORT
+            typedef Register<YAAL_ADDR(CGPPORT), reg8_t> Cgpport;
+#       endif
+
 #       ifdef CLK_CNTR
             typedef Register<YAAL_ADDR(CLK_CNTR), reg8_t> Clk_cntr;
 #       endif
 
+#       ifdef CLKMSR
+            typedef Register<YAAL_ADDR(CLKMSR), reg8_t> Clkmsr;
+#       endif
+
 #       ifdef CLKPR
             typedef Register<YAAL_ADDR(CLKPR), reg8_t> Clkpr;
+#       endif
+
+#       ifdef CLKPSR
+            typedef Register<YAAL_ADDR(CLKPSR), reg8_t> Clkpsr;
 #       endif
 
 #       ifdef CMCR
@@ -208,6 +300,10 @@ namespace yaal {
             typedef Register<YAAL_ADDR(EEDR), reg8_t> Eedr;
 #       endif
 
+#       ifdef EICRA
+            typedef Register<YAAL_ADDR(EICRA), reg8_t> Eicra;
+#       endif
+
 #       ifdef EICRB
             typedef Register<YAAL_ADDR(EICRB), reg8_t> Eicrb;
 #       endif
@@ -238,6 +334,30 @@ namespace yaal {
 
 #       ifdef EMCUCR
             typedef Register<YAAL_ADDR(EMCUCR), reg8_t> Emcucr;
+#       endif
+
+#       ifdef EXTCCR0
+            typedef Register<YAAL_ADDR(EXTCCR0), reg8_t> Extccr0;
+#       endif
+
+#       ifdef EXTCCR1A
+            typedef Register<YAAL_ADDR(EXTCCR1A), reg8_t> Extccr1a;
+#       endif
+
+#       ifdef EXTCCR1B
+            typedef Register<YAAL_ADDR(EXTCCR1B), reg8_t> Extccr1b;
+#       endif
+
+#       ifdef EXTCNT
+            typedef Register<YAAL_ADDR(EXTCNT), reg8_t> Extcnt;
+#       endif
+
+#       ifdef EXTIFR
+            typedef Register<YAAL_ADDR(EXTIFR), reg8_t> Extifr;
+#       endif
+
+#       ifdef EXTIMSK
+            typedef Register<YAAL_ADDR(EXTIMSK), reg8_t> Extimsk;
 #       endif
 
 #       ifdef FISCR
@@ -332,6 +452,10 @@ namespace yaal {
             typedef Register<YAAL_ADDR(IO_ENAB), reg8_t> Io_enab;
 #       endif
 
+#       ifdef IPCR
+            typedef Register<YAAL_ADDR(IPCR), reg8_t> Ipcr;
+#       endif
+
 #       ifdef IRDAMOD
             typedef Register<YAAL_ADDR(IRDAMOD), reg8_t> Irdamod;
 #       endif
@@ -358,6 +482,10 @@ namespace yaal {
 
 #       ifdef LOCKDET2
             typedef Register<YAAL_ADDR(LOCKDET2), reg8_t> Lockdet2;
+#       endif
+
+#       ifdef MCSR
+            typedef Register<YAAL_ADDR(MCSR), reg8_t> Mcsr;
 #       endif
 
 #       ifdef MCUCR
@@ -392,16 +520,28 @@ namespace yaal {
             typedef Register<YAAL_ADDR(MSMCR), reg8_t> Msmcr;
 #       endif
 
+#       ifdef MSPCR
+            typedef Register<YAAL_ADDR(MSPCR), reg8_t> Mspcr;
+#       endif
+
+#       ifdef MSPDR
+            typedef Register<YAAL_ADDR(MSPDR), reg8_t> Mspdr;
+#       endif
+
+#       ifdef MSPSR
+            typedef Register<YAAL_ADDR(MSPSR), reg8_t> Mspsr;
+#       endif
+
+#       ifdef NVMCMD
+            typedef Register<YAAL_ADDR(NVMCMD), reg8_t> Nvmcmd;
+#       endif
+
+#       ifdef NVMCSR
+            typedef Register<YAAL_ADDR(NVMCSR), reg8_t> Nvmcsr;
+#       endif
+
 #       ifdef OCDR
             typedef Register<YAAL_ADDR(OCDR), reg8_t> Ocdr;
-#       endif
-
-#       ifdef OCR0A
-            typedef Register<YAAL_ADDR(OCR0A), reg8_t> Ocr0a;
-#       endif
-
-#       ifdef OCR0B
-            typedef Register<YAAL_ADDR(OCR0B), reg8_t> Ocr0b;
 #       endif
 
 #       ifdef OCR0
@@ -512,12 +652,40 @@ namespace yaal {
             typedef Register<YAAL_ADDR(PRR), reg8_t> Prr;
 #       endif
 
+#       ifdef PUEA
+            typedef Register<YAAL_ADDR(PUEA), reg8_t> Puea;
+#       endif
+
+#       ifdef PUEB
+            typedef Register<YAAL_ADDR(PUEB), reg8_t> Pueb;
+#       endif
+
+#       ifdef PUEC
+            typedef Register<YAAL_ADDR(PUEC), reg8_t> Puec;
+#       endif
+
 #       ifdef PWR_ATTEN
             typedef Register<YAAL_ADDR(PWR_ATTEN), reg8_t> Pwr_atten;
 #       endif
 
+#       ifdef QTCSR
+            typedef Register<YAAL_ADDR(QTCSR), reg8_t> Qtcsr;
+#       endif
+
+#       ifdef RAMAR
+            typedef Register<YAAL_ADDR(RAMAR), reg8_t> Ramar;
+#       endif
+
+#       ifdef RAMDR
+            typedef Register<YAAL_ADDR(RAMDR), reg8_t> Ramdr;
+#       endif
+
 #       ifdef RAMPZ
             typedef Register<YAAL_ADDR(RAMPZ), reg8_t> Rampz;
+#       endif
+
+#       ifdef RSTFLR
+            typedef Register<YAAL_ADDR(RSTFLR), reg8_t> Rstflr;
 #       endif
 
 #       ifdef RXB
@@ -550,10 +718,6 @@ namespace yaal {
 
 #       ifdef SPCR
             typedef Register<YAAL_ADDR(SPCR), reg8_t> Spcr;
-#       endif
-
-#       ifdef SPDR0
-            typedef Register<YAAL_ADDR(SPDR0), reg8_t> Spdr0;
 #       endif
 
 #       ifdef SPDR
@@ -732,8 +896,32 @@ namespace yaal {
             typedef Register<YAAL_ADDR(TWDR), reg8_t> Twdr;
 #       endif
 
+#       ifdef TWSAM
+            typedef Register<YAAL_ADDR(TWSAM), reg8_t> Twsam;
+#       endif
+
+#       ifdef TWSA
+            typedef Register<YAAL_ADDR(TWSA), reg8_t> Twsa;
+#       endif
+
+#       ifdef TWSCRA
+            typedef Register<YAAL_ADDR(TWSCRA), reg8_t> Twscra;
+#       endif
+
+#       ifdef TWSCRB
+            typedef Register<YAAL_ADDR(TWSCRB), reg8_t> Twscrb;
+#       endif
+
+#       ifdef TWSD
+            typedef Register<YAAL_ADDR(TWSD), reg8_t> Twsd;
+#       endif
+
 #       ifdef TWSR
             typedef Register<YAAL_ADDR(TWSR), reg8_t> Twsr;
+#       endif
+
+#       ifdef TWSSRA
+            typedef Register<YAAL_ADDR(TWSSRA), reg8_t> Twssra;
 #       endif
 
 #       ifdef TXB
@@ -776,12 +964,24 @@ namespace yaal {
             typedef Register<YAAL_ADDR(UBRRH), reg8_t> Ubrrh;
 #       endif
 
+#       ifdef UBRRLO
+            typedef Register<YAAL_ADDR(UBRRLO), reg8_t> Ubrrlo;
+#       endif
+
 #       ifdef UBRRL
             typedef Register<YAAL_ADDR(UBRRL), reg8_t> Ubrrl;
 #       endif
 
 #       ifdef UBRR
             typedef Register<YAAL_ADDR(UBRR), reg8_t> Ubrr;
+#       endif
+
+#       ifdef UCRA
+            typedef Register<YAAL_ADDR(UCRA), reg8_t> Ucra;
+#       endif
+
+#       ifdef UCRB
+            typedef Register<YAAL_ADDR(UCRB), reg8_t> Ucrb;
 #       endif
 
 #       ifdef UCR
@@ -856,12 +1056,28 @@ namespace yaal {
             typedef Register<YAAL_ADDR(USISR), reg8_t> Usisr;
 #       endif
 
+#       ifdef USPCR
+            typedef Register<YAAL_ADDR(USPCR), reg8_t> Uspcr;
+#       endif
+
+#       ifdef USPDR
+            typedef Register<YAAL_ADDR(USPDR), reg8_t> Uspdr;
+#       endif
+
+#       ifdef USPSR
+            typedef Register<YAAL_ADDR(USPSR), reg8_t> Uspsr;
+#       endif
+
 #       ifdef USR
             typedef Register<YAAL_ADDR(USR), reg8_t> Usr;
 #       endif
 
 #       ifdef VCOTUNE
             typedef Register<YAAL_ADDR(VCOTUNE), reg8_t> Vcotune;
+#       endif
+
+#       ifdef VLMCSR
+            typedef Register<YAAL_ADDR(VLMCSR), reg8_t> Vlmcsr;
 #       endif
 
 #       ifdef VMCSR

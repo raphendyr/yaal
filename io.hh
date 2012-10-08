@@ -23,7 +23,7 @@
 
 namespace yaal {
 
-    typedef uint8_t reg_a_t;
+    typedef uint16_t reg_a_t;
     typedef uint8_t bit_t;
     typedef volatile uint8_t reg8_t;
     typedef volatile uint16_t reg16_t;
@@ -74,7 +74,8 @@ namespace yaal {
 
     template<reg_a_t reg, typename reg_size = reg8_t>
     struct WriteonlyRegister : public __WriteonlyRegister<reg, reg_size> {
-        typedef reg_size size_type;
+        // can't be in two places
+        //typedef reg_size size_type;
 
         static void set(reg_size value) {
             YAAL_REG(reg_size, reg) = value;

@@ -127,7 +127,7 @@ EXTRAINCDIRS =
 #     gnu89 = c89 plus GCC extensions
 #     c99   = ISO C99 standard (not yet fully implemented)
 #     gnu99 = c99 plus GCC extensions
-CSTANDARD = -std=gnu99
+CSTANDARD = -std=c++0x
 
 
 # Place -D or -U options here for C sources
@@ -167,7 +167,7 @@ CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wl,--print-gc-sections	# from sooda
 CFLAGS += -Wl,--gc-sections		# from sooda
 CFLAGS += -Wl,--relax			# from sooda
-CFLAGS += -combine			# from sooda
+#CFLAGS += -combine			# from sooda
 #CFLAGS += -mshort-calls
 #CFLAGS += -fno-unit-at-a-time
 #CFLAGS += -Wundef
@@ -202,7 +202,7 @@ CPPFLAGS += -Wundef
 #CPPFLAGS += -Wsign-compare
 CPPFLAGS += -Wa,-adhlns=$(<:%.cpp=$(OBJDIR)/%.lst)
 CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
-#CPPFLAGS += $(CSTANDARD)
+CPPFLAGS += $(CSTANDARD)
 
 
 #---------------- Assembler Options ----------------
