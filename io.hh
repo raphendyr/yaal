@@ -18,7 +18,7 @@
 
 // wrapper and unwrapper
 #define YAAL_REG(reg_t, addr) (*reinterpret_cast<reg_t*>(addr))
-#define YAAL_ADDR(reg) (reinterpret_cast<reg_a_t(&(reg)))
+#define YAAL_ADDR(reg) (reinterpret_cast<reg_a_t>(&(reg)))
 
 
 namespace yaal {
@@ -99,18 +99,18 @@ namespace yaal {
         typedef InputClass input;
 
         // there is no protection if port is in input state
-        static void set(output::size_type value) {
+        static void set(typename OutputClass::size_type value) {
             output::set(value);
         }
 
-        static input::size_type get(void) {
+        static typename InputClass::size_type get(void) {
             return input::get();
         }
 
         // FIXME: name collision with this function and output type
         static void set_output(void) {
             // TODO: is this enough?
-            direction::set(~(direction::size_type)0);
+            direction::set(~(typename DirectionClass::size_type)0);
         }
 
         // FIXME: name collision with this function and input type

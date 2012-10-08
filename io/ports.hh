@@ -9,67 +9,67 @@ namespace yaal {
 
     namespace registers {
 #       ifdef PORTA
-            typdef Register<PORTA> PortA;
+            typedef Register<YAAL_ADDR(PORTA)> PortA;
 #       endif
 #       ifdef DDRA
-            typdef Register<DDRA> DdrA;
+            typedef Register<YAAL_ADDR(DDRA)> DdrA;
 #       endif
 #       ifdef PINA
-            typdef ReadonlyRegister<PINA> PinA;
+            typedef ReadonlyRegister<YAAL_ADDR(PINA)> PinA;
 #       endif
 #       ifdef PORTB
-            typdef Register<PORTB> PortB;
+            typedef Register<YAAL_ADDR(PORTB)> PortB;
 #       endif
 #       ifdef DDRB
-            typdef Register<DDRB> DdrB;
+            typedef Register<YAAL_ADDR(DDRB)> DdrB;
 #       endif
 #       ifdef PINB
-            typdef ReadonlyRegister<PINB> PinB;
+            typedef ReadonlyRegister<YAAL_ADDR(PINB)> PinB;
 #       endif
 #       ifdef PORTC
-            typdef Register<PORTC> PortC;
+            typedef Register<YAAL_ADDR(PORTC)> PortC;
 #       endif
 #       ifdef DDRC
-            typdef Register<DDRC> DdrC;
+            typedef Register<YAAL_ADDR(DDRC)> DdrC;
 #       endif
 #       ifdef PINC
-            typdef ReadonlyRegister<PINC> PinC;
+            typedef ReadonlyRegister<YAAL_ADDR(PINC)> PinC;
 #       endif
 #       ifdef PORTD
-            typdef Register<PORTD> PortD;
+            typedef Register<YAAL_ADDR(PORTD)> PortD;
 #       endif
 #       ifdef DDRD
-            typdef Register<DDRD> DdrD;
+            typedef Register<YAAL_ADDR(DDRD)> DdrD;
 #       endif
 #       ifdef PIND
-            typdef ReadonlyRegister<PIND> PinD;
+            typedef ReadonlyRegister<YAAL_ADDR(PIND)> PinD;
 #       endif
 #       ifdef PORTE
-            typdef Register<PORTE> PortE;
+            typedef Register<YAAL_ADDR(PORTE)> PortE;
 #       endif
 #       ifdef DDRE
-            typdef Register<DDRE> DdrE;
+            typedef Register<YAAL_ADDR(DDRE)> DdrE;
 #       endif
 #       ifdef PINE
-            typdef ReadonlyRegister<PINE> PinE;
+            typedef ReadonlyRegister<YAAL_ADDR(PINE)> PinE;
 #       endif
 #       ifdef PORTF
-            typdef Register<PORTF> PortF;
+            typedef Register<YAAL_ADDR(PORTF)> PortF;
 #       endif
 #       ifdef DDRF
-            typdef Register<DDRF> DdrF;
+            typedef Register<YAAL_ADDR(DDRF)> DdrF;
 #       endif
 #       ifdef PINF
-            typdef ReadonlyRegister<PINF> PinF;
+            typedef ReadonlyRegister<YAAL_ADDR(PINF)> PinF;
 #       endif
 #       ifdef PORTG
-            typdef Register<PORTG> PortG;
+            typedef Register<YAAL_ADDR(PORTG)> PortG;
 #       endif
 #       ifdef DDRG
-            typdef Register<DDRG> DdrG;
+            typedef Register<YAAL_ADDR(DDRG)> DdrG;
 #       endif
 #       ifdef PING
-            typdef ReadonlyRegister<PING> PinG;
+            typedef ReadonlyRegister<YAAL_ADDR(PING)> PinG;
 #       endif
     }
 #   if defined(PORTA) && defined(DDRA) && defined(PINA)
