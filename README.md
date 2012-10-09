@@ -42,6 +42,7 @@ Or in arduino style:
       delay_ms(1000);
     }
 
+Those are mainly for directions, but for working examples look into *examples* directory.
 
 License and using
 -----------------
