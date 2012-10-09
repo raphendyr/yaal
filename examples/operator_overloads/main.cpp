@@ -8,15 +8,19 @@ PortB1 led;
 
 int main(void) {
 
-    ledMatrixRow &= 0xff;
     ledMatrixRow = 0xff;
+    ledMatrixRow &= 0xf0;
+    ledMatrixRow |= 0x0f;
+    ledMatrixRow += 1;
+    ledMatrixRow -= 2;
+    ledMatrixRow *= 2;
 
-    //led.output();
+    uint8_t value = ledMatrixRow;
 
     while (1) {
-        //led = true;
+        led = true;
         //_delay_ms(800);
-        //led = false;
+        led = false;
         //_delay_ms(800);
     }
 

@@ -87,6 +87,10 @@ namespace yaal {
             YAAL_REG(reg_size, reg) = value;
         }
 
+        static reg_size& setter(void) {
+            return YAAL_REG(reg_size, reg);
+        }
+
         // TODO: kokeile kääntyykö
         operator reg_size& (void) {
             // write: Register x; x = 3; x |= 1 << 4;
@@ -118,24 +122,39 @@ namespace yaal {
         typedef InputClass input;
 
         // there is no protection if port is in input state
-        static void set(typename OutputClass::size_type value) {
+        static void set(typename output::size_type value) {
             output::set(value);
         }
 
-        static typename InputClass::size_type get(void) {
+        static typename input::size_type get(void) {
             return input::get();
         }
 
         // FIXME: name collision with this function and output type
         static void set_output(void) {
             // TODO: is this enough?
-            direction::set(~(typename DirectionClass::size_type)0);
+            direction::set(~(typename direction::size_type)0);
         }
 
         // FIXME: name collision with this function and input type
         static void set_input(void) {
             // TODO: is this enough?
             direction::set(0);
+        }
+
+        operator typename input::size_type (void) const {
+            /* read: Port<> x; uint8_t value = x; */
+            return get();
+        }
+
+        operator typename output::size_type & (void) {
+            /* write: Register x; x = 3; x |= 1 << 4; */
+            return output::setter();
+        }
+
+        Port<output, direction, input>& operator= (typename output::size_type value) {
+            set(value);
+            return *this;
         }
     };
 
@@ -170,6 +189,14 @@ namespace yaal {
             port::direction::setBit(bit);
             if (pullup)
                 port::output::setBit(bit);
+        }
+        operator bool (void) const {
+            return get();
+        }
+
+        Pin<port, bit>& operator= (bool state) {
+            set(state);
+            return *this;
         }
     };
 
