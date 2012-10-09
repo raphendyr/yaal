@@ -29,19 +29,20 @@ namespace yaal {
     typedef volatile uint16_t reg16_t;
 
     template <reg_a_t reg, typename reg_size>
-    struct __ReadonlyRegister {};
+    struct __ReadableRegister {
+    private:
+        static bool getBit(bit_t) { return 0; }
+    };
 
     template <reg_a_t reg>
-    struct __ReadonlyRegister<reg, reg8_t> {
+    struct __ReadableRegister<reg, reg8_t> {
         static bool getBit(bit_t bit) {
             return BITGET(YAAL_REG(reg8_t, reg), bit);
         }
     };
 
     template <reg_a_t reg, typename reg_size = reg8_t>
-    struct ReadonlyRegister : public __ReadonlyRegister<reg, reg_size> {
-        typedef reg_size size_type;
-
+    struct ReadableRegister : public __ReadableRegister<reg, reg_size> {
         static reg_size get(void) {
             return YAAL_REG(reg_size, reg);
         }
@@ -54,10 +55,15 @@ namespace yaal {
     };
 
     template<reg_a_t reg, typename reg_size>
-    struct __WriteonlyRegister {};
+    struct __WriteableRegister {
+    private:
+        static void setBit(uint8_t) { };
+        static void setBit(uint8_t, bool) { };
+        static void clrBit(uint8_t) { };
+    };
 
     template<reg_a_t reg>
-    struct __WriteonlyRegister<reg, reg8_t> {
+    struct __WriteableRegister<reg, reg8_t> {
         // TODO: does this optimize correctly?
         static void setBit(uint8_t bit, bool state = true) {
             if (state)
@@ -73,7 +79,7 @@ namespace yaal {
 
 
     template<reg_a_t reg, typename reg_size = reg8_t>
-    struct WriteonlyRegister : public __WriteonlyRegister<reg, reg_size> {
+    struct WriteableRegister : public __WriteableRegister<reg, reg_size> {
         // can't be in two places
         //typedef reg_size size_type;
 
@@ -88,8 +94,20 @@ namespace yaal {
         }
     };
 
+    template <reg_a_t reg, typename reg_size = reg8_t>
+    struct ReadonlyRegister : public ReadableRegister<reg, reg_size>, private WriteableRegister<reg, reg_size> {
+        typedef reg_size size_type;
+    };
+
     template<reg_a_t reg, typename reg_size = reg8_t>
-    struct Register : public ReadonlyRegister<reg, reg_size>, public WriteonlyRegister<reg, reg_size> { };
+    struct WriteonlyRegister : public WriteableRegister<reg, reg_size>, private ReadableRegister<reg, reg_size> {
+        typedef reg_size size_type;
+    };
+
+    template<reg_a_t reg, typename reg_size = reg8_t>
+    struct Register : public ReadableRegister<reg, reg_size>, public WriteableRegister<reg, reg_size> {
+        typedef reg_size size_type;
+    };
 
 
     // Register port, Register ddr, ReadonlyRegister pin
