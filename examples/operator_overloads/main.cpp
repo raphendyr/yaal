@@ -8,7 +8,7 @@ PortB1 led;
 
 int main(void) {
 
-    ledMatrixRow.output();
+    ledMatrixRow &= 0xff;
     ledMatrixRow = 0xff;
 
     //led.output();
