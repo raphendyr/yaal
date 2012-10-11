@@ -31,7 +31,7 @@ namespace yaal {
     template <reg_a_t reg, typename reg_size>
     struct __ReadableRegister {
     private:
-        static bool getBit(bit_t) { return 0; }
+        static bool getBit(bit_t);
     };
 
     template <reg_a_t reg>
