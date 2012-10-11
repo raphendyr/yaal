@@ -37,14 +37,13 @@
 # make filename.i = Create a preprocessed source file for use in submitting
 #                   bug reports to the GCC project.
 #
-# make macrotest_filename = Build with flag -E to see code after macros
 #
 # To rebuild project do "make clean" then "make all".
 #----------------------------------------------------------------------------
 
 
 # Target file name (without extension).
-# TARGET = returner
+# TARGET = target
 # automatic:
 TARGET = $(shell basename $(shell pwd))
 
@@ -161,13 +160,8 @@ CFLAGS += -ffunction-sections
 CFLAGS += -fpack-struct
 CFLAGS += -fshort-enums
 CFLAGS += -ffreestanding		# from sooda
-CFLAGS += -fwhole-program		# from sooda
 CFLAGS += -Wall
 CFLAGS += -Wstrict-prototypes
-CFLAGS += -Wl,--print-gc-sections	# from sooda
-CFLAGS += -Wl,--gc-sections		# from sooda
-CFLAGS += -Wl,--relax			# from sooda
-#CFLAGS += -combine			# from sooda
 #CFLAGS += -mshort-calls
 #CFLAGS += -fno-unit-at-a-time
 #CFLAGS += -Wundef
@@ -192,6 +186,7 @@ CPPFLAGS += -funsigned-char
 CPPFLAGS += -funsigned-bitfields
 CPPFLAGS += -fpack-struct
 CPPFLAGS += -fshort-enums
+CPPFLAGS += -ffreestanding		# from sooda
 CPPFLAGS += -fno-exceptions
 CPPFLAGS += -Wall
 CPPFLAGS += -Wundef
@@ -273,10 +268,17 @@ EXTMEMOPTS =
 #    --cref:    add cross reference to  map file
 LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
 LDFLAGS += -Wl,--relax
+#LDFLAGS += -Wl,--relax			# from sooda
 LDFLAGS += -Wl,--gc-sections
+#LDFLAGS += -Wl,--gc-sections		# from sooda
+LDFLAGS += -Wl,--print-gc-sections	# from sooda
+LDFLAGS += -ffreestanding		# from sooda
+LDFLAGS += -fwhole-program		# from sooda
+#LDFLAGS += -combine			# from sooda
 LDFLAGS += $(EXTMEMOPTS)
 LDFLAGS += $(patsubst %,-L%,$(EXTRALIBDIRS))
 LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
+
 #LDFLAGS += -T linker_script.x
 
 
@@ -600,7 +602,6 @@ $(OBJDIR)/%.o : %.S
 
 %.i : %.cpp
 	$(CC) -E -mmcu=$(MCU) -I. $(CPPFLAGS) $< -o $@
-
 
 
 # Target: clean project.
