@@ -117,42 +117,42 @@ namespace yaal {
     // Register port, Register ddr, ReadonlyRegister pin
     template<typename OutputClass, typename DirectionClass, typename InputClass>
     struct Port {
-        typedef OutputClass output;
-        typedef DirectionClass direction;
-        typedef InputClass input;
+        static OutputClass output;
+        static DirectionClass direction;
+        static InputClass input;
 
         // there is no protection if port is in input state
-        static void set(typename output::size_type value) {
-            output::set(value);
+        static void set(typename OutputClass::size_type value) {
+            output = value;
         }
 
-        static typename input::size_type get(void) {
-            return input::get();
+        static typename InputClass::size_type get(void) {
+            return input;
         }
 
         // FIXME: name collision with this function and output type
         static void set_output(void) {
             // TODO: is this enough?
-            direction::set(~(typename direction::size_type)0);
+            direction = ~(typename DirectionClass::size_type)0;
         }
 
         // FIXME: name collision with this function and input type
         static void set_input(void) {
             // TODO: is this enough?
-            direction::set(0);
+            direction = 0;
         }
 
-        operator typename input::size_type (void) const {
+        operator typename InputClass::size_type (void) const {
             /* read: Port<> x; uint8_t value = x; */
             return get();
         }
 
-        operator typename output::size_type & (void) {
+        operator typename OutputClass::size_type & (void) {
             /* write: Register x; x = 3; x |= 1 << 4; */
-            return output::setter();
+            return output.setter();
         }
 
-        Port<output, direction, input>& operator= (typename output::size_type value) {
+        Port<OutputClass, DirectionClass, InputClass>& operator= (typename OutputClass::size_type value) {
             set(value);
             return *this;
         }
@@ -161,11 +161,13 @@ namespace yaal {
 
     template<typename PortClass, bit_t bit>
     struct Pin {
-        typedef PortClass port;
+        static PortClass port;
 
         static void set(bool state = true) {
-            // TODO: do this optimize correctly?
-            port::output::setBit(bit, state);
+            if (state)
+                port |= 1 << bit;
+            else
+                port &= ~(1 << bit);
         }
 
         static void clear(void) {
@@ -173,28 +175,28 @@ namespace yaal {
         }
 
         static bool get(void) {
-            return port::input::getBit(bit);
+            return port & (1 << bit);
         }
 
         static void output(void) {
             // TODO: should we clear output state?
-            port::output::clrBit(bit);
-            port::direction::setBit(bit);
+            clear();
+            port.direction |= (1 << bit);
         }
 
         static void input(bool pullup = false) {
             // TODO: order of operations? order by variable? should we even touch on output bit?
             if (!pullup)
-                port::output::clrBit(bit);
-            port::direction::setBit(bit);
+                clear();
+            port.direction &= ~(1 << bit);
             if (pullup)
-                port::output::setBit(bit);
+                set();
         }
         operator bool (void) const {
             return get();
         }
 
-        Pin<port, bit>& operator= (bool state) {
+        Pin<PortClass, bit>& operator= (bool state) {
             set(state);
             return *this;
         }

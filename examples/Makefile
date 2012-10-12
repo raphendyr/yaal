@@ -42,22 +42,16 @@
 #----------------------------------------------------------------------------
 
 
-# Target file name (without extension).
-# TARGET = target
-# automatic:
-TARGET = $(shell basename $(shell pwd))
 
-# List C source files here. (C dependencies are automatically generated.)
-#SRC =	main.c \
-#		lib/teensy/usb_debug_only.c \
-#		lib/teensy/print.c \
-#		lib/myavr/shift_register_bus.c \
-#		lib/string.c
+# Board
+# -----
 
-#SRCBASE = main.c
-#SRC = $(SRCBASE)
-#SRC += $(shell ./lib/parsesources.py $(SRCBASE))
-SRC = 
+# Processor frequency.
+#   Normally the first thing your program should do is set the clock prescaler,
+#   so your program will run at the correct speed.  You should also set this
+#   variable to same clock speed.  The _delay_ms() macro uses this, and many
+#   examples use this variable to calculate timings.  Do not add a "UL" here.
+F_CPU = 16000000
 
 
 # MCU name, you MUST set this to match the board you are using
@@ -69,27 +63,23 @@ MCU = atmega32u4        # Teensy 2.0
 #MCU = at90usb1286      # Teensy++ 2.0
 
 
-# Processor frequency.
-#   Normally the first thing your program should do is set the clock prescaler,
-#   so your program will run at the correct speed.  You should also set this
-#   variable to same clock speed.  The _delay_ms() macro uses this, and many
-#   examples use this variable to calculate timings.  Do not add a "UL" here.
-F_CPU = 16000000
 
+# Project files
+# -------------
 
-# Output format. (can be srec, ihex, binary)
-FORMAT = ihex
+# Target file name (without extension).
+# TARGET = target
+# automatic:
+TARGET = $(shell basename $(shell pwd))
 
-
-# Object files directory
-#     To put object files in current directory, use a dot (.), do NOT make
-#     this an empty or blank macro!
-OBJDIR = obj
-
+# List C source files here. (C dependencies are automatically generated.)
+#SRCBASE = main.c
+#SRC = $(SRCBASE)
+#SRC += $(shell ./lib/parsesources.py $(SRCBASE))
+SRC = 
 
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = main.cpp
-
 
 # List Assembler source files here.
 #     Make them always end in a capital .S.  Files ending in a lowercase .s
@@ -101,10 +91,25 @@ CPPSRC = main.cpp
 ASRC =
 
 
+
+# Options
+# -------
+
+# Output format. (can be srec, ihex, binary)
+FORMAT = ihex
+
+
+# Object files directory
+#     To put object files in current directory, use a dot (.), do NOT make
+#     this an empty or blank macro!
+OBJDIR = obj
+
+
 # Optimization level, can be [0, 1, 2, 3, s]. 
 #     0 = turn off optimization. s = optimize for size.
 #     (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
-OPT = s
+# FIXME: yaal don't build correctly using s
+OPT = 2
 
 
 # Debugging format.
@@ -126,6 +131,7 @@ EXTRAINCDIRS =
 #     gnu89 = c89 plus GCC extensions
 #     c99   = ISO C99 standard (not yet fully implemented)
 #     gnu99 = c99 plus GCC extensions
+#     c++0x = C++ 2011 Standard (aka. c++11)
 CSTANDARD = -std=c++0x
 
 
@@ -390,6 +396,7 @@ MSG_CREATING_LIBRARY = Creating library:
 
 
 # Define all object files.
+# FIXME: support for %.cc
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o) $(CPPSRC:%.cpp=$(OBJDIR)/%.o) $(ASRC:%.S=$(OBJDIR)/%.o) 
 
 # Define all listing files.
@@ -617,11 +624,12 @@ clean_list :
 	$(REMOVE) $(TARGET).map
 	$(REMOVE) $(TARGET).sym
 	$(REMOVE) $(TARGET).lss
-	$(REMOVE) $(SRC:%.c=$(OBJDIR)/%.o)
-	$(REMOVE) $(SRC:%.c=$(OBJDIR)/%.lst)
-	$(REMOVE) $(SRC:.c=.s)
-	$(REMOVE) $(SRC:.c=.d)
-	$(REMOVE) $(SRC:.c=.i)
+	$(REMOVE) $(OBJ)
+	$(REMOVE) $(LST)
+	# FIXME: support *.cc
+	$(REMOVE) $(SRC:.c=.s) $(CPPSRC:.cpp=.s)
+	$(REMOVE) $(SRC:.c=.d) $(CPPSRC:.cpp=.d)
+	$(REMOVE) $(SRC:.c=.i) $(CPPSRC:.cpp=.i)
 	$(REMOVEDIR) .dep
 
 
