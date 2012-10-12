@@ -28,70 +28,24 @@ namespace yaal {
     typedef volatile uint8_t reg8_t;
     typedef volatile uint16_t reg16_t;
 
-    template <reg_a_t reg, typename reg_size>
-    struct __ReadableRegister {
-    private:
-        static bool getBit(bit_t);
-    };
-
-    template <reg_a_t reg>
-    struct __ReadableRegister<reg, reg8_t> {
-        static bool getBit(bit_t bit) {
-            return BITGET(YAAL_REG(reg8_t, reg), bit);
-        }
-    };
-
     template <reg_a_t reg, typename reg_size = reg8_t>
-    struct ReadableRegister : public __ReadableRegister<reg, reg_size> {
+    struct ReadableRegister {
         static reg_size get(void) {
             return YAAL_REG(reg_size, reg);
         }
 
-        // TODO: kokeile kääntyykö
         operator reg_size (void) const {
             // read: Register x; y = x;
             return YAAL_REG(reg_size, reg);
         }
     };
 
-    template<reg_a_t reg, typename reg_size>
-    struct __WriteableRegister {
-    private:
-        static void setBit(uint8_t) { };
-        static void setBit(uint8_t, bool) { };
-        static void clrBit(uint8_t) { };
-    };
-
-    template<reg_a_t reg>
-    struct __WriteableRegister<reg, reg8_t> {
-        // TODO: does this optimize correctly?
-        static void setBit(uint8_t bit, bool state = true) {
-            if (state)
-                BITSET(YAAL_REG(reg8_t, reg), bit);
-            else
-                BITCLR(YAAL_REG(reg8_t, reg), bit);
-        }
-
-        static void clrBit(uint8_t bit) {
-            setBit(bit, false);
-        }
-    };
-
-
     template<reg_a_t reg, typename reg_size = reg8_t>
-    struct WriteableRegister : public __WriteableRegister<reg, reg_size> {
-        // can't be in two places
-        //typedef reg_size size_type;
-
+    struct WriteableRegister {
         static void set(reg_size value) {
             YAAL_REG(reg_size, reg) = value;
         }
 
-        static reg_size& setter(void) {
-            return YAAL_REG(reg_size, reg);
-        }
-
-        // TODO: kokeile kääntyykö
         operator reg_size& (void) {
             // write: Register x; x = 3; x |= 1 << 4;
             return YAAL_REG(reg_size, reg);
@@ -120,6 +74,7 @@ namespace yaal {
         static OutputClass output;
         static DirectionClass direction;
         static InputClass input;
+        typedef Port<OutputClass, DirectionClass, InputClass> self_type;
 
         // there is no protection if port is in input state
         static void set(typename OutputClass::size_type value) {
@@ -147,12 +102,12 @@ namespace yaal {
             return get();
         }
 
-        operator typename OutputClass::size_type & (void) {
+        operator typename OutputClass::size_type& (void) {
             /* write: Register x; x = 3; x |= 1 << 4; */
-            return output.setter();
+            return output;
         }
 
-        Port<OutputClass, DirectionClass, InputClass>& operator= (typename OutputClass::size_type value) {
+        self_type& operator= (typename OutputClass::size_type value) {
             set(value);
             return *this;
         }
@@ -162,6 +117,7 @@ namespace yaal {
     template<typename PortClass, bit_t bit>
     struct Pin {
         static PortClass port;
+        typedef Pin<PortClass, bit> self_type;
 
         static void set(bool state = true) {
             if (state)
@@ -196,7 +152,7 @@ namespace yaal {
             return get();
         }
 
-        Pin<PortClass, bit>& operator= (bool state) {
+        self_type& operator= (bool state) {
             set(state);
             return *this;
         }
