@@ -9,23 +9,9 @@ int main(void) {
 
     while (1) {
         led.set();
-        //_delay_ms(800);
+        _delay_ms(800);
         led.clear();
-        //_delay_ms(800);
-        led.set();
-        led.clear();
-        led.set();
-        led.clear();
-        led.set();
-        led.clear();
-        led.set();
-        led.clear();
-        led.set();
-        led.clear();
-        led.set();
-        led.clear();
-        led.set();
-        led.clear();
+        _delay_ms(800);
     }
 
     return 0;

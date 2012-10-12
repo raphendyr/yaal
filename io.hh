@@ -6,16 +6,6 @@
 #include <avr/io.h>
 #include <inttypes.h>
 
-// from lib/util.h
-#define SHIFT8BIT_RIGHT(val, num)       ((unsigned char)(val) >> (num))
-#define SHIFT8BIT_LEFT(val, num)        ((unsigned char)(val) << (num))
-#define DIV2(val)                                       SHIFT8BIT_RIGHT(val, 1)
-#define MUL2(val)                                       SHIFT8BIT_LEFT(val, 1)
-#define NEG(byte)                                       ((unsigned char)~(byte))
-#define BITSET(port, num)       ((port) |= _BV(num))
-#define BITCLR(port, num)       ((port) &= NEG(_BV(num)))
-#define BITGET(port, num)       ((port) & _BV(num))
-
 // wrapper and unwrapper
 #define YAAL_REG(reg_t, addr) (*reinterpret_cast<reg_t*>(addr))
 #define YAAL_ADDR(reg) (reinterpret_cast<reg_a_t>(&(reg)))
@@ -109,7 +99,7 @@ namespace yaal {
         inline __attribute__ ((always_inline, error ("Port operation not inlined")))
         operator typename InputClass::size_type (void) const {
             /* read: Port<> x; uint8_t value = x; */
-            return get();
+            return input;
         }
 
         inline __attribute__ ((always_inline, error ("Port operation not inlined")))
@@ -120,7 +110,7 @@ namespace yaal {
 
         inline __attribute__ ((always_inline, error ("Port operation not inlined")))
         self_type& operator= (typename OutputClass::size_type value) {
-            set(value);
+            output = value;
             return *this;
         }
     };
@@ -134,7 +124,7 @@ namespace yaal {
         static inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
         void set(bool state = true) {
             if (state)
-                port |= 1 << bit;
+                port |= (1 << bit);
             else
                 port &= ~(1 << bit);
         }
