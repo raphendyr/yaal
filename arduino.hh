@@ -2,5 +2,6 @@
 #define __YAAL_ARDUINO__ 1
 
 #include "arduino/pinout.hh"
+#include "arduino/communication.hh"
 
 #endif
