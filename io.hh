@@ -2,6 +2,7 @@
 #define __YAAL_IO__ 1
 
 #include "requirements.hh"
+#include "qualifiers.hh"
 
 #include <avr/io.h>
 #include <inttypes.h>
@@ -20,12 +21,12 @@ namespace yaal {
 
     template <reg_a_t reg, typename reg_size = reg8_t>
     struct ReadableRegister {
-        static inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+        static YAAL_INLINE("Register operation")
         reg_size get(void) {
             return YAAL_REG(reg_size, reg);
         }
 
-        inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+        YAAL_INLINE("Register operation")
         operator reg_size (void) const {
             // read: Register x; y = x;
             return YAAL_REG(reg_size, reg);
@@ -34,13 +35,13 @@ namespace yaal {
 
     template<reg_a_t reg, typename reg_size = reg8_t>
     struct WriteableRegister {
-        static inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+        static YAAL_INLINE("Register operation")
         void set(reg_size value) {
             YAAL_REG(reg_size, reg) = value;
         }
 
 
-        inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+        YAAL_INLINE("Register operation")
         operator reg_size& (void) {
             // write: Register x; x = 3; x |= 1 << 4;
             return YAAL_REG(reg_size, reg);
@@ -73,43 +74,43 @@ namespace yaal {
         InputClass input;
 
         // there is no protection if port is in input state
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         void set(typename OutputClass::size_type value) {
             output = value;
         }
 
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         typename InputClass::size_type get(void) const {
             return input;
         }
 
         // FIXME: name collision with this function and output type
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         void set_output(void) {
             // TODO: is this enough?
             direction = ~(typename DirectionClass::size_type)0;
         }
 
         // FIXME: name collision with this function and input type
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         void set_input(void) {
             // TODO: is this enough?
             direction = 0;
         }
 
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         operator typename InputClass::size_type (void) const {
             /* read: Port<> x; uint8_t value = x; */
             return input;
         }
 
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         operator typename OutputClass::size_type& (void) {
             /* write: Register x; x = 3; x |= 1 << 4; */
             return output;
         }
 
-        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        YAAL_INLINE("Port operation")
         self_type& operator= (typename OutputClass::size_type value) {
             output = value;
             return *this;
@@ -123,7 +124,7 @@ namespace yaal {
 
         PortClass port;
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         void set(bool state = true) {
             if (state)
                 port |= (1 << bit);
@@ -131,24 +132,24 @@ namespace yaal {
                 port &= ~(1 << bit);
         }
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         void clear(void) {
             set(false);
         }
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         bool get(void) const {
             return port & (1 << bit);
         }
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         void output(void) {
             // TODO: should we clear output state?
             clear();
             port.direction |= (1 << bit);
         }
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         void input(bool pullup = false) {
             // TODO: order of operations? order by variable? should we even touch on output bit?
             if (!pullup)
@@ -158,12 +159,12 @@ namespace yaal {
                 set();
         }
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         operator bool (void) const {
             return get();
         }
 
-        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        YAAL_INLINE("Pin operation")
         self_type& operator= (bool state) {
             set(state);
             return *this;

@@ -3,6 +3,7 @@
 
 #include "shift.hh"
 #include "../io/null.hh"
+#include "../qualifiers.hh"
 
 namespace yaal {
 
@@ -14,7 +15,7 @@ namespace yaal {
               bool ChangeClockFirst = false >
     struct SPI {
 
-        static inline __attribute__ ((always_inline, error ("Not inlined")))
+        static YAAL_INLINE("SPI.setup()")
         void setup(void) {
             ClockPin clock;
             MosiPin mosi;

@@ -1,6 +1,8 @@
 #ifndef __YAAL_IO__NULL__
 #define __YAAL_IO__NULL__ 1
 
+#include "../qualifiers.hh"
+
 namespace yaal {
     namespace internal {
 
@@ -9,21 +11,21 @@ namespace yaal {
             size_type tmp;
 
             /* read */
-            static inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+            static YAAL_INLINE("Register operation")
             size_type get(void) { return 0; }
 
-            inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+            YAAL_INLINE("Register operation")
             operator size_type (void) const { return 0; }
 
             /* write */
-            static inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+            static YAAL_INLINE("Register operation")
             void set(size_type) { }
 
-            inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+            YAAL_INLINE("Register operation")
             operator size_type& (void) { return tmp; }
 
 
-            inline __attribute__ ((always_inline, error ("Register operation not inlined")))
+            YAAL_INLINE("Register operation")
             NullRegister& operator= (size_type) { return *this; }
         };
 

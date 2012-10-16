@@ -1,6 +1,8 @@
 #ifndef __YAAL_COMMUNICATION__SHIFT__
 #define __YAAL_COMMUNICATION__SHIFT__ 1
 
+#include "../qualifiers.hh"
+
 namespace yaal {
     namespace internal {
 
@@ -9,7 +11,7 @@ namespace yaal {
                   typename InputPin,
                   bool LSBfirst = true,
                   bool ChangeClockFirst = false >
-        static inline __attribute__ ((always_inline, error ("ShiftByte not inlined")))
+        static YAAL_INLINE("shiftByte")
         uint8_t shiftByte(uint8_t byte = 0) {
             ClockPin clock;
             OutputPin output;
