@@ -2,6 +2,7 @@
 #define __YAAL_ARDUINO__PINS__ 1
 
 #include "../qualifiers.hh"
+#include "../io/port.hh"
 
 // TODO: can we use 'namespace yaal::arduino {' ?
 namespace yaal {
