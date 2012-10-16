@@ -12,6 +12,14 @@
 
 namespace yaal {
 
+    enum States {
+        HIGH,
+        LOW,
+        OUTPUT,
+        INPUT,
+        PULLUP,
+    };
+
     // Register port, Register ddr, ReadonlyRegister pin
     template<typename OutputClass, typename DirectionClass, typename InputClass>
     struct Port {
@@ -72,6 +80,9 @@ namespace yaal {
 
         PortClass port;
 
+        // manipulator methods
+
+        /* default set() with booleans */
         YAAL_INLINE("Pin operation")
         void set(bool state = true) {
             if (state)
@@ -80,16 +91,40 @@ namespace yaal {
                 port &= ~(1 << bit);
         }
 
+        /* set() with Status enum */
+        YAAL_INLINE("Pin operation")
+        void set(States state) {
+            switch (state) {
+                case LOW:
+                    set(false);
+                    break;
+                case HIGH:
+                    set(true);
+                    break;
+                case OUTPUT:
+                    output();
+                    break;
+                case INPUT:
+                    input(false);
+                    break;
+                case PULLUP:
+                    input(true);
+            }
+        }
+
+        /* alias for set(false) */
         YAAL_INLINE("Pin operation")
         void clear(void) {
             set(false);
         }
 
+        /* get pin value */
         YAAL_INLINE("Pin operation")
         bool get(void) const {
             return port & (1 << bit);
         }
 
+        /* set pin in output mode */
         YAAL_INLINE("Pin operation")
         void output(void) {
             // TODO: should we clear output state?
@@ -97,6 +132,7 @@ namespace yaal {
             port.direction |= (1 << bit);
         }
 
+        /* set pin input mode */
         YAAL_INLINE("Pin operation")
         void input(bool pullup = false) {
             // TODO: order of operations? order by variable? should we even touch on output bit?
@@ -107,15 +143,64 @@ namespace yaal {
                 set();
         }
 
+        // manipulator operators
+
+        /* operator for if(pin) */
         YAAL_INLINE("Pin operation")
         operator bool (void) const {
             return get();
         }
 
+        /* assignment operator with booleans */
         YAAL_INLINE("Pin operation")
         self_type& operator= (bool state) {
             set(state);
             return *this;
+        }
+
+        /* assignment operator with States enum */
+        YAAL_INLINE("Pin operation")
+        self_type& operator= (States state) {
+            set(state);
+            return *this;
+        }
+
+        // state getters
+
+        /* is this pin in output state */
+        YAAL_INLINE("Pin operation")
+        bool is_output(void) const {
+            return port.direction & (1 << bit);
+        }
+
+        /* is this pin in input state */
+        YAAL_INLINE("Pin operation")
+        bool is_input(bool pullup = false) const {
+            return !is_output() && get() == pullup;
+        }
+
+        /* is this pin in some enum State state */
+        YAAL_INLINE("Pin operation")
+        bool operator== (States state) const {
+            switch (state) {
+                case LOW:
+                    return !get();
+                case HIGH:
+                    return get();
+                case OUTPUT:
+                    return is_output();
+                case INPUT:
+                    return is_input(false);
+                case PULLUP:
+                    return is_input(true);
+            }
+            return false;
+        }
+
+        /* is this pin not in some */
+        YAAL_INLINE("Pin operation")
+        bool operator!= (States state) const {
+            return !(*this == state);
         }
     };
 

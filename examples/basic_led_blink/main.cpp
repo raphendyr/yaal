@@ -5,13 +5,32 @@ using namespace yaal;
 
 PortB1 led;
 
+#define dl _delay_ms(800)
+
 int main(void) {
 
-    while (1) {
+    led = OUTPUT;
+    // or
+    led.output();
+
+    for (;;) {
+        led = HIGH;
+        dl;
+        led = LOW;
+        dl;
+
+        // or
+
+        led = true;
+        dl;
+        led = false;
+        dl;
+
+        // or
         led.set();
-        _delay_ms(800);
+        dl;
         led.clear();
-        _delay_ms(800);
+        dl;
     }
 
     return 0;

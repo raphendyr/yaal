@@ -10,8 +10,14 @@ namespace yaal {
         template<typename PinClass>
         struct DigitalPin : public PinClass {
             YAAL_INLINE("DigitalPin operation")
-            DigitalPin<PinClass>& operator= (bool value) {
-                this->set(value);
+            DigitalPin<PinClass>& operator= (bool state) {
+                this->set(state);
+                return *this;
+            }
+
+            YAAL_INLINE("Pin operation")
+            DigitalPin<PinClass>& operator= (States state) {
+                this->set(state);
                 return *this;
             }
         };
