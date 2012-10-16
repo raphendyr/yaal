@@ -2,11 +2,11 @@
 #define __YAAL_IO__OTHER__ 1
 // do not edit. genereted using io_definitions.sh
 
-#include "../requirements.hh"
+#include "register.hh"
 #include <avr/io.h>
 
 namespace yaal {
-    namespace registers {
+    namespace internal {
 
 #       ifdef ADC
             typedef Register<YAAL_ADDR(ADC), reg16_t> Adc;
