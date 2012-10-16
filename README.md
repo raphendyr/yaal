@@ -25,24 +25,14 @@ Trying to make avr coding super easy. Result should be able to replace arduino l
       }
     }
 
-Or in arduino style:
-
-    #include <yaal/arduino.hh>
-
-    D6 led;
-
-    void setup() {
-      led.output();
-    }
-
-    void loop() {
-      led.on();
-      delay_ms(1000);
-      led.off();
-      delay_ms(1000);
-    }
-
 Those are mainly for directions, but for working examples look into *examples* directory.
+
+Why YAAL?
+---------
+
+Why should I use YAAL instead of Arduino. Arduino is so easy to use!
+
+Well. Because of the performance. Read more in [why_yaal.md](https://github.com/raphendyr/yaal/blob/master/why_yaal.md)
 
 License and using
 -----------------
