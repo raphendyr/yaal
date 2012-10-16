@@ -66,31 +66,32 @@ namespace yaal {
     // Register port, Register ddr, ReadonlyRegister pin
     template<typename OutputClass, typename DirectionClass, typename InputClass>
     struct Port {
-        static OutputClass output;
-        static DirectionClass direction;
-        static InputClass input;
         typedef Port<OutputClass, DirectionClass, InputClass> self_type;
 
+        OutputClass output;
+        DirectionClass direction;
+        InputClass input;
+
         // there is no protection if port is in input state
-        static inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
         void set(typename OutputClass::size_type value) {
             output = value;
         }
 
-        static inline __attribute__ ((always_inline, error ("Port operation not inlined")))
-        typename InputClass::size_type get(void) {
+        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        typename InputClass::size_type get(void) const {
             return input;
         }
 
         // FIXME: name collision with this function and output type
-        static inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
         void set_output(void) {
             // TODO: is this enough?
             direction = ~(typename DirectionClass::size_type)0;
         }
 
         // FIXME: name collision with this function and input type
-        static inline __attribute__ ((always_inline, error ("Port operation not inlined")))
+        inline __attribute__ ((always_inline, error ("Port operation not inlined")))
         void set_input(void) {
             // TODO: is this enough?
             direction = 0;
@@ -118,10 +119,11 @@ namespace yaal {
 
     template<typename PortClass, bit_t bit>
     struct Pin {
-        static PortClass port;
         typedef Pin<PortClass, bit> self_type;
 
-        static inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        PortClass port;
+
+        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
         void set(bool state = true) {
             if (state)
                 port |= (1 << bit);
@@ -129,24 +131,24 @@ namespace yaal {
                 port &= ~(1 << bit);
         }
 
-        static inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
         void clear(void) {
             set(false);
         }
 
-        static inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
-        bool get(void) {
+        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        bool get(void) const {
             return port & (1 << bit);
         }
 
-        static inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
         void output(void) {
             // TODO: should we clear output state?
             clear();
             port.direction |= (1 << bit);
         }
 
-        static inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
+        inline __attribute__ ((always_inline, error ("Pin operation not inlined")))
         void input(bool pullup = false) {
             // TODO: order of operations? order by variable? should we even touch on output bit?
             if (!pullup)
