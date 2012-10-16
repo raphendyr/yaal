@@ -7,6 +7,11 @@ namespace yaal {
 
         template<typename PinClass>
         struct DigitalPin : public PinClass {
+            inline __attribute__ ((always_inline, error ("DigitalPin operation not inlined")))
+            DigitalPin<PinClass>& operator= (bool value) {
+                this->set(value);
+                return *this;
+            }
         };
 
     }
