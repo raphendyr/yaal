@@ -172,6 +172,7 @@ namespace yaal {
 
 }
 
+#include "io/null.hh"
 #include "io/ports.hh"
 #include "io/other.hh"
 
