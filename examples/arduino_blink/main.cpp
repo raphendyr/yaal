@@ -12,23 +12,14 @@ D6 led;
 
 int main(void) {
 
-    led.output();
-    button.input();
+    led = OUTPUT;
+    button = PULLUP;
 
     for (;;) {
         if (button) {
-            led.set();
+            led = HIGH;
             _delay_ms(800);
-            led.clear();
-        }
-        _delay_ms(800);
-
-        // arduino compatibility
-
-        if (digitalRead(button)) {
-            digitalWrite(led, true);
-            _delay_ms(800);
-            digitalWrite(led, false);
+            led = LOW;
         }
         _delay_ms(800);
     }
