@@ -7,8 +7,6 @@
 namespace yaal {
     namespace arduino {
         
-        #define INPUT_PULLUP PULLUP
-
         /* arduino code uses pinMode(pin, value) for pin mode manipulation
          * that is not required with yaal, but provided for compatibility
          * use this instead:
@@ -17,7 +15,7 @@ namespace yaal {
          */
         template<typename ClassPin>
         YAAL_DEPRECATED("Funktion pinMode() is only for compatibility. Avoid it.")
-        void pinMode(ClassPin, States state) {
+        void pinMode(ClassPin, Mode state) {
             ClassPin pin;
             pin = state;
         }
@@ -28,9 +26,9 @@ namespace yaal {
          *   D1 led;
          *   led = HIGH;
          */
-        template<typename ClassPin, typename state_type>
+        template<typename ClassPin>
         YAAL_DEPRECATED("Funktion digitalWrite() is only for compatibility. Avoid it.")
-        void digitalWrite(ClassPin, state_type state) {
+        void digitalWrite(ClassPin, bool state) {
             ClassPin pin;
             pin = state;
         }

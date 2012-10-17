@@ -17,11 +17,12 @@ int main(void) {
 
     uint8_t value = ledMatrixRow;
 
-    while (1) {
+    for (;;) {
         led = true;
         //_delay_ms(800);
         led = false;
         //_delay_ms(800);
     }
 
+    return 0;
 }

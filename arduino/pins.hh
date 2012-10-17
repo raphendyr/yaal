@@ -15,12 +15,6 @@ namespace yaal {
                 this->set(state);
                 return *this;
             }
-
-            YAAL_INLINE("Pin operation")
-            DigitalPin<PinClass>& operator= (States state) {
-                this->set(state);
-                return *this;
-            }
         };
 
     }

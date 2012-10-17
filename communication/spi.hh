@@ -22,10 +22,10 @@ namespace yaal {
             MisoPin miso;
             SelectPin ss;
 
-            clock.output();
-            mosi.output();
-            miso.output();
-            ss.output();
+            clock.mode.output();
+            mosi.mode.output();
+            miso.mode.output();
+            ss.mode.output();
         }
 
         static inline

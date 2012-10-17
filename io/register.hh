@@ -52,6 +52,36 @@ namespace yaal {
             }
         };
 
+        template<typename RegisterClass, bit_t bit>
+        struct RegisterBit {
+            typedef RegisterBit<RegisterClass, bit> self_type;
+
+            YAAL_INLINE("RegisterBit operation")
+            void set(bool state) {
+                RegisterClass reg;
+                if (state)
+                    reg |= (1 << bit);
+                else
+                    reg &= ~(1 << bit);
+            }
+
+            YAAL_INLINE("RegisterBit operation")
+            self_type& operator= (bool state) {
+                set(state);
+                return *this;
+            }
+
+            YAAL_INLINE("RegisterBit operation")
+            bool get() const {
+                const RegisterClass reg;
+                return reg & (1 << bit);
+            }
+
+            YAAL_INLINE("RegisterBit operation")
+            operator bool() const {
+                return get();
+            }
+        };
     }
 
     template <reg_a_t reg, typename reg_size = reg8_t>
@@ -68,6 +98,12 @@ namespace yaal {
         private internal::ReadableRegister<reg, reg_size>
     {
         typedef reg_size size_type;
+
+        YAAL_INLINE("WriteonlyRegister operation")
+        WriteonlyRegister<reg, reg_size>& operator=(reg_size value) {
+            this->set(value);
+            return *this;
+        }
     };
 
     template<reg_a_t reg, typename reg_size = reg8_t>
@@ -76,6 +112,12 @@ namespace yaal {
         public internal::WriteableRegister<reg, reg_size>
     {
         typedef reg_size size_type;
+
+        YAAL_INLINE("Register operation")
+        Register<reg, reg_size>& operator=(reg_size value) {
+            this->set(value);
+            return *this;
+        }
     };
 
 }

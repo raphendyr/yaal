@@ -9,21 +9,24 @@
 #include "../qualifiers.hh"
 #include "register.hh"
 
+#define LOW false
+#define HIGH true
 
 namespace yaal {
 
-    enum States {
-        HIGH,
-        LOW,
-        OUTPUT,
+    enum Mode {
         INPUT,
-        PULLUP,
+        OUTPUT,
+        INPUT_PULLUP,
     };
 
     // Register port, Register ddr, ReadonlyRegister pin
     template<typename OutputClass, typename DirectionClass, typename InputClass>
     struct Port {
         typedef Port<OutputClass, DirectionClass, InputClass> self_type;
+        typedef OutputClass output_type;
+        typedef DirectionClass direction_type;
+        typedef InputClass input_type;
 
         OutputClass output;
         DirectionClass direction;
@@ -73,43 +76,123 @@ namespace yaal {
         }
     };
 
+    namespace internal {
+        template<typename PortClass, bit_t bit>
+        struct PinMode {
+            typedef PinMode<PortClass, bit> self_type;
+            typedef RegisterBit<typename PortClass::output_type, bit> output_type;
+            typedef RegisterBit<typename PortClass::direction_type, bit> direction_type;
+
+            YAAL_INLINE("PinMode operation")
+            void output() {
+                output_type out;
+                direction_type dir;
+
+                out = false;
+                dir = true;
+            }
+
+            YAAL_INLINE("PinMode operation")
+            void input(bool pullup = false) {
+                output_type out;
+                direction_type dir;
+                // TODO: order of operations? order by variable? should we even touch on output bit?
+                if (!pullup)
+                    out = false;
+                dir = false;
+                if (pullup)
+                    out = true;
+            }
+
+            YAAL_INLINE("PinMode operation")
+            void set(bool output_mode, bool pullup = false) {
+                if (output_mode)
+                    output();
+                else
+                    input(pullup);
+            }
+
+            YAAL_INLINE("PinMode operation")
+            void set(Mode mode) {
+                switch (mode) {
+                    case INPUT:
+                        input(false);
+                        return;
+                    case OUTPUT:
+                        output();
+                        return;
+                    case INPUT_PULLUP:
+                        input(true);
+                        return;
+                }
+            }
+
+            YAAL_INLINE("PinMode operation")
+            bool is_output() const {
+                direction_type dir;
+                return dir;
+            }
+
+            YAAL_INLINE("PinMode operation")
+            Mode get() const {
+                output_type out;
+                direction_type dir;
+
+                if (dir)
+                    return OUTPUT;
+                else if (out)
+                    return INPUT_PULLUP;
+                else
+                    return INPUT;
+            }
+
+            YAAL_INLINE("PinMode operation")
+            operator bool () const {
+                return is_output();
+            }
+
+            YAAL_INLINE("PinMode operation")
+            operator Mode () const {
+                return get();
+            }
+
+            YAAL_INLINE("PinMode operation")
+            self_type& operator= (bool output_mode) {
+                set(output_mode);
+                return *this;
+            }
+
+            YAAL_INLINE("PinMode operation")
+            self_type& operator= (Mode mode) {
+                set(mode);
+                return *this;
+            }
+
+            template<typename OtherPin, bit_t other_bit>
+            YAAL_INLINE("PinMode operation")
+            self_type& operator= (const PinMode<OtherPin, other_bit>& pin_mode) {
+                Mode mode = pin_mode;
+                return *this = mode;
+            }
+        };
+    }
 
     template<typename PortClass, bit_t bit>
     struct Pin {
         typedef Pin<PortClass, bit> self_type;
+        typedef internal::RegisterBit<typename PortClass::output_type, bit> output_type;
+        typedef internal::RegisterBit<typename PortClass::input_type, bit> input_type;
 
         PortClass port;
+        internal::PinMode<PortClass, bit> mode;
 
         // manipulator methods
 
         /* default set() with booleans */
         YAAL_INLINE("Pin operation")
         void set(bool state = true) {
-            if (state)
-                port |= (1 << bit);
-            else
-                port &= ~(1 << bit);
-        }
-
-        /* set() with Status enum */
-        YAAL_INLINE("Pin operation")
-        void set(States state) {
-            switch (state) {
-                case LOW:
-                    set(false);
-                    break;
-                case HIGH:
-                    set(true);
-                    break;
-                case OUTPUT:
-                    output();
-                    break;
-                case INPUT:
-                    input(false);
-                    break;
-                case PULLUP:
-                    input(true);
-            }
+            output_type out;
+            out = state;
         }
 
         /* alias for set(false) */
@@ -121,26 +204,8 @@ namespace yaal {
         /* get pin value */
         YAAL_INLINE("Pin operation")
         bool get(void) const {
-            return port & (1 << bit);
-        }
-
-        /* set pin in output mode */
-        YAAL_INLINE("Pin operation")
-        void output(void) {
-            // TODO: should we clear output state?
-            clear();
-            port.direction |= (1 << bit);
-        }
-
-        /* set pin input mode */
-        YAAL_INLINE("Pin operation")
-        void input(bool pullup = false) {
-            // TODO: order of operations? order by variable? should we even touch on output bit?
-            if (!pullup)
-                clear();
-            port.direction &= ~(1 << bit);
-            if (pullup)
-                set();
+            input_type in;
+            return in;
         }
 
         // manipulator operators
@@ -157,53 +222,7 @@ namespace yaal {
             set(state);
             return *this;
         }
-
-        /* assignment operator with States enum */
-        YAAL_INLINE("Pin operation")
-        self_type& operator= (States state) {
-            set(state);
-            return *this;
-        }
-
-        // state getters
-
-        /* is this pin in output state */
-        YAAL_INLINE("Pin operation")
-        bool is_output(void) const {
-            return port.direction & (1 << bit);
-        }
-
-        /* is this pin in input state */
-        YAAL_INLINE("Pin operation")
-        bool is_input(bool pullup = false) const {
-            return !is_output() && get() == pullup;
-        }
-
-        /* is this pin in some enum State state */
-        YAAL_INLINE("Pin operation")
-        bool operator== (States state) const {
-            switch (state) {
-                case LOW:
-                    return !get();
-                case HIGH:
-                    return get();
-                case OUTPUT:
-                    return is_output();
-                case INPUT:
-                    return is_input(false);
-                case PULLUP:
-                    return is_input(true);
-            }
-            return false;
-        }
-
-        /* is this pin not in some */
-        YAAL_INLINE("Pin operation")
-        bool operator!= (States state) const {
-            return !(*this == state);
-        }
     };
-
 }
 
 #endif

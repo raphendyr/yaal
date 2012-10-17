@@ -5,6 +5,7 @@
 #include <util/delay.h>
 
 
+using namespace yaal;
 using namespace yaal::arduino;
 
 D5 button;
@@ -12,8 +13,8 @@ D6 led;
 
 int main(void) {
 
-    led = OUTPUT;
-    button = PULLUP;
+    led.mode = OUTPUT;
+    button.mode = INPUT_PULLUP;
 
     for (;;) {
         if (button) {

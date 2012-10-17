@@ -8,7 +8,7 @@ namespace yaal {
 
         struct NullRegister {
             typedef uint32_t size_type;
-            size_type tmp;
+            size_type tmp = 0;
 
             /* read */
             static YAAL_INLINE("Register operation")

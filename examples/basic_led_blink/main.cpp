@@ -9,9 +9,9 @@ PortB1 led;
 
 int main(void) {
 
-    led = OUTPUT;
+    led.mode = OUTPUT;
     // or
-    led.output();
+    led.mode.output();
 
     for (;;) {
         led = HIGH;
