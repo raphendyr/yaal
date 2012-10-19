@@ -223,6 +223,43 @@ namespace yaal {
             return *this;
         }
     };
+
+    template<typename PinClass>
+    class OutputPin : public PinClass {
+        Mode mode;
+
+    public:
+        OutputPin() {
+            PinClass pin;
+            mode = pin.mode;
+            pin.mode = OUTPUT;
+        }
+
+        OutputPin(const PinClass&) {
+            PinClass pin;
+            mode = pin.mode;
+            pin.mode = OUTPUT;
+        }
+
+        ~OutputPin() {
+            PinClass pin;
+            pin.mode = mode;
+        }
+
+        template<typename value_type>
+        OutputPin<PinClass>& operator= (value_type value) {
+            PinClass::operator=(value);
+            return *this;
+        }
+    };
+
+    #define _OutputPin(var) OutputPin<decltype(var)>
+
+    template<typename PinClass>
+    OutputPin<PinClass> as_output(const PinClass& pin) {
+        OutputPin<PinClass> as(pin);
+        return as;
+    }
 }
 
 #endif
