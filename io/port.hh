@@ -184,6 +184,7 @@ namespace yaal {
     template<typename PortClass, bit_t bit>
     class Pin : public internal::SingleBit<PortClass, bit> {
         typedef Pin<PortClass, bit> self_type;
+        typedef internal::SingleBit<PortClass, bit> super;
 
     public:
         PortClass port;
@@ -191,10 +192,7 @@ namespace yaal {
 
         /* assignment operator is not inherited */
         YAAL_INLINE("Pin operation")
-        self_type& operator= (bool state) {
-            this->set(state);
-            return *this;
-        }
+        self_type& operator= (bool state) { super::operator=(state); return *this; }
     };
 }
 
