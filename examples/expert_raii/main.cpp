@@ -15,10 +15,10 @@ int main(void) {
         // wait for button to be pressed
         if (!button) {
             // create temporary variable led
-            auto led = button.as(OUTPUT);
+            auto led = button.reversed().as(OUTPUT);
 
             // put led on
-            led = LOW;
+            led = true;
 
             //_delay_ms(2000);
 

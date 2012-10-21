@@ -212,6 +212,9 @@ namespace yaal {
         };
     }
 
+    template<typename PinClass>
+    class Reversed;
+
     template<typename PortClass, bit_t bit>
     class Pin : public internal::SingleBit<PortClass, bit> {
         typedef Pin<PortClass, bit> self_type;
@@ -225,6 +228,11 @@ namespace yaal {
         self_type& operator= (bool state) {
             this->set(state);
             return *this;
+        }
+
+        YAAL_INLINE("Pin Reversed wrapper")
+        Reversed<self_type> reversed() {
+            return Reversed<self_type>();
         }
 
         YAAL_INLINE("Pin RAII wrapper")
@@ -263,6 +271,16 @@ namespace yaal {
         YAAL_INLINE("Reversed pin operation")
         operator bool () {
             return get();
+        }
+
+        YAAL_INLINE("Reversed pin reversed wrapper")
+        PinClass reversed() {
+            return PinClass();
+        }
+
+        YAAL_INLINE("Reversed pin RAII wrapper")
+        internal::RAIIPin<self_type> as(Mode mode) {
+            return internal::RAIIPin<self_type>(mode);
         }
     };
 
