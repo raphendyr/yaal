@@ -22,8 +22,10 @@ namespace yaal {
 
     // Register port, Register ddr, ReadonlyRegister pin
     template<typename OutputClass, typename DirectionClass, typename InputClass>
-    struct Port {
+    class Port {
         typedef Port<OutputClass, DirectionClass, InputClass> self_type;
+
+    public:
         typedef OutputClass output_type;
         typedef DirectionClass direction_type;
         typedef InputClass input_type;
@@ -78,11 +80,12 @@ namespace yaal {
 
     namespace internal {
         template<typename PortClass, bit_t bit>
-        struct PinMode {
+        class PinMode {
             typedef PinMode<PortClass, bit> self_type;
-            typedef RegisterBit<typename PortClass::output_type, bit> output_type;
-            typedef RegisterBit<typename PortClass::direction_type, bit> direction_type;
+            typedef SingleBit<typename PortClass::output_type, bit> output_type;
+            typedef SingleBit<typename PortClass::direction_type, bit> direction_type;
 
+        public:
             YAAL_INLINE("PinMode operation")
             void output() {
                 output_type out;
@@ -171,6 +174,7 @@ namespace yaal {
             template<typename OtherPin, bit_t other_bit>
             YAAL_INLINE("PinMode operation")
             self_type& operator= (const PinMode<OtherPin, other_bit>& pin_mode) {
+                /* D1 led1; D2 led2; led1.mode = led2.mode; */
                 Mode mode = pin_mode;
                 return *this = mode;
             }
@@ -209,54 +213,56 @@ namespace yaal {
     }
 
     template<typename PortClass, bit_t bit>
-    struct Pin {
+    class Pin : public internal::SingleBit<PortClass, bit> {
         typedef Pin<PortClass, bit> self_type;
-        typedef internal::RegisterBit<typename PortClass::output_type, bit> output_type;
-        typedef internal::RegisterBit<typename PortClass::input_type, bit> input_type;
 
+    public:
         PortClass port;
         internal::PinMode<PortClass, bit> mode;
 
-        // manipulator methods
-
-        /* default set() with booleans */
-        YAAL_INLINE("Pin operation")
-        void set(bool state = true) {
-            output_type out;
-            out = state;
-        }
-
-        /* alias for set(false) */
-        YAAL_INLINE("Pin operation")
-        void clear(void) {
-            set(false);
-        }
-
-        /* get pin value */
-        YAAL_INLINE("Pin operation")
-        bool get(void) const {
-            input_type in;
-            return in;
-        }
-
-        // manipulator operators
-
-        /* operator for if(pin) */
-        YAAL_INLINE("Pin operation")
-        operator bool (void) const {
-            return get();
-        }
-
-        /* assignment operator with booleans */
+        /* assignment operator is not inherited */
         YAAL_INLINE("Pin operation")
         self_type& operator= (bool state) {
-            set(state);
+            this->set(state);
             return *this;
         }
 
         YAAL_INLINE("Pin RAII wrapper")
         internal::RAIIPin<self_type> as(Mode mode) {
             return internal::RAIIPin<self_type>(mode);
+        }
+    };
+
+    template<typename PinClass>
+    class Reversed : public PinClass {
+        typedef Reversed<PinClass> self_type;
+        typedef PinClass super;
+
+    public:
+        YAAL_INLINE("Reversed pin operation")
+        void set(bool state = true) {
+            super::set(!state);
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        void clear() {
+            set(false);
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        bool get() const {
+            return !super::get();
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        self_type& operator= (bool state) {
+            set(state);
+            return *this;
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        operator bool () {
+            return get();
         }
     };
 

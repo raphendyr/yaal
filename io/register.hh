@@ -53,16 +53,23 @@ namespace yaal {
         };
 
         template<typename RegisterClass, bit_t bit>
-        struct RegisterBit {
-            typedef RegisterBit<RegisterClass, bit> self_type;
+        class SingleBit {
+            typedef SingleBit<RegisterClass, bit> self_type;
+
+        public:
 
             YAAL_INLINE("RegisterBit operation")
-            void set(bool state) {
+            void set(bool state = true) {
                 RegisterClass reg;
                 if (state)
                     reg |= (1 << bit);
                 else
                     reg &= ~(1 << bit);
+            }
+
+            YAAL_INLINE("RegisterBit operation")
+            void clear() {
+                set(false);
             }
 
             YAAL_INLINE("RegisterBit operation")
@@ -78,7 +85,7 @@ namespace yaal {
             }
 
             YAAL_INLINE("RegisterBit operation")
-            operator bool() const {
+            operator bool () const {
                 return get();
             }
         };
