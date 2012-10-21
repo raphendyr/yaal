@@ -175,6 +175,37 @@ namespace yaal {
                 return *this = mode;
             }
         };
+
+        template<typename PinClass>
+        class RAIIPin : public PinClass {
+            typedef RAIIPin<PinClass> self_type;
+            typedef PinClass super;
+
+            Mode mode;
+
+        public:
+            RAIIPin(Mode the_mode) {
+                PinClass pin;
+                mode = pin.mode;
+                pin.mode = the_mode;
+            }
+
+            ~RAIIPin() {
+                PinClass pin;
+                pin.mode = mode;
+            }
+
+            template<typename value_type>
+            self_type& operator=(value_type value) {
+                super::operator=(value);
+                return *this;
+            }
+
+        private:
+            RAIIPin();
+            //RAIIPin(const self_type&);
+            self_type& operator=(const self_type&);
+        };
     }
 
     template<typename PortClass, bit_t bit>
@@ -222,44 +253,13 @@ namespace yaal {
             set(state);
             return *this;
         }
-    };
 
-    template<typename PinClass>
-    class OutputPin : public PinClass {
-        Mode mode;
-
-    public:
-        OutputPin() {
-            PinClass pin;
-            mode = pin.mode;
-            pin.mode = OUTPUT;
-        }
-
-        OutputPin(const PinClass&) {
-            PinClass pin;
-            mode = pin.mode;
-            pin.mode = OUTPUT;
-        }
-
-        ~OutputPin() {
-            PinClass pin;
-            pin.mode = mode;
-        }
-
-        template<typename value_type>
-        OutputPin<PinClass>& operator= (value_type value) {
-            PinClass::operator=(value);
-            return *this;
+        YAAL_INLINE("Pin RAII wrapper")
+        internal::RAIIPin<self_type> as(Mode mode) {
+            return internal::RAIIPin<self_type>(mode);
         }
     };
 
-    #define _OutputPin(var) OutputPin<decltype(var)>
-
-    template<typename PinClass>
-    OutputPin<PinClass> as_output(const PinClass& pin) {
-        OutputPin<PinClass> as(pin);
-        return as;
-    }
 }
 
 #endif
