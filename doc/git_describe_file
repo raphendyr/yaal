@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -f "$1" ]; then
+    hash=$(git log -n 1 --pretty="%H" -- $1)
+    if [ $? -eq 0 ]; then
+        version=$(git describe $hash)
+        if [ $? -eq 0 ]; then
+            echo "$version"
+            exit 0
+        fi
+    fi
+fi
+
+exit 1
