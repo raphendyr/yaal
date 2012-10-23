@@ -1,0 +1,20 @@
+base: http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=50106
+ * Part One - Timers running at Fcpu 
+   - TCCR1B
+   - TCNT1
+ * Part Two - Prescaled Timers
+   - prescaler
+   - TCCR1B
+ * Part Four - The CTC Timer Mode 
+   - CTC and other modes
+   - TCCR1B
+   - OCR1A
+   - iterrupt flags, TIFR (OCF1A)
+ * Part Six - Pure Hardware CTC
+   - TCCR1A (COM1A0)
+ * Part Five - CTC Mode using Interrupts 
+   - require interrupts, TIMSK (OCIE1A)
+   - ISR(TIMER1_COMPA_vect)
+ * Part Seven - The Overflow Event 
+   - require interrupts, TIMSK (TOIE1)
+   - ISR(TIMER1_OVF_vect)
