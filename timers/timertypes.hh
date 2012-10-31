@@ -1,7 +1,20 @@
 #ifndef __YAAL_TIMERS__TIMERTYPES__
 #define __YAAL_TIMERS__TIMERTYPES__ 1
 
+#include <inttypes.h>
+#include "../bitmask.hh"
+
 namespace yaal {
+
+    /* NOTES:
+       Most optimal would be assining timer control values as bytes:
+         TCCR0A = control_bits_a;
+         TCCR0B = control_bits_b & ~clock_select_bits;
+       FIXME: Is it possible to write code chuck taht would be possible?
+
+       Meanwhile we toggle bits up/down by feature.
+     */
+
 
     // FIXME: should we order these: wgm0, wgm1, wgm2
     template<typename Wgm2Class, typename Wgm1Class, typename Wgm0Class>
@@ -44,6 +57,13 @@ namespace yaal {
     };
 
 
+    template<typename PrescalerClass>
+    class Timer {
+    public:
+        typedef PrescalerClass prescaler;
+    };
+
+
     /* Timer/Counter0 is a general purpose 8-bit Timer/Counter module,
        with two independent Output Compare Units, and with PWM support.
        It allows accurate program execution timing (event management)
@@ -56,7 +76,8 @@ namespace yaal {
        - Frequency Generator
        - Three Independent Interrupt Sources (TOV0, OCF0A, and OCF0B)
      */
-    class Timer8 {
+    template<typename PrescalerClass>
+    class Timer8 : public Timer<PrescalerClass> {
         typedef Tcnt0 counter;
         // 8 bit unsigned
         typedef Ocr0a out_a;
@@ -93,7 +114,8 @@ namespace yaal {
         }
     };
 
-    class Timer10 {
+    template<typename PrescalerClass>
+    class Timer10 : public Timer<PrescalerClass> {
     
     };
 
@@ -120,7 +142,8 @@ namespace yaal {
        byte must be read before the high byte.
        NOTE: avr-gcc should handle this when using *(volatile uint16_t*) = value
      */
-    class Timer16 {
+    template<typename PrescalerClass>
+    class Timer16 : public Timer<PrescalerClass> {
         typedef Tccr1a ctrl_a;
         // COM1A1, COM1A0, COM1B1, COM1B0, COM1C1, COM1C0, WGM11, WGM10
         typedef Tccr1b ctrl_b;
@@ -145,9 +168,157 @@ namespace yaal {
         
     };
 
-    class AsyncronousTimer {
+
+    template<typename TimerClass>
+    class AsyncronousTimer : public TimerClass {
     
     };
+
+
+
+
+    /* 10-bit async timer's prescaler:
+    Mode, CS43 CS42 CS41 CS40, Asynchronous Clocking Mode, Synchronous Clocking Mode
+    0, 0 0 0 0, T/C4 stopped   T/C4 stopped
+    1, 0 0 0 1, PCK            CK
+    2, 0 0 1 0, PCK/2          CK/2
+    3, 0 0 1 1, PCK/4          CK/4
+    4, 0 1 0 0, PCK/8          CK/8
+    5, 0 1 0 1, PCK/16         CK/16
+    6, 0 1 1 0, PCK/32         CK/32
+    7, 0 1 1 1, PCK/64         CK/64
+    8, 1 0 0 0, PCK/128        CK/128
+    9, 1 0 0 1, PCK/256        CK/256
+    a, 1 0 1 0, PCK/512        CK/512
+    b, 1 0 1 1, PCK/1024       CK/1024
+    c, 1 1 0 0, PCK/2048       CK/2048
+    d, 1 1 0 1, PCK/4096       CK/4096
+    e, 1 1 1 0, PCK/8192       CK/8192
+    f, 1 1 1 1, PCK/16384      CK/16384
+    */
+
+    /* 8 and 16-bit timer's prescaler:
+    Mode, CSn2 CSn1 CSn0, clocking mode
+    0, 0 0 0, no clock - stopped
+    1, 0 0 1, clk_io - no prescaler
+    2, 0 1 0, clk_io/8
+    3, 0 1 1, clk_io/64
+    4, 1 0 0, clk_io/256
+    5, 1 0 1, clk_io/1024
+    6, 1 1 0, extern on Tn, Falling edge
+    7, 1 1 1, extern on Tn, Rising edge
+    */
+
+    namespace internal {
+        template<uint8_t mode_bits>
+        class _Prescaler {
+        public:
+            enum ClockMode;
+            // TODO: prescaler control, ks. atmega32u4 12.4.
+
+            // FIXME: is Control allways TCCRnB?
+            template<typename Control>
+            void start(ClockMode mode) {
+                Control cntrl;
+                if (mode_bits > 3)
+                    if (mode & 0x8)
+                        cntrl |= 0x8;
+                if (mode_bits > 2)
+                    if (mode & 0x4)
+                        cntrl |= 0x4;
+                if (mode_bits > 1)
+                    if (mode & 0x2)
+                        cntrl |= 0x2;
+                if (mode_bits > 0)
+                    if (mode & 0x1)
+                        cntrl |= 0x1;
+            }
+
+            template<typename Control>
+            void stop() {
+                Control cntrl;
+                // For 2 or fewer bits this is slower
+                // For 3 bits this is as fast as using cbi
+                // For 4 or more bits this is faster
+                cntrl &= ~BitMask<mode_bits>;
+                // in rN, port      ; 1 cycle
+                // ori rN, bitmask  ; 1 cycle
+                // out port, rN     ; 1 cycle
+            }
+        }
+    };
+
+    template<uint8_t mode_bits = 3
+    class Prescaler : public internal::_Prescaler<mode_bits> { };
+
+    template<>
+    class Prescaler<3> : public internal::_Prescaler<3> {
+    public:
+        enum ClockMode {
+            STOPPED,
+            CLK,
+            CLK_8,
+            CLK_64,
+            CLK_256,
+            CLK_1024,
+            EXTERN_FALLING,
+            EXTERN_RISING
+        };
+    };
+
+    template<>
+    class Prescaler<4> : public internal::_Prescaler<4> {
+        enum ClockMode {
+            STOPPED,
+            CLK,
+            CLK_2,
+            CLK_4,
+            CLK_8,
+            CLK_16,
+            CLK_32,
+            CLK_64,
+            CLK_128,
+            CLK_256,
+            CLK_512,
+            CLK_1024,
+            CLK_2048,
+            CLK_4096,
+            CLK_8192,
+            CLK_16384
+        };
+    };
+
+
+
+    // Teensy 2
+
+
+    // timers 0, 1, 3 share same prescaler, but has own clock sources.
+    // this means that we can syncronize timers 0, 1, 3
+    typedef Timer8<
+        Prescaler<3>,
+        TimerControl<
+            Tcnt0, // counter
+            Tifr0, TOV0,
+            Timsk0, TOIE0,
+            TimerMode<Tccr0a, WGM00, Tccr0a, WGM01, Tccr0b, WGM02>,
+            OutputCompare<Ocr0a, Tccr0a, COM0A0, Tccr0a, COM0A1, Tccr0b, FOC0A, Tifr0, OCF0A, Timsk0, OCIE0A>,
+            OutputCompare<Ocr0b, Tccr0a, COM0B0, Tccr0a, COM0B1, Tccr0b, FOC0B, Tifr0, OCF0B, Timsk0, OCIE0B>,
+            PrescaleSelect<Tccr0b, CS02, Tccr0b, CS01, Tccr0b, CS00>,
+        >,
+    > timer0;
+
+    typedef Timer16<
+        Prescaler<3>,
+    > timer1;
+
+    typedef Timer16<
+        Prescaler<3>,
+    > timer3;
+
+    typedef AsyncronousTimer<Timer10<
+        Prescaler<4>,
+    >> timer4;
 }
 
 #endif
