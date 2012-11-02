@@ -11,8 +11,9 @@ int main(void) {
 
     sei();
 
-    // C style
     uint8_t local_data;
+
+    // C style
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         local_data = data;
     }
