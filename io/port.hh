@@ -9,10 +9,10 @@
 #include "../qualifiers.hh"
 #include "register.hh"
 
-#define LOW false
-#define HIGH true
-
 namespace yaal {
+
+    static const bool LOW = false;
+    static const bool HIGH = true;
 
     enum Mode {
         INPUT,
