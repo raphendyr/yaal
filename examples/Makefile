@@ -609,6 +609,12 @@ $(OBJDIR)/%.o : %.S
 %.i : %.cpp
 	$(CC) -E -mmcu=$(MCU) -I. $(CPPFLAGS) $< -o $@
 
+%.m : %.c
+	$(CC) -dM -E -mmcu=$(MCU) -I. $(CFLAGS) $< -o $@ 
+
+%.m : %.cpp
+	$(CC) -dM -E -mmcu=$(MCU) -I. $(CPPFLAGS) $< -o $@
+
 
 # Target: clean project.
 clean: begin clean_list end
@@ -629,6 +635,7 @@ clean_list :
 	$(REMOVE) $(SRC:.c=.s) $(CPPSRC:.cpp=.s)
 	$(REMOVE) $(SRC:.c=.d) $(CPPSRC:.cpp=.d)
 	$(REMOVE) $(SRC:.c=.i) $(CPPSRC:.cpp=.i)
+	$(REMOVE) $(SRC:.c=.m) $(CPPSRC:.cpp=.m)
 	$(REMOVEDIR) .dep
 
 
