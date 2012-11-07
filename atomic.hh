@@ -2,8 +2,8 @@
 #define __YAAL_ATOMIC__ 1
 
 #include <inttypes.h>
-
 #include <avr/interrupt.h> // SREG, sei, cli
+#include "qualifiers.hh"
 
 namespace yaal {
 
@@ -22,11 +22,13 @@ namespace yaal {
         uint8_t state;
 
     public:
+        YAAL_INLINE("Atomic")
         Atomic() {
             state = SREG;
             cli();
         }
 
+        YAAL_INLINE("~Atomic")
         ~Atomic() {
             SREG = state;
         }
@@ -46,11 +48,13 @@ namespace yaal {
         uint8_t state;
 
     public:
+        YAAL_INLINE("Interruptable")
         Interruptable() {
             state = SREG;
             sei();
         }
 
+        YAAL_INLINE("~Interruptable")
         ~Interruptable() {
             SREG = state;
         }
