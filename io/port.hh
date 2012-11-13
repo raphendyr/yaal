@@ -179,7 +179,41 @@ namespace yaal {
                 return *this = mode;
             }
         };
+
+        template<typename PinClass>
+        class RAIIPin : public PinClass {
+            typedef RAIIPin<PinClass> self_type;
+            typedef PinClass super;
+
+            Mode mode;
+
+        public:
+            RAIIPin(Mode the_mode) {
+                PinClass pin;
+                mode = pin.mode;
+                pin.mode = the_mode;
+            }
+
+            ~RAIIPin() {
+                PinClass pin;
+                pin.mode = mode;
+            }
+
+            template<typename value_type>
+            self_type& operator=(value_type value) {
+                super::operator=(value);
+                return *this;
+            }
+
+        private:
+            RAIIPin();
+            //RAIIPin(const self_type&);
+            self_type& operator=(const self_type&);
+        };
     }
+
+    template<typename PinClass>
+    class Reversed;
 
     template<typename PortClass, bit_t bit>
     class Pin : public internal::SingleBit<PortClass, bit> {
@@ -192,7 +226,20 @@ namespace yaal {
 
         /* assignment operator is not inherited */
         YAAL_INLINE("Pin operation")
-        self_type& operator= (bool state) { super::operator=(state); return *this; }
+        self_type& operator= (bool state) {
+            this->set(state);
+            return *this;
+        }
+
+        YAAL_INLINE("Pin Reversed wrapper")
+        Reversed<self_type> reversed() {
+            return Reversed<self_type>();
+        }
+
+        YAAL_INLINE("Pin RAII wrapper")
+        internal::RAIIPin<self_type> as(Mode mode) {
+            return internal::RAIIPin<self_type>(mode);
+        }
     };
 
     template<typename PinClass>
@@ -226,7 +273,18 @@ namespace yaal {
         operator bool () {
             return get();
         }
+
+        YAAL_INLINE("Reversed pin reversed wrapper")
+        PinClass reversed() {
+            return PinClass();
+        }
+
+        YAAL_INLINE("Reversed pin RAII wrapper")
+        internal::RAIIPin<self_type> as(Mode mode) {
+            return internal::RAIIPin<self_type>(mode);
+        }
     };
+
 }
 
 #endif
