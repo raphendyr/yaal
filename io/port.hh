@@ -194,6 +194,39 @@ namespace yaal {
         YAAL_INLINE("Pin operation")
         self_type& operator= (bool state) { super::operator=(state); return *this; }
     };
+
+    template<typename PinClass>
+    class Reversed : public PinClass {
+        typedef Reversed<PinClass> self_type;
+        typedef PinClass super;
+
+    public:
+        YAAL_INLINE("Reversed pin operation")
+        void set(bool state = true) {
+            super::set(!state);
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        void clear() {
+            set(false);
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        bool get() const {
+            return !super::get();
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        self_type& operator= (bool state) {
+            set(state);
+            return *this;
+        }
+
+        YAAL_INLINE("Reversed pin operation")
+        operator bool () {
+            return get();
+        }
+    };
 }
 
 #endif
