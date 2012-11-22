@@ -21,13 +21,13 @@ namespace yaal {
                 clock = false;
 
             for (uint8_t i = 0; i < 8; i++) {
-                // clock
-                clock = true;
                 // write bit
                 if (byte & (LSBfirst ? 0x01 : 0x80))
                     output = true;
                 else
                     output = false;
+                // clock
+                clock = true;
                 // shift byte
                 // FIXME: there should be fixed bug in gcc 4.7.0 that wont produce 16 bit shift
                 byte = LSBfirst ? (byte >> 1) : (byte << 1);
