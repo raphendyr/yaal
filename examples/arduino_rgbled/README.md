@@ -11,3 +11,5 @@ I connected RGB LED module to my Teensy 2.0 directly. So the pins I'm using are:
 Template class SimpleRGBLed has methods for all colors whih can be made using digital pins and the led. When PWM is in yaal we can create full color space class for rgb leds.
 
 Look into [main.cpp](https://github.com/raphendyr/yaal/blob/master/examples/arduino_rgbled/main.cpp) for the code.
+
+Code will compile to size of 404 bytes on flash and 0 bytes on RAM.
