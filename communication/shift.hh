@@ -7,13 +7,48 @@
 namespace yaal {
     namespace internal {
 
+        template< typename ClockPin,
+                  typename OutputPin,
+                  bool LSBfirst = true,
+                  //bool ChangeClockFirst = false,
+                  typename function>
+        static YAAL_INLINE("shiftBitsIf")
+        void shiftBitsIf(uint8_t bits, function callback) {
+            ClockPin clock;
+            OutputPin output;
+
+            // put clock down first
+            //if (ChangeClockFirst)
+            //    clock = false;
+
+            // loop through all bits
+            for (uint8_t i = 0; i < bits; i++) {
+                // clock
+                clock = false;
+                // write bit
+                if (callback(i))
+                    output = true;
+                else
+                    output = false;
+                // clock
+                clock = true;
+            }
+
+            clock = false;
+
+            // put clock up first
+            //if (ChangeClockFirst)
+            //    clock = true;
+        }
+
+        // FIXME: rewrite using shiftBitsIf
         template< typename T,
                   typename ClockPin,
                   typename OutputPin,
                   typename InputPin,
                   bool LSBfirst = true,
                   bool ChangeClockFirst = false >
-        static YAAL_INLINE("shiftByte")
+        static YAAL_INLINE("shiftBits")
         T shiftBits(T data, uint8_t bits) {
             ClockPin clock;
             OutputPin output;
@@ -66,7 +101,7 @@ namespace yaal {
                   typename InputPin,
                   bool LSBfirst = true,
                   bool ChangeClockFirst = false >
-        static YAAL_INLINE("shiftByte")
+        static YAAL_INLINE("shiftBits")
         T shiftBits(T data) {
             // Call myself with number of bits for type
             return shiftBits<T, ClockPin, OutputPin, InputPin, LSBfirst, ChangeClockFirst>(data, sizeof(T)*8);
