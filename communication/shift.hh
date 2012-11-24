@@ -14,15 +14,22 @@ namespace yaal {
                   bool LSBfirst = true,
                   bool ChangeClockFirst = false >
         static YAAL_INLINE("shiftByte")
-        T shiftByte(T data = 0) {
+        T shiftBits(T data, uint8_t bits) {
             ClockPin clock;
             OutputPin output;
             InputPin input;
 
+            // move bits to left for MSB transfer
+            // FIXME: do not do when output is null
+            if (!LSBfirst)
+                data <<= (8*sizeof(T) - bits);
+
+            // put clock down first
             if (ChangeClockFirst)
                 clock = false;
 
-            for (uint8_t i = 0; i < sizeof(T)*8; i++) {
+            // loop through all bits
+            for (uint8_t i = 0; i < bits; i++) {
                 // write bit
                 if (data & (LSBfirst ? 0x01 : (1L << (8*sizeof(T) - 1))))
                     output = true;
@@ -40,10 +47,29 @@ namespace yaal {
                 clock = false;
             }
 
+            // put clock up first
             if (ChangeClockFirst)
                 clock = true;
 
+            // right shift
+            // FIXME: do not do this, when input is null
+            if (LSBfirst)
+                data >>= (8*sizeof(T) - bits);
+
+            // reaturn read data
             return data;
+        }
+
+        template< typename T,
+                  typename ClockPin,
+                  typename OutputPin,
+                  typename InputPin,
+                  bool LSBfirst = true,
+                  bool ChangeClockFirst = false >
+        static YAAL_INLINE("shiftByte")
+        T shiftBits(T data) {
+            // Call myself with number of bits for type
+            return shiftBits<T, ClockPin, OutputPin, InputPin, LSBfirst, ChangeClockFirst>(data, sizeof(T)*8);
         }
 
     }
