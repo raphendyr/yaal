@@ -22,36 +22,39 @@ namespace yaal {
             MisoPin miso;
             SelectPin ss;
 
-            clock.mode.output();
-            mosi.mode.output();
-            miso.mode.output();
-            ss.mode.output();
+            clock.mode = OUTPUT;
+            mosi.mode = OUTPUT;
+            miso.mode = OUTPUT;
+            ss.mode = OUTPUT;
         }
 
         static inline
-        uint8_t read(void) {
+        template<typename T>
+        T read(void) {
             SelectPin ss;
             ss = false;
-            uint8_t byte = internal::shiftByte<ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>();
+            T data = internal::shiftByte<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>();
             ss = true;
-            return byte;
+            return data;
         }
 
         static inline
-        void write(uint8_t byte) {
+        template<typename T>
+        void write(T data) {
             SelectPin ss;
             ss = false;
-            internal::shiftByte<ClockPin, MosiPin, NullPin, LSBfirst, ChangeClockFirst>(byte);
+            internal::shiftByte<T, ClockPin, MosiPin, NullPin, LSBfirst, ChangeClockFirst>(data);
             ss = true;
         }
 
         static inline
-        uint8_t transfer(uint8_t byte) {
+        template<typename T>
+        T transfer(T data) {
             SelectPin ss;
             ss = false;
-            byte = internal::shiftByte<ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(byte);
+            data = internal::shiftByte<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data);
             ss = true;
-            return byte;
+            return data;
         }
 
     };
