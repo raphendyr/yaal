@@ -285,6 +285,34 @@ namespace yaal {
         }
     };
 
+    template<typename Pin>
+    class LowPeriod {
+    public:
+        LowPeriod() {
+            Pin p;
+            p = false;
+        }
+
+        ~LowPeriod() {
+            Pin p;
+            p = true;
+        }
+    };
+
+    template<typename Pin>
+    class HighPeriod {
+    public:
+        HighPeriod() {
+            Pin p;
+            p = true;
+        }
+
+        ~HighPeriod() {
+            Pin p;
+            p = false;
+        }
+    };
+
 }
 
 #endif

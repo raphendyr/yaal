@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include "shift.hh"
 #include "../io/null.hh"
+#include "../io/port.hh"
 #include "../qualifiers.hh"
 
 namespace yaal {
@@ -16,7 +17,7 @@ namespace yaal {
               bool ChangeClockFirst = false >
     struct SPI {
 
-        static YAAL_INLINE("SPI.setup()")
+        static YAAL_INLINE("SPI::setup")
         void setup(void) {
             ClockPin clock;
             MosiPin mosi;
@@ -32,60 +33,44 @@ namespace yaal {
         template<typename T>
         static inline
         T read(void) {
-            SelectPin ss;
-            ss = false;
-            T data = internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0);
-            ss = true;
-            return data;
+            LowPeriod<SelectPin> for_this_block;
+            return internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0);
         }
 
         template<typename T>
         static inline
         T read(uint8_t bits) {
-            SelectPin ss;
-            ss = false;
-            T data = internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0, bits);
-            ss = true;
-            return data;
+            LowPeriod<SelectPin> for_this_block;
+            return internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0, bits);
         }
 
 
         template<typename T>
         static inline
         void write(T data) {
-            SelectPin ss;
-            ss = false;
+            LowPeriod<SelectPin> for_this_block;
             internal::shiftBits<T, ClockPin, MosiPin, NullPin, LSBfirst, ChangeClockFirst>(data);
-            ss = true;
         }
 
         template<typename T>
         static inline
         void write(T data, uint8_t bits) {
-            SelectPin ss;
-            ss = false;
+            LowPeriod<SelectPin> for_this_block;
             internal::shiftBits<T, ClockPin, MosiPin, NullPin, LSBfirst, ChangeClockFirst>(data, bits);
-            ss = true;
         }
 
         template<typename T>
         static inline
         T transfer(T data) {
-            SelectPin ss;
-            ss = false;
-            data = internal::shiftBits<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data);
-            ss = true;
-            return data;
+            LowPeriod<SelectPin> for_this_block;
+            return internal::shiftBits<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data);
         }
 
         template<typename T>
         static inline
         T transfer(T data, uint8_t bits) {
-            SelectPin ss;
-            ss = false;
-            data = internal::shiftBits<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data, bits);
-            ss = true;
-            return data;
+            LowPeriod<SelectPin> for_this_block;
+            return internal::shiftBits<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data, bits);
         }
     };
 
