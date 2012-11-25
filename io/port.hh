@@ -285,6 +285,42 @@ namespace yaal {
         }
     };
 
+    template< typename Pin,
+              bool pullup = false >
+    class Floating {
+        typedef Floating<Pin> self_type;
+
+    public:
+        YAAL_INLINE("Floating pin operation")
+        void set(bool state = true) {
+            if (state)
+                super::mode = OUTPUT;
+            else
+                super::mode = pullup ? INPUT_PULLUP : INPUT;
+        }
+
+        YAAL_INLINE("Floating pin operation")
+        void clear() {
+            set(false);
+        }
+
+        YAAL_INLINE("Floating pin operation")
+        bool get() const {
+            return !super::get();
+        }
+
+        YAAL_INLINE("Floating pin operation")
+        self_type& operator= (bool state) {
+            set(state);
+            return *this;
+        }
+
+        YAAL_INLINE("Floating pin operation")
+        operator bool () {
+            return get();
+        }
+    };
+
     template<typename Pin>
     class LowPeriod {
     public:
@@ -316,7 +352,6 @@ namespace yaal {
             p = false;
         }
     };
-
 }
 
 #endif
