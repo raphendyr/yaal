@@ -288,11 +288,13 @@ namespace yaal {
     template<typename Pin>
     class LowPeriod {
     public:
+        YAAL_INLINE("LowPeriod")
         LowPeriod() {
             Pin p;
             p = false;
         }
 
+        YAAL_INLINE("~LowPeriod")
         ~LowPeriod() {
             Pin p;
             p = true;
@@ -302,11 +304,13 @@ namespace yaal {
     template<typename Pin>
     class HighPeriod {
     public:
+        YAAL_INLINE("HighPeriod")
         HighPeriod() {
             Pin p;
             p = true;
         }
 
+        YAAL_INLINE("~HighPeriod")
         ~HighPeriod() {
             Pin p;
             p = false;
