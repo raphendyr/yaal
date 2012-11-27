@@ -289,6 +289,7 @@ namespace yaal {
               bool pullup = false >
     class Floating {
         typedef Floating<Pin> self_type;
+        typedef Pin super;
 
     public:
         YAAL_INLINE("Floating pin operation")
