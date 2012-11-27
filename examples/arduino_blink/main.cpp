@@ -11,19 +11,16 @@ using namespace yaal::arduino;
 D5 button;
 D6 led;
 
-int main(void) {
-
+void setup() {
     led.mode = OUTPUT;
     button.mode = INPUT_PULLUP;
+}
 
-    for (;;) {
-        if (button) {
-            led = HIGH;
-            _delay_ms(800);
-            led = LOW;
-        }
+void loop() {
+    if (button) {
+        led = HIGH;
         _delay_ms(800);
+        led = LOW;
     }
-
-    return 0;
+    _delay_ms(800);
 }
