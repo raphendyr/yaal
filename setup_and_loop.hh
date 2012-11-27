@@ -1,19 +1,16 @@
 #ifndef __YAAL_SETUP_AND_LOOP__
 #define __YAAL_SETUP_AND_LOOP__ 1
 
-YAAL_INLINE("Setup")
-void setup();
+#include "qualifiers.hh"
+#include "core/main.hh"
 
-YAAL_INLINE("Loop")
-void loop();
+#define setup() \
+    setup() __attribute__ ((naked, section(".init8"))); \
+    void setup()
 
-void main() __attribute__((noreturn));
-void main() {
-    setup();
-
-    for (;;) {
-        loop();
-    }
-}
+#define loop() \
+    YAAL_INLINE("main loop") loop(); \
+    void main() { for(;;) loop(); } \
+    void loop()
 
 #endif
