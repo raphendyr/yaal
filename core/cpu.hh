@@ -6,7 +6,7 @@
 
 namespace yaal {
 
-    class Cpu {
+    static class Cpu {
     public:
         class Prescaler {
         public:
