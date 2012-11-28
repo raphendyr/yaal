@@ -3,10 +3,9 @@
 // there is no better infrastructure for this yet
 #define ARDUINO_teensy
 
+#include "yaal/arduino.hh"
 #include <util/delay.h>
 
-#include "yaal/arduino.hh"
-#include "yaal/setup_and_loop.hh"
 
 // FIXME: these should not be needed
 using namespace yaal;

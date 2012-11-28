@@ -1,3 +1,4 @@
+#include "yaal/core.hh"
 #include "yaal/io.hh"
 #include <util/delay.h>
 
@@ -14,7 +15,7 @@ PortB1 redLed;
 Reversed<PortB2> grnLed;
 
 
-int main(void) {
+void main() {
 
     // set pins in output mode
     redLed.mode = OUTPUT;
@@ -41,6 +42,4 @@ int main(void) {
         grnLed.clear();
         DL;
     }
-
-    return 0;
 }

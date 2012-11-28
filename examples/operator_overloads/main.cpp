@@ -1,3 +1,4 @@
+#include "yaal/core.hh"
 #include "yaal/io.hh"
 #include <util/delay.h>
 
@@ -6,7 +7,7 @@ using namespace yaal;
 PortB ledMatrixRow;
 PortB1 led;
 
-int main(void) {
+void main() {
 
     ledMatrixRow = 0xff;
     ledMatrixRow &= 0xf0;
@@ -24,5 +25,4 @@ int main(void) {
         //_delay_ms(800);
     }
 
-    return 0;
 }

@@ -1,3 +1,4 @@
+#include "yaal/core.hh"
 #include "yaal/io.hh"
 #include <util/delay.h>
 
@@ -6,7 +7,7 @@ using namespace yaal;
 
 PortB1 button;
 
-int main(void) {
+void main() {
 
     // setup
     button.mode = INPUT;
@@ -26,5 +27,4 @@ int main(void) {
         }
     }
 
-    return 0;
 }

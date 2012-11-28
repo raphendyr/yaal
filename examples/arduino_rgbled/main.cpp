@@ -11,7 +11,7 @@ using namespace yaal::arduino;
 
 BasicRGBLed<D1, D2, D0> rgb;
 
-int main(void) {
+void main(void) {
 
     // initialize
     rgb.setup();
@@ -35,6 +35,4 @@ int main(void) {
         rgb.white();
         _delay_ms(800);
     }
-
-    return 0;
 }

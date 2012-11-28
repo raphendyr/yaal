@@ -3,7 +3,6 @@
 
 #include "yaal/arduino.hh"
 #include "yaal/communication/spi.hh"
-#include "yaal/setup_and_loop.hh"
 #include <util/delay.h>
 
 using namespace yaal;

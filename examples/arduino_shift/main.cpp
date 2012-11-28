@@ -10,10 +10,9 @@ using namespace yaal::arduino;
 D1 clock;
 D2 data;
 
-int main(void) {
+void main() {
 
     uint8_t value = shiftIn(clock, data);
     shiftOut(clock, data, value);
 
-    return 0;
 }

@@ -1,13 +1,14 @@
+#include "yaal/core.hh"
+#include "yaal/io.hh"
 #include "yaal/atomic.hh"
 #include <util/atomic.h>
 
-#include "yaal/io.hh"
 
 using namespace yaal;
 
 PortB data;
 
-int main(void) {
+void main() {
 
     sei();
 
@@ -28,5 +29,4 @@ int main(void) {
 
     cli();
 
-    return 0;
 }
