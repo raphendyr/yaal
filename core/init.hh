@@ -46,25 +46,40 @@
  *   Jumps into main().
  */
 
+#ifdef __YAAL_CORE__INIT_C__
+#  define EXTERN
+#  define SECTION(s) __attribute__ ((naked, section(s), used, weak))
+#  define NORETURN __attribute__ ((noreturn, used, weak))
+#  define WEAK __attribute__ ((weak))
+#else
+#  define EXTERN extern
+#  define SECTION(s) __attribute__ ((naked, section(s), used))
+#  define NORETURN __attribute__ ((noreturn, used))
+#  define WEAK
+#endif
+
+
 namespace yaal {
 
-    extern void pre_init() __attribute__ ((naked, section(".init3")));
+    EXTERN void pre_init() SECTION(".init3");
 
-    extern void cpu_init() __attribute__ ((naked, section(".init5")));
+    EXTERN void cpu_init() SECTION(".init5");
 
-    extern void hardware_init() __attribute__ ((naked, section(".init7")));
-
-    // FIXME: no need if weak setup / loop does't work
-    //extern void init() __attribute__ ((naked, section(".init8")));
+    EXTERN void hardware_init() SECTION(".init7");
 
 }
 
-// FIXME: no idea howto get weak setup / loop to inline into main
 
-//extern void setup();
+EXTERN void setup() SECTION(".init8");
 
-//extern void loop();
+EXTERN void loop() WEAK;
 
-//extern void main() __attribute__((noreturn));
+EXTERN void main() NORETURN;
+
+
+#undef EXTERN
+#undef SECTION
+#undef NORETURN
+#undef WEAK
 
 #endif

@@ -4,9 +4,6 @@
 /* include yaal/core */
 #include "core.hh"
 
-/* include setup() and loop() */
-#include "setup_and_loop.hh"
-
 /* include arduino subsystems */
 #include "arduino/pinout.hh"
 #include "arduino/communication.hh"
