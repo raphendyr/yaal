@@ -6,7 +6,7 @@
 
 namespace yaal {
 
-    static class Cpu {
+    class Cpu {
     public:
         class Prescaler {
         public:
@@ -76,8 +76,10 @@ namespace yaal {
 
         Prescaler prescaler;
 
-    } cpu;
+    };
 
+    // initialize cpu
+    static Cpu cpu __attribute__ ((unused));
 }
 
 #endif
