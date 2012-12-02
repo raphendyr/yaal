@@ -17,7 +17,7 @@ namespace yaal {
         YAAL_DEPRECATED("Funktion pinMode() is only for compatibility. Avoid it.")
         void pinMode(ClassPin, Mode state) {
             ClassPin pin;
-            pin = state;
+            pin.mode = state;
         }
 
         /* arduino code uses digitalWrite(pin, value) for pin manipulation
