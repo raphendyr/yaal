@@ -162,6 +162,24 @@ public:
         return at(i);
     }
 
+    void erase(uint8_t i) {
+        //pos = tail + i
+        //tail .. pos .. head
+        //0 .. pos .. head    tail .. buffer_size
+        //0 .. head           tail .. pos .. buffer_size
+
+        uint8_t pos = forward_modulo(tail, i);
+        if (pos < head) {
+            for (uint8_t j = pos; j < head - 1; j++) {
+                buffer[j] = buffer[j+1];
+            }
+        } else {
+            for (uint8_t j = pos; j > tail + 1; j--) {
+                buffer[j] = buffer[j-1];
+            }
+        }
+    }
+
     /* iterators */
 
     template<typename funktion_t>
