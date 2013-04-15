@@ -2,29 +2,26 @@
 #define __YAAL_REQUIREMENTS_H__ 1
 
 // This is c++ code, need c++ compiler
-#  ifndef __cplusplus
-#    error  "This is c++ header. gnu c++ is required."
-#  else
+#if !defined(__cplusplus)
+#  error  "This is c++ header. gnu c++ is required."
 
-//   require gnu gcc
-#    ifndef __GNUC__
-#      error  "GNU gcc is required. If this source can be build using other tools, please submit pull request."
-#    else
+// require gnu gcc
+#elif !defined(__GNUC__)
+#  error  "GNU gcc is required. If this source can be build using other tools, please submit pull request."
 
-//     check gcc is atleast 4.6.0
-#      if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 6 )
-#        error  "GNU 4.6+ is required."
-#      else
+// check gcc is atleast 4.6.0
+#elif __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 6 )
+#  error  "GNU 4.6+ is required."
 
-//       requirements are ok
-#        define __YAAL__ 1
+// requirements are ok
+#else
+#  define __YAAL__ 1
 
-//       common includes
-#        include <stdint.h>
-#        include "qualifiers.hh"
+// common includes
+#  include <stdint.h>
+#  include "qualifiers.hh"
 
-#      endif
-#    endif
-#  endif
+// end requirements block
+#endif
 
 #endif
