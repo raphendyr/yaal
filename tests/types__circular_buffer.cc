@@ -1,4 +1,5 @@
 #include "yaal/types/circular_buffer.hh"
+using namespace yaal;
 
 #include <iostream>
 
