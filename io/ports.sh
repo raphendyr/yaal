@@ -5,11 +5,13 @@ PORTS="A B C D E F G"
 
 echo "#ifndef __YAAL_IO__PORTS__"
 echo "#define __YAAL_IO__PORTS__ 1"
+echo '#include "../requirements.hh"'
+echo '#ifdef __YAAL__'
 echo "/* Generated using ports.sh */"
 echo ""
-echo "#include \"register.hh\""
-echo "#include \"port.hh\""
-echo "#include <avr/io.h>"
+echo '#include "register.hh"'
+echo '#include "port.hh"'
+echo '#include <avr/io.h>'
 echo ""
 echo "namespace yaal {"
 echo ""
@@ -42,4 +44,5 @@ for c in $PORTS; do
 done
 echo "}"
 echo ""
+echo "#endif"
 echo "#endif"

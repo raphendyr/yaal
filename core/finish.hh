@@ -1,5 +1,7 @@
 #ifndef __YAAL_CORE__FINISH__
 #define __YAAL_CORE__FINISH__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 /* Sections:
  * src: http://www.nongnu.org/avr-libc/user-manual/mem_sections.html
@@ -41,4 +43,5 @@
 namespace yaal {
 }
 
+#endif
 #endif

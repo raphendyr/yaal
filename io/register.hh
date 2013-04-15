@@ -1,14 +1,12 @@
 #ifndef __YAAL_IO__REGISTER__
 #define __YAAL_IO__REGISTER__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 /* yaal/io/register.hh
  * Register abstraction classes
  */
 
-#include "../requirements.hh"
-#include "../qualifiers.hh"
-
-#include <inttypes.h>
 
 // wrapper and unwrapper
 #define YAAL_REG(reg_t, addr) (*reinterpret_cast<reg_t*>(addr))
@@ -129,4 +127,5 @@ namespace yaal {
 
 }
 
+#endif
 #endif

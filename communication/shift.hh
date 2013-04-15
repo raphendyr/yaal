@@ -1,8 +1,7 @@
 #ifndef __YAAL_COMMUNICATION__SHIFT__
 #define __YAAL_COMMUNICATION__SHIFT__ 1
-
-#include <inttypes.h>
-#include "../qualifiers.hh"
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 namespace yaal {
     namespace internal {
@@ -110,4 +109,5 @@ namespace yaal {
     }
 }
 
+#endif
 #endif

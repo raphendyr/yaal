@@ -1,9 +1,9 @@
 #ifndef __YAAL_ATOMIC__
 #define __YAAL_ATOMIC__ 1
+#include "requirements.hh"
+#ifdef __YAAL__
 
-#include <inttypes.h>
 #include <avr/interrupt.h> // SREG, sei, cli
-#include "qualifiers.hh"
 
 namespace yaal {
 
@@ -62,4 +62,5 @@ namespace yaal {
 
 }
 
+#endif
 #endif

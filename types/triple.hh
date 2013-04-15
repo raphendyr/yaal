@@ -1,5 +1,7 @@
 #ifndef __YAAL_TYPES__TRIPLE__
 #define __YAAL_TYPES__TRIPLE__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 #include "traits.hh"
 
@@ -71,4 +73,5 @@ Triple<T1, T2, T3> make_triple(const typename TypeTraits<T1>::on_input v1,
     return Triple<T1, T2, T3>(v1, v2, v3);
 }
 
+#endif
 #endif

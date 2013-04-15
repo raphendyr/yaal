@@ -1,5 +1,7 @@
 #ifndef __YAAL_IO__OTHER__
 #define __YAAL_IO__OTHER__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 // do not edit. genereted using io_definitions.sh
 
 #include "register.hh"
@@ -1099,4 +1101,5 @@ namespace yaal {
     }
 }
 
+#endif
 #endif

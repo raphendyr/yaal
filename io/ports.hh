@@ -1,5 +1,7 @@
 #ifndef __YAAL_IO__PORTS__
 #define __YAAL_IO__PORTS__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 /* Generated using ports.sh */
 
 #include "register.hh"
@@ -273,4 +275,5 @@ namespace yaal {
 
 }
 
+#endif
 #endif

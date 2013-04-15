@@ -1,5 +1,7 @@
 #ifndef __YAAL_ARDUINO__PINOUT__TEENSY__
 #define __YAAL_ARDUINO__PINOUT__TEENSY__ 1
+#include "../../requirements.hh"
+#ifdef __YAAL__
 
 #ifndef __YAAL_ARDUINO__PINOUT__
 # error "Do not include arduino pinouts for boards directly. Include yaal/arduino/pinout.hh instead."
@@ -150,5 +152,6 @@ typedef AnalogPin<Adc7> A7;
     }
 }
 
+#endif
 #endif
 #endif

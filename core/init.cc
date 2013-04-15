@@ -1,7 +1,8 @@
-#define __YAAL_CORE__INIT_C__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
+#define __YAAL_CORE__INIT_C__ 1
 #include "cpu.hh"
-#include "../qualifiers.hh"
 #include "init.hh"
 
 
@@ -25,3 +26,5 @@ void main() {
         loop();
     }
 }
+
+#endif

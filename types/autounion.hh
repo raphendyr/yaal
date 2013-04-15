@@ -1,11 +1,10 @@
 #ifndef __YAAL_TYPES__AUTOUNION__
 #define __YAAL_TYPES__AUTOUNION__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
  
 /* yaal/types/autounion.hh
 */
- 
-#include "../requirements.hh"
-#include <inttypes.h>
  
 namespace yaal {
 
@@ -74,4 +73,5 @@ int main() {
 }
 #endif
 
+#endif
 #endif

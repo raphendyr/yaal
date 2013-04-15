@@ -1,7 +1,7 @@
 #ifndef __YAAL_CORE__INIT__
 #define __YAAL_CORE__INIT__ 1
-
-#include "../qualifiers.hh"
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 /* Sections:
  * src: http://www.nongnu.org/avr-libc/user-manual/mem_sections.html
@@ -82,4 +82,5 @@ EXTERN void main() NORETURN;
 #undef NORETURN
 #undef WEAK
 
+#endif
 #endif

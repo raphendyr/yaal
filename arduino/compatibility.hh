@@ -1,5 +1,7 @@
 #ifndef __YAAL_ARDUINO__COMPATINILITY__
 #define __YAAL_ARDUINO__COMPATINILITY__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 #include "../qualifiers.hh"
 #include "../io/port.hh"
@@ -50,4 +52,5 @@ namespace yaal {
     }
 }
 
+#endif
 #endif

@@ -1,9 +1,9 @@
 #ifndef __YAAL_TYPES__CIRCULAR_BUFFER__
 #define __YAAL_TYPES__CIRCULAR_BUFFER__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
-#include <inttypes.h>
 #include "traits.hh"
-#include "../qualifiers.hh"
 
 // for api: http://www.boost.org/doc/libs/1_52_0/libs/circular_buffer/doc/circular_buffer.html
 
@@ -179,4 +179,5 @@ public:
     // rend
 };
 
+#endif
 #endif

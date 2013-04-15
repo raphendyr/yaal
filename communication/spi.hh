@@ -1,11 +1,11 @@
 #ifndef __YAAL_COMMUNICATION__SPI__
 #define __YAAL_COMMUNICATION__SPI__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
-#include <inttypes.h>
 #include "shift.hh"
 #include "../io/null.hh"
 #include "../io/port.hh"
-#include "../qualifiers.hh"
 
 namespace yaal {
 
@@ -76,4 +76,5 @@ namespace yaal {
 
 }
 
+#endif
 #endif

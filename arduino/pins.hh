@@ -1,7 +1,8 @@
 #ifndef __YAAL_ARDUINO__PINS__
 #define __YAAL_ARDUINO__PINS__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
-#include "../qualifiers.hh"
 #include "../io/port.hh"
 
 namespace yaal {
@@ -21,4 +22,5 @@ namespace yaal {
     }
 }
 
+#endif
 #endif

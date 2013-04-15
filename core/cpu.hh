@@ -1,7 +1,8 @@
 #ifndef __YAAL_CORE__CPU__
 #define __YAAL_CORE__CPU__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
-#include <inttypes.h>
 #include <avr/io.h>
 
 namespace yaal {
@@ -82,4 +83,5 @@ namespace yaal {
     static Cpu cpu __attribute__ ((unused));
 }
 
+#endif
 #endif

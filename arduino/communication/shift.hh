@@ -1,7 +1,8 @@
 #ifndef __YAAL_ARDUINO__COMMUNICATION__SHIFT__
 #define __YAAL_ARDUINO__COMMUNICATION__SHIFT__ 1
+#include "../../requirements.hh"
+#ifdef __YAAL__
 
-#include <inttypes.h>
 #include "../../communication/shift.hh"
 #include "../../io/null.hh"
 
@@ -27,4 +28,5 @@ namespace yaal {
 	}
 }
 
+#endif
 #endif

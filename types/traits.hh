@@ -1,5 +1,7 @@
 #ifndef __YAAL_TYPES__TRAITS__
 #define __YAAL_TYPES__TRAITS__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 template<typename T>
 struct TypeTraits {
@@ -24,4 +26,5 @@ template<> struct TypeTraits<signed long> : public PrimitiveTypeTraits<signed lo
 template<> struct TypeTraits<double> : public PrimitiveTypeTraits<double> { };
 template<> struct TypeTraits<float> : public PrimitiveTypeTraits<float> { };
 
+#endif
 #endif

@@ -1,7 +1,7 @@
 #ifndef __YAAL__BITMASK__
 #define __YAAL__BITMASK__ 1
-
-#include <inttypes.h>
+#include "requirements.hh"
+#ifdef __YAAL__
 
 namespace yaal {
 
@@ -18,4 +18,5 @@ namespace yaal {
     };
 }
 
+#endif
 #endif

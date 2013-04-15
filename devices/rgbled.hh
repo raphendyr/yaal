@@ -1,5 +1,7 @@
 #ifndef __YAAL_DEVICES__RGBLED__
 #define __YAAL_DEVICES__RGBLED__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 namespace yaal {
 
@@ -193,4 +195,5 @@ namespace yaal {
 
 }
 
+#endif
 #endif

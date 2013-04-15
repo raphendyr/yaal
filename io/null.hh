@@ -1,7 +1,7 @@
 #ifndef __YAAL_IO__NULL__
 #define __YAAL_IO__NULL__ 1
-
-#include "../qualifiers.hh"
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 namespace yaal {
     namespace internal {
@@ -38,4 +38,5 @@ namespace yaal {
     typedef Pin<NullPort, 0> NullPin;
 }
 
+#endif
 #endif

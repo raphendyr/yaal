@@ -21,9 +21,11 @@ done < registers_16.txt
 
 echo "#ifndef __YAAL_IO__OTHER__"
 echo "#define __YAAL_IO__OTHER__ 1"
+echo '#include "../requirements.hh"'
+echo '#ifdef __YAAL__'
 echo "// do not edit. genereted using io_definitions.sh"
 echo ""
-echo "#include \"register.hh\""
+echo '#include "register.hh"'
 echo "#include <avr/io.h>"
 echo ""
 echo "namespace yaal {"
@@ -47,4 +49,5 @@ done < registers_8.txt
 echo "    }"
 echo "}"
 echo ""
+echo "#endif"
 echo "#endif"

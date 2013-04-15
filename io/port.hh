@@ -1,12 +1,12 @@
 #ifndef __YAAL_IO__PORT__
 #define __YAAL_IO__PORT__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
 /* yaal/io/port.hh
  * Port and Pin abstration classes
  */
 
-#include "../requirements.hh"
-#include "../qualifiers.hh"
 #include "register.hh"
 
 namespace yaal {
@@ -355,4 +355,5 @@ namespace yaal {
     };
 }
 
+#endif
 #endif
