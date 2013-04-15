@@ -934,50 +934,6 @@ namespace yaal {
             typedef Register<YAAL_ADDR(TX_CNTL), reg8_t> Tx_cntl;
 #       endif
 
-#       ifdef UBRR0H
-            typedef Register<YAAL_ADDR(UBRR0H), reg8_t> Ubrr0h;
-#       endif
-
-#       ifdef UBRR0L
-            typedef Register<YAAL_ADDR(UBRR0L), reg8_t> Ubrr0l;
-#       endif
-
-#       ifdef UBRR0
-            typedef Register<YAAL_ADDR(UBRR0), reg8_t> Ubrr0;
-#       endif
-
-#       ifdef UBRR1H
-            typedef Register<YAAL_ADDR(UBRR1H), reg8_t> Ubrr1h;
-#       endif
-
-#       ifdef UBRR1L
-            typedef Register<YAAL_ADDR(UBRR1L), reg8_t> Ubrr1l;
-#       endif
-
-#       ifdef UBRR1
-            typedef Register<YAAL_ADDR(UBRR1), reg8_t> Ubrr1;
-#       endif
-
-#       ifdef UBRRHI
-            typedef Register<YAAL_ADDR(UBRRHI), reg8_t> Ubrrhi;
-#       endif
-
-#       ifdef UBRRH
-            typedef Register<YAAL_ADDR(UBRRH), reg8_t> Ubrrh;
-#       endif
-
-#       ifdef UBRRLO
-            typedef Register<YAAL_ADDR(UBRRLO), reg8_t> Ubrrlo;
-#       endif
-
-#       ifdef UBRRL
-            typedef Register<YAAL_ADDR(UBRRL), reg8_t> Ubrrl;
-#       endif
-
-#       ifdef UBRR
-            typedef Register<YAAL_ADDR(UBRR), reg8_t> Ubrr;
-#       endif
-
 #       ifdef UCRA
             typedef Register<YAAL_ADDR(UCRA), reg8_t> Ucra;
 #       endif
@@ -988,54 +944,6 @@ namespace yaal {
 
 #       ifdef UCR
             typedef Register<YAAL_ADDR(UCR), reg8_t> Ucr;
-#       endif
-
-#       ifdef UCSR0A
-            typedef Register<YAAL_ADDR(UCSR0A), reg8_t> Ucsr0a;
-#       endif
-
-#       ifdef UCSR0B
-            typedef Register<YAAL_ADDR(UCSR0B), reg8_t> Ucsr0b;
-#       endif
-
-#       ifdef UCSR0C
-            typedef Register<YAAL_ADDR(UCSR0C), reg8_t> Ucsr0c;
-#       endif
-
-#       ifdef UCSR1A
-            typedef Register<YAAL_ADDR(UCSR1A), reg8_t> Ucsr1a;
-#       endif
-
-#       ifdef UCSR1B
-            typedef Register<YAAL_ADDR(UCSR1B), reg8_t> Ucsr1b;
-#       endif
-
-#       ifdef UCSR1C
-            typedef Register<YAAL_ADDR(UCSR1C), reg8_t> Ucsr1c;
-#       endif
-
-#       ifdef UCSRA
-            typedef Register<YAAL_ADDR(UCSRA), reg8_t> Ucsra;
-#       endif
-
-#       ifdef UCSRB
-            typedef Register<YAAL_ADDR(UCSRB), reg8_t> Ucsrb;
-#       endif
-
-#       ifdef UCSRC
-            typedef Register<YAAL_ADDR(UCSRC), reg8_t> Ucsrc;
-#       endif
-
-#       ifdef UDR0
-            typedef Register<YAAL_ADDR(UDR0), reg8_t> Udr0;
-#       endif
-
-#       ifdef UDR1
-            typedef Register<YAAL_ADDR(UDR1), reg8_t> Udr1;
-#       endif
-
-#       ifdef UDR
-            typedef Register<YAAL_ADDR(UDR), reg8_t> Udr;
 #       endif
 
 #       ifdef USIBR
