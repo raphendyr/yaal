@@ -5,7 +5,7 @@
 
 #include "shift.hh"
 #include "../io/null.hh"
-#include "../io/port.hh"
+#include "../io/types/pin.hh"
 
 namespace yaal {
 

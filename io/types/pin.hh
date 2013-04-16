@@ -1,14 +1,15 @@
-#ifndef __YAAL_IO__PORT__
-#define __YAAL_IO__PORT__ 1
-#include "../requirements.hh"
+#ifndef __YAAL_IO__TYPES__PIN__
+#define __YAAL_IO__TYPES__PIN__ 1
+#include "../../requirements.hh"
 #ifdef __YAAL__
 
-/* yaal/io/port.hh
+/* yaal/io/types/pin.hh
  * Pin abstration classes
  */
 
 // FIXME: why we need this include?
-#include "types/port.hh"
+#include "port.hh"
+#include "register.hh"
 
 namespace yaal {
 
@@ -22,6 +23,7 @@ namespace yaal {
     };
 
     namespace internal {
+
         template<typename PortClass, bit_t bit>
         class PinMode {
             typedef PinMode<PortClass, bit> self_type;

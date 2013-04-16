@@ -3,7 +3,8 @@
 #include "../requirements.hh"
 #ifdef __YAAL__
 
-#include "port.hh"
+#include "types/port.hh"
+#include "types/pin.hh"
 
 namespace yaal {
     namespace internal {

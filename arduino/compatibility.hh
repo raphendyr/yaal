@@ -3,8 +3,7 @@
 #include "../requirements.hh"
 #ifdef __YAAL__
 
-#include "../qualifiers.hh"
-#include "../io/port.hh"
+#include "../io/types/pin.hh"
 
 namespace yaal {
     namespace arduino {

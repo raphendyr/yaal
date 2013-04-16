@@ -6,7 +6,7 @@
 
 #include "types/register.hh"
 #include "types/port.hh"
-#include "port.hh"
+#include "types/pin.hh"
 #include <avr/io.h>
 
 namespace yaal {

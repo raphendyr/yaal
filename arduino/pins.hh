@@ -3,7 +3,7 @@
 #include "../requirements.hh"
 #ifdef __YAAL__
 
-#include "../io/port.hh"
+#include "../io/types/pin.hh"
 
 namespace yaal {
     namespace arduino {
