@@ -5,6 +5,7 @@
 /* Generated using ports.sh */
 
 #include "types/register.hh"
+#include "types/port.hh"
 #include "port.hh"
 #include <avr/io.h>
 

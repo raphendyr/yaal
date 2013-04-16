@@ -10,6 +10,7 @@ echo '#ifdef __YAAL__'
 echo "/* Generated using ports.sh */"
 echo ""
 echo '#include "types/register.hh"'
+echo '#include "types/port.hh"'
 echo '#include "port.hh"'
 echo '#include <avr/io.h>'
 echo ""
