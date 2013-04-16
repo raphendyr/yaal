@@ -4,7 +4,7 @@
 #ifdef __YAAL__
 /* Generated using ports.sh */
 
-#include "register.hh"
+#include "types/register.hh"
 #include "port.hh"
 #include <avr/io.h>
 

@@ -4,7 +4,7 @@
 #ifdef __YAAL__
 // do not edit. generated using serial.sh
 
-#include "../register.hh"
+#include "../types/register.hh"
 #include <avr/io.h>
 
 namespace yaal {

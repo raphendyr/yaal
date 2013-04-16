@@ -6,10 +6,6 @@
  * relevant headers from yaal/io
  */
 
-// classes
-#include "io/register.hh"
-#include "io/port.hh"
-
 // register mappings
 #include "io/null.hh"
 #include "io/ports.hh"

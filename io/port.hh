@@ -7,7 +7,9 @@
  * Port and Pin abstration classes
  */
 
-#include "register.hh"
+// For some magical reason this needs to be included before following classes
+// FIXME: find out why
+#include "types/register.hh"
 
 namespace yaal {
 

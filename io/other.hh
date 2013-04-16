@@ -4,7 +4,7 @@
 #ifdef __YAAL__
 // do not edit. genereted using io_definitions.sh
 
-#include "register.hh"
+#include "types/register.hh"
 #include <avr/io.h>
 
 namespace yaal {

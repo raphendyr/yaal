@@ -26,7 +26,7 @@ echo '#include "../requirements.hh"'
 echo '#ifdef __YAAL__'
 echo "// do not edit. genereted using io_definitions.sh"
 echo ""
-echo '#include "register.hh"'
+echo '#include "types/register.hh"'
 echo "#include <avr/io.h>"
 echo ""
 echo "namespace yaal {"
