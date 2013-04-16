@@ -2,7 +2,7 @@
 #define __YAAL_IO__SERIALS__ 1
 
 #include <avr/io.h>
-#include "registers/serialregs.hh"
+#include "registers/serial.hh"
 #include "types/serial.hh"
 
 namespace yaal {

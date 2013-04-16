@@ -1,8 +1,8 @@
-#ifndef __YAAL_IO__SERIALREGS__
-#define __YAAL_IO__SERIALREGS__ 1
+#ifndef __YAAL_IO__REGISTERS__SERIAL__
+#define __YAAL_IO__REGISTERS__SERIAL__ 1
 #include "../../requirements.hh"
 #ifdef __YAAL__
-// do not edit. generated using serialregs.sh
+// do not edit. generated using serial.sh
 
 #include "../register.hh"
 #include <avr/io.h>

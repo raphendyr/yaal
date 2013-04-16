@@ -12,11 +12,11 @@ grep "MEM16$" serial_registers.txt | awk '{print $1}' | sort -u > serial_registe
 # 8 bits
 grep "MEM8$" serial_registers.txt | awk '{print $1}' | sort -u >  serial_registers_8.txt
 
-echo "#ifndef __YAAL_IO__SERIALREGS__"
-echo "#define __YAAL_IO__SERIALREGS__ 1"
+echo "#ifndef __YAAL_IO__REGISTERS__SERIAL__"
+echo "#define __YAAL_IO__REGISTERS__SERIAL__ 1"
 echo '#include "../../requirements.hh"'
 echo '#ifdef __YAAL__'
-echo "// do not edit. generated using serialregs.sh"
+echo "// do not edit. generated using serial.sh"
 echo ""
 echo '#include "../register.hh"'
 echo "#include <avr/io.h>"
