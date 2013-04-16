@@ -7,6 +7,7 @@ for f in /usr/lib/avr/include/avr/io*.h; do grep _SFR_IO $f | awk '{print $2 " "
 	grep -v "_CONFIG" | \
 	grep -v "SPDR0" | \
 	grep -vE "^(PORT|DDR|PIN)[A-Z] " | \
+	grep -vE "^(UDR(|[[:digit:]])|UCSR(|[[:digit:]])[A-C]|UBRR(|[[:digit:]])(|H|L))" | \
 	sort -u > registers.txt
 
 # 16 bits
