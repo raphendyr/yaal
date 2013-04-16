@@ -15,4 +15,7 @@
 #include "io/ports.hh"
 #include "io/other.hh"
 
+// USART/Serial interface
+#include "io/serials.hh"
+
 #endif

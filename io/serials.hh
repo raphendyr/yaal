@@ -1,9 +1,13 @@
 #ifndef __YAAL_IO__SERIALS__
 #define __YAAL_IO__SERIALS__ 1
+#include "../requirements.hh"
+#ifdef __YAAL__
 
-#include <avr/io.h>
-#include "registers/serial.hh"
+/* USART/Serial interface
+ */
+
 #include "types/serial.hh"
+#include "registers/serial.hh"
 
 namespace yaal {
 
@@ -22,6 +26,8 @@ namespace yaal {
 #ifdef UDR3
     typedef internal::Serial<internal::Udr3, internal::Ucsr3a, internal::Ucsr3b, internal::Ucsr3c, internal::Ubrr3l, internal::Ubrr3h> Serial3;
 #endif
+
 }
 
+#endif
 #endif

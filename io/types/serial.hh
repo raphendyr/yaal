@@ -1,8 +1,10 @@
-#ifndef __YAAL_IO_TYPES__SERIAL__
-#define __YAAL_IO_TYPES__SERIAL__ 1
+#ifndef __YAAL_IO__TYPES__SERIAL__
+#define __YAAL_IO__TYPES__SERIAL__ 1
+#include "../../requirements.hh"
+#ifdef __YAAL__
 
-#include <stdint.h>
-
+// FIXME: should not need avr/io.hh here.
+#include <avr/io.h>
 #include "../../types/autounion.hh"
 
 namespace yaal {
@@ -130,4 +132,5 @@ namespace yaal {
 
     }
 }
+#endif
 #endif

@@ -15,7 +15,7 @@ SIZEDUMMY = sizedummy
 all: serial.hex
 
 # Tool invocations
-serial.o: serial.cpp yaal/io/serials.hh yaal/io/types/serial.hh yaal/io/registers/serialregs.hh
+serial.o: serial.cpp yaal/io/serials.hh yaal/io/types/serial.hh yaal/io/registers/serial.hh
 	@echo 'Building file: $<'
 	@echo 'Invoking: AVR Compiler'
 	avr-g++ -Wall -Os -fpack-struct -fshort-enums -std=c++0x -funsigned-char -funsigned-bitfields -mmcu=atmega2560 -DF_CPU=16000000UL -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -c -o"$@" "$<"
