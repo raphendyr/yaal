@@ -8,7 +8,7 @@
  
 namespace yaal {
 
-    template<typename T, bool bigendian = true>
+    template<typename T, bool bigendian = false>
     class autounion {
     
         union data_u {
