@@ -103,8 +103,11 @@ namespace yaal {
 	        YAAL_INLINE("Serial transmit")
 	        void transmit(T val) {
 		        autounion<T, false> value = val;
-		        for (uint8_t i = 0; i < value.size; ++i)
-			        transmit_byte(value[i]);
+		        for (uint8_t i = 0; i < value.size; ++i) {
+		            // XXX: I guess it's OK to use UDRE1 here instead of UDREn?
+		            while (!(ucsrAReg & (1<<UDRE1)));
+		            udrReg = value[i];
+		        }
 	        }
 
 	        YAAL_INLINE("Serial receive")
@@ -115,13 +118,6 @@ namespace yaal {
 		        return udrReg;
 	        }
         private:
-	        YAAL_INLINE("Serial transmit byte")
-	        void transmit_byte(uint8_t value) {
-		        // XXX: I guess it's OK to use UDRE1 here instead of UDREn?
-		        while (!(ucsrAReg & (1<<UDRE1)));
-		        udrReg = value;
-	        }
-
 	        udr udrReg;
 	        ucsrA ucsrAReg;
 	        ucsrB ucsrBReg;
