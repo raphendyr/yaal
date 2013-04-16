@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "${0%/*}"
+
 tot=0
 err=0
 
@@ -27,3 +29,4 @@ for d in *; do
 done
 
 echo " == $(($tot - $err)) of $tot ok, $err errors == "
+exit $err

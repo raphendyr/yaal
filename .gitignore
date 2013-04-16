@@ -11,3 +11,5 @@
 *.so
 .dep/
 *.o.d
+tests/*.bin
+tests/*.log
