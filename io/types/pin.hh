@@ -160,6 +160,7 @@ namespace yaal {
     template<typename PinClass>
     class Reversed;
 
+    /* Pin<Port, bit> */
     template<typename PortClass, bit_t bit>
     class Pin : public internal::SingleBit<PortClass, bit> {
         typedef Pin<PortClass, bit> self_type;
@@ -187,6 +188,10 @@ namespace yaal {
         }
     };
 
+    /* NullPin */
+    typedef Pin<NullPort, 0> NullPin;
+
+    /* Reversed<Pin> */
     template<typename PinClass>
     class Reversed : public PinClass {
         typedef Reversed<PinClass> self_type;
@@ -230,6 +235,7 @@ namespace yaal {
         }
     };
 
+    /* Floating<Pin> */
     template< typename Pin,
               bool pullup = false >
     class Floating {

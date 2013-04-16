@@ -70,6 +70,11 @@ namespace yaal {
             return *this;
         }
     };
+
+    /* NullPort */
+    typedef Port<NullRegister,
+                 NullRegister,
+                 NullRegister> NullPort;
 }
 
 #endif

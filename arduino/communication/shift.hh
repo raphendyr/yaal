@@ -4,7 +4,7 @@
 #ifdef __YAAL__
 
 #include "../../communication/shift.hh"
-#include "../../io/null.hh"
+#include "../../io/types/pin.hh"
 
 namespace yaal {
 	namespace arduino {

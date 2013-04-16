@@ -125,6 +125,28 @@ namespace yaal {
         }
     };
 
+    struct NullRegister {
+        typedef uint32_t size_type;
+        size_type tmp = 0;
+
+        /* read */
+        static YAAL_INLINE("Register operation")
+        size_type get(void) { return 0; }
+
+        YAAL_INLINE("Register operation")
+        operator size_type (void) const { return 0; }
+
+        /* write */
+        static YAAL_INLINE("Register operation")
+        void set(size_type) { }
+
+        YAAL_INLINE("Register operation")
+        operator size_type& (void) { return tmp; }
+
+
+        YAAL_INLINE("Register operation")
+        NullRegister& operator= (size_type) { return *this; }
+    };
 }
 
 #endif

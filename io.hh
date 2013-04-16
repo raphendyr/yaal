@@ -6,12 +6,13 @@
  * relevant headers from yaal/io
  */
 
-// register mappings
-#include "io/null.hh"
+// Ports and Pins
 #include "io/ports.hh"
-#include "io/other.hh"
 
 // USART/Serial interface
 #include "io/serials.hh"
+
+// All other registers
+#include "io/other.hh"
 
 #endif
