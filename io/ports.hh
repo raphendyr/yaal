@@ -12,7 +12,32 @@ namespace yaal {
 
     /*  port A  */
 #   if defined(PORTA) && defined(DDRA) && defined(PINA)
-        typedef Port<internal::PortAReg, internal::DdrAReg, internal::PinAReg> PortA;
+        typedef Port<internal::PortAReg, internal::DdrAReg, internal::PinAReg, (0
+#       ifdef PORTA0
+          | _BV(PORTA0)
+#       endif
+#       ifdef PORTA1
+          | _BV(PORTA1)
+#       endif
+#       ifdef PORTA2
+          | _BV(PORTA2)
+#       endif
+#       ifdef PORTA3
+          | _BV(PORTA3)
+#       endif
+#       ifdef PORTA4
+          | _BV(PORTA4)
+#       endif
+#       ifdef PORTA5
+          | _BV(PORTA5)
+#       endif
+#       ifdef PORTA6
+          | _BV(PORTA6)
+#       endif
+#       ifdef PORTA7
+          | _BV(PORTA7)
+#       endif
+        )> PortA;
 
 #       ifdef PORTA0
             typedef Pin<PortA, PORTA0> PortA0;
@@ -42,7 +67,32 @@ namespace yaal {
 
     /*  port B  */
 #   if defined(PORTB) && defined(DDRB) && defined(PINB)
-        typedef Port<internal::PortBReg, internal::DdrBReg, internal::PinBReg> PortB;
+        typedef Port<internal::PortBReg, internal::DdrBReg, internal::PinBReg, (0
+#       ifdef PORTB0
+          | _BV(PORTB0)
+#       endif
+#       ifdef PORTB1
+          | _BV(PORTB1)
+#       endif
+#       ifdef PORTB2
+          | _BV(PORTB2)
+#       endif
+#       ifdef PORTB3
+          | _BV(PORTB3)
+#       endif
+#       ifdef PORTB4
+          | _BV(PORTB4)
+#       endif
+#       ifdef PORTB5
+          | _BV(PORTB5)
+#       endif
+#       ifdef PORTB6
+          | _BV(PORTB6)
+#       endif
+#       ifdef PORTB7
+          | _BV(PORTB7)
+#       endif
+        )> PortB;
 
 #       ifdef PORTB0
             typedef Pin<PortB, PORTB0> PortB0;
@@ -72,7 +122,32 @@ namespace yaal {
 
     /*  port C  */
 #   if defined(PORTC) && defined(DDRC) && defined(PINC)
-        typedef Port<internal::PortCReg, internal::DdrCReg, internal::PinCReg> PortC;
+        typedef Port<internal::PortCReg, internal::DdrCReg, internal::PinCReg, (0
+#       ifdef PORTC0
+          | _BV(PORTC0)
+#       endif
+#       ifdef PORTC1
+          | _BV(PORTC1)
+#       endif
+#       ifdef PORTC2
+          | _BV(PORTC2)
+#       endif
+#       ifdef PORTC3
+          | _BV(PORTC3)
+#       endif
+#       ifdef PORTC4
+          | _BV(PORTC4)
+#       endif
+#       ifdef PORTC5
+          | _BV(PORTC5)
+#       endif
+#       ifdef PORTC6
+          | _BV(PORTC6)
+#       endif
+#       ifdef PORTC7
+          | _BV(PORTC7)
+#       endif
+        )> PortC;
 
 #       ifdef PORTC0
             typedef Pin<PortC, PORTC0> PortC0;
@@ -102,7 +177,32 @@ namespace yaal {
 
     /*  port D  */
 #   if defined(PORTD) && defined(DDRD) && defined(PIND)
-        typedef Port<internal::PortDReg, internal::DdrDReg, internal::PinDReg> PortD;
+        typedef Port<internal::PortDReg, internal::DdrDReg, internal::PinDReg, (0
+#       ifdef PORTD0
+          | _BV(PORTD0)
+#       endif
+#       ifdef PORTD1
+          | _BV(PORTD1)
+#       endif
+#       ifdef PORTD2
+          | _BV(PORTD2)
+#       endif
+#       ifdef PORTD3
+          | _BV(PORTD3)
+#       endif
+#       ifdef PORTD4
+          | _BV(PORTD4)
+#       endif
+#       ifdef PORTD5
+          | _BV(PORTD5)
+#       endif
+#       ifdef PORTD6
+          | _BV(PORTD6)
+#       endif
+#       ifdef PORTD7
+          | _BV(PORTD7)
+#       endif
+        )> PortD;
 
 #       ifdef PORTD0
             typedef Pin<PortD, PORTD0> PortD0;
@@ -132,7 +232,32 @@ namespace yaal {
 
     /*  port E  */
 #   if defined(PORTE) && defined(DDRE) && defined(PINE)
-        typedef Port<internal::PortEReg, internal::DdrEReg, internal::PinEReg> PortE;
+        typedef Port<internal::PortEReg, internal::DdrEReg, internal::PinEReg, (0
+#       ifdef PORTE0
+          | _BV(PORTE0)
+#       endif
+#       ifdef PORTE1
+          | _BV(PORTE1)
+#       endif
+#       ifdef PORTE2
+          | _BV(PORTE2)
+#       endif
+#       ifdef PORTE3
+          | _BV(PORTE3)
+#       endif
+#       ifdef PORTE4
+          | _BV(PORTE4)
+#       endif
+#       ifdef PORTE5
+          | _BV(PORTE5)
+#       endif
+#       ifdef PORTE6
+          | _BV(PORTE6)
+#       endif
+#       ifdef PORTE7
+          | _BV(PORTE7)
+#       endif
+        )> PortE;
 
 #       ifdef PORTE0
             typedef Pin<PortE, PORTE0> PortE0;
@@ -162,7 +287,32 @@ namespace yaal {
 
     /*  port F  */
 #   if defined(PORTF) && defined(DDRF) && defined(PINF)
-        typedef Port<internal::PortFReg, internal::DdrFReg, internal::PinFReg> PortF;
+        typedef Port<internal::PortFReg, internal::DdrFReg, internal::PinFReg, (0
+#       ifdef PORTF0
+          | _BV(PORTF0)
+#       endif
+#       ifdef PORTF1
+          | _BV(PORTF1)
+#       endif
+#       ifdef PORTF2
+          | _BV(PORTF2)
+#       endif
+#       ifdef PORTF3
+          | _BV(PORTF3)
+#       endif
+#       ifdef PORTF4
+          | _BV(PORTF4)
+#       endif
+#       ifdef PORTF5
+          | _BV(PORTF5)
+#       endif
+#       ifdef PORTF6
+          | _BV(PORTF6)
+#       endif
+#       ifdef PORTF7
+          | _BV(PORTF7)
+#       endif
+        )> PortF;
 
 #       ifdef PORTF0
             typedef Pin<PortF, PORTF0> PortF0;
@@ -192,7 +342,32 @@ namespace yaal {
 
     /*  port G  */
 #   if defined(PORTG) && defined(DDRG) && defined(PING)
-        typedef Port<internal::PortGReg, internal::DdrGReg, internal::PinGReg> PortG;
+        typedef Port<internal::PortGReg, internal::DdrGReg, internal::PinGReg, (0
+#       ifdef PORTG0
+          | _BV(PORTG0)
+#       endif
+#       ifdef PORTG1
+          | _BV(PORTG1)
+#       endif
+#       ifdef PORTG2
+          | _BV(PORTG2)
+#       endif
+#       ifdef PORTG3
+          | _BV(PORTG3)
+#       endif
+#       ifdef PORTG4
+          | _BV(PORTG4)
+#       endif
+#       ifdef PORTG5
+          | _BV(PORTG5)
+#       endif
+#       ifdef PORTG6
+          | _BV(PORTG6)
+#       endif
+#       ifdef PORTG7
+          | _BV(PORTG7)
+#       endif
+        )> PortG;
 
 #       ifdef PORTG0
             typedef Pin<PortG, PORTG0> PortG0;
@@ -222,7 +397,32 @@ namespace yaal {
 
     /*  port H  */
 #   if defined(PORTH) && defined(DDRH) && defined(PINH)
-        typedef Port<internal::PortHReg, internal::DdrHReg, internal::PinHReg> PortH;
+        typedef Port<internal::PortHReg, internal::DdrHReg, internal::PinHReg, (0
+#       ifdef PORTH0
+          | _BV(PORTH0)
+#       endif
+#       ifdef PORTH1
+          | _BV(PORTH1)
+#       endif
+#       ifdef PORTH2
+          | _BV(PORTH2)
+#       endif
+#       ifdef PORTH3
+          | _BV(PORTH3)
+#       endif
+#       ifdef PORTH4
+          | _BV(PORTH4)
+#       endif
+#       ifdef PORTH5
+          | _BV(PORTH5)
+#       endif
+#       ifdef PORTH6
+          | _BV(PORTH6)
+#       endif
+#       ifdef PORTH7
+          | _BV(PORTH7)
+#       endif
+        )> PortH;
 
 #       ifdef PORTH0
             typedef Pin<PortH, PORTH0> PortH0;
@@ -252,7 +452,32 @@ namespace yaal {
 
     /*  port I  */
 #   if defined(PORTI) && defined(DDRI) && defined(PINI)
-        typedef Port<internal::PortIReg, internal::DdrIReg, internal::PinIReg> PortI;
+        typedef Port<internal::PortIReg, internal::DdrIReg, internal::PinIReg, (0
+#       ifdef PORTI0
+          | _BV(PORTI0)
+#       endif
+#       ifdef PORTI1
+          | _BV(PORTI1)
+#       endif
+#       ifdef PORTI2
+          | _BV(PORTI2)
+#       endif
+#       ifdef PORTI3
+          | _BV(PORTI3)
+#       endif
+#       ifdef PORTI4
+          | _BV(PORTI4)
+#       endif
+#       ifdef PORTI5
+          | _BV(PORTI5)
+#       endif
+#       ifdef PORTI6
+          | _BV(PORTI6)
+#       endif
+#       ifdef PORTI7
+          | _BV(PORTI7)
+#       endif
+        )> PortI;
 
 #       ifdef PORTI0
             typedef Pin<PortI, PORTI0> PortI0;
@@ -282,7 +507,32 @@ namespace yaal {
 
     /*  port J  */
 #   if defined(PORTJ) && defined(DDRJ) && defined(PINJ)
-        typedef Port<internal::PortJReg, internal::DdrJReg, internal::PinJReg> PortJ;
+        typedef Port<internal::PortJReg, internal::DdrJReg, internal::PinJReg, (0
+#       ifdef PORTJ0
+          | _BV(PORTJ0)
+#       endif
+#       ifdef PORTJ1
+          | _BV(PORTJ1)
+#       endif
+#       ifdef PORTJ2
+          | _BV(PORTJ2)
+#       endif
+#       ifdef PORTJ3
+          | _BV(PORTJ3)
+#       endif
+#       ifdef PORTJ4
+          | _BV(PORTJ4)
+#       endif
+#       ifdef PORTJ5
+          | _BV(PORTJ5)
+#       endif
+#       ifdef PORTJ6
+          | _BV(PORTJ6)
+#       endif
+#       ifdef PORTJ7
+          | _BV(PORTJ7)
+#       endif
+        )> PortJ;
 
 #       ifdef PORTJ0
             typedef Pin<PortJ, PORTJ0> PortJ0;
@@ -312,7 +562,32 @@ namespace yaal {
 
     /*  port K  */
 #   if defined(PORTK) && defined(DDRK) && defined(PINK)
-        typedef Port<internal::PortKReg, internal::DdrKReg, internal::PinKReg> PortK;
+        typedef Port<internal::PortKReg, internal::DdrKReg, internal::PinKReg, (0
+#       ifdef PORTK0
+          | _BV(PORTK0)
+#       endif
+#       ifdef PORTK1
+          | _BV(PORTK1)
+#       endif
+#       ifdef PORTK2
+          | _BV(PORTK2)
+#       endif
+#       ifdef PORTK3
+          | _BV(PORTK3)
+#       endif
+#       ifdef PORTK4
+          | _BV(PORTK4)
+#       endif
+#       ifdef PORTK5
+          | _BV(PORTK5)
+#       endif
+#       ifdef PORTK6
+          | _BV(PORTK6)
+#       endif
+#       ifdef PORTK7
+          | _BV(PORTK7)
+#       endif
+        )> PortK;
 
 #       ifdef PORTK0
             typedef Pin<PortK, PORTK0> PortK0;

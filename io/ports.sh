@@ -21,7 +21,13 @@ for c in $PORTS; do
 	echo
 	echo "    /*  port $c  */"
 	echo "#   if defined(PORT$c) && defined(DDR$c) && defined(PIN$c)"
-	echo "        typedef Port<internal::Port${c}Reg, internal::Ddr${c}Reg, internal::Pin${c}Reg> Port$c;"
+	echo "        typedef Port<internal::Port${c}Reg, internal::Ddr${c}Reg, internal::Pin${c}Reg, (0"
+	for i in 0 1 2 3 4 5 6 7; do
+		echo "#       ifdef PORT$c$i"
+		echo "          | _BV(PORT$c$i)"
+		echo '#       endif'
+	done
+	echo "        )> Port$c;"
 	echo
 	for i in 0 1 2 3 4 5 6 7; do
 		echo "#       ifdef PORT$c$i"

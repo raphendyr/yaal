@@ -13,15 +13,19 @@
 
 namespace yaal {
 
-    // Register port, Register ddr, ReadonlyRegister pin
-    template<typename OutputClass, typename DirectionClass, typename InputClass>
+    // Port<Register port, Register ddr, ReadonlyRegister pin, bit_mask>
+    template< typename OutputClass,
+              typename DirectionClass,
+              typename InputClass,
+              uint8_t bitmask >
     class Port {
-        typedef Port<OutputClass, DirectionClass, InputClass> self_type;
+        typedef Port<OutputClass, DirectionClass, InputClass, bitmask> self_type;
 
     public:
         typedef OutputClass output_type;
         typedef DirectionClass direction_type;
         typedef InputClass input_type;
+        static const uint8_t mask = bitmask;
 
         OutputClass output;
         DirectionClass direction;
@@ -72,9 +76,7 @@ namespace yaal {
     };
 
     /* NullPort */
-    typedef Port<NullRegister,
-                 NullRegister,
-                 NullRegister> NullPort;
+    typedef Port<NullRegister, NullRegister, NullRegister, 0> NullPort;
 }
 
 #endif
