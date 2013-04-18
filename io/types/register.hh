@@ -12,13 +12,19 @@
 #define YAAL_REG(reg_t, addr) (*reinterpret_cast<reg_t*>(addr))
 #define YAAL_ADDR(reg) (reinterpret_cast<reg_a_t>(&(reg)))
 
+#ifndef YAAL_SMALL_REG_SIZE
+#  define YAAL_SMALL_REG_SIZE uint8_t
+#endif
+#ifndef YAAL_BIG_REG_SIZE
+#  define YAAL_BIG_REG_SIZE uint16_t
+#endif
 
 namespace yaal {
 
-    typedef uint16_t reg_a_t;
+    typedef YAAL_BIG_REG_SIZE reg_a_t;
     typedef uint8_t bit_t;
-    typedef volatile uint8_t reg8_t;
-    typedef volatile uint16_t reg16_t;
+    typedef volatile YAAL_SMALL_REG_SIZE reg8_t;
+    typedef volatile YAAL_BIG_REG_SIZE reg16_t;
 
     namespace internal {
 
@@ -148,6 +154,9 @@ namespace yaal {
         NullRegister& operator= (size_type) { return *this; }
     };
 }
+
+#undef YAAL_SMALL_REG_SIZE
+#undef YAAL_BIG_REG_SIZE
 
 #endif
 #endif
