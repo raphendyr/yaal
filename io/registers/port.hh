@@ -13,7 +13,7 @@ namespace yaal {
 
         /*  port A  */
 #       ifdef PINA
-            typedef ReadonlyRegister<YAAL_ADDR(PINA)> PinAReg;
+            typedef Register<YAAL_ADDR(PINA)> PinAReg;
 #       endif
 #       ifdef DDRA
             typedef Register<YAAL_ADDR(DDRA)> DdrAReg;
@@ -24,7 +24,7 @@ namespace yaal {
 
         /*  port B  */
 #       ifdef PINB
-            typedef ReadonlyRegister<YAAL_ADDR(PINB)> PinBReg;
+            typedef Register<YAAL_ADDR(PINB)> PinBReg;
 #       endif
 #       ifdef DDRB
             typedef Register<YAAL_ADDR(DDRB)> DdrBReg;
@@ -35,7 +35,7 @@ namespace yaal {
 
         /*  port C  */
 #       ifdef PINC
-            typedef ReadonlyRegister<YAAL_ADDR(PINC)> PinCReg;
+            typedef Register<YAAL_ADDR(PINC)> PinCReg;
 #       endif
 #       ifdef DDRC
             typedef Register<YAAL_ADDR(DDRC)> DdrCReg;
@@ -46,7 +46,7 @@ namespace yaal {
 
         /*  port D  */
 #       ifdef PIND
-            typedef ReadonlyRegister<YAAL_ADDR(PIND)> PinDReg;
+            typedef Register<YAAL_ADDR(PIND)> PinDReg;
 #       endif
 #       ifdef DDRD
             typedef Register<YAAL_ADDR(DDRD)> DdrDReg;
@@ -57,7 +57,7 @@ namespace yaal {
 
         /*  port E  */
 #       ifdef PINE
-            typedef ReadonlyRegister<YAAL_ADDR(PINE)> PinEReg;
+            typedef Register<YAAL_ADDR(PINE)> PinEReg;
 #       endif
 #       ifdef DDRE
             typedef Register<YAAL_ADDR(DDRE)> DdrEReg;
@@ -68,7 +68,7 @@ namespace yaal {
 
         /*  port F  */
 #       ifdef PINF
-            typedef ReadonlyRegister<YAAL_ADDR(PINF)> PinFReg;
+            typedef Register<YAAL_ADDR(PINF)> PinFReg;
 #       endif
 #       ifdef DDRF
             typedef Register<YAAL_ADDR(DDRF)> DdrFReg;
@@ -79,7 +79,7 @@ namespace yaal {
 
         /*  port G  */
 #       ifdef PING
-            typedef ReadonlyRegister<YAAL_ADDR(PING)> PinGReg;
+            typedef Register<YAAL_ADDR(PING)> PinGReg;
 #       endif
 #       ifdef DDRG
             typedef Register<YAAL_ADDR(DDRG)> DdrGReg;
@@ -90,7 +90,7 @@ namespace yaal {
 
         /*  port H  */
 #       ifdef PINH
-            typedef ReadonlyRegister<YAAL_ADDR(PINH)> PinHReg;
+            typedef Register<YAAL_ADDR(PINH)> PinHReg;
 #       endif
 #       ifdef DDRH
             typedef Register<YAAL_ADDR(DDRH)> DdrHReg;
@@ -101,7 +101,7 @@ namespace yaal {
 
         /*  port I  */
 #       ifdef PINI
-            typedef ReadonlyRegister<YAAL_ADDR(PINI)> PinIReg;
+            typedef Register<YAAL_ADDR(PINI)> PinIReg;
 #       endif
 #       ifdef DDRI
             typedef Register<YAAL_ADDR(DDRI)> DdrIReg;
@@ -112,7 +112,7 @@ namespace yaal {
 
         /*  port J  */
 #       ifdef PINJ
-            typedef ReadonlyRegister<YAAL_ADDR(PINJ)> PinJReg;
+            typedef Register<YAAL_ADDR(PINJ)> PinJReg;
 #       endif
 #       ifdef DDRJ
             typedef Register<YAAL_ADDR(DDRJ)> DdrJReg;
@@ -123,7 +123,7 @@ namespace yaal {
 
         /*  port K  */
 #       ifdef PINK
-            typedef ReadonlyRegister<YAAL_ADDR(PINK)> PinKReg;
+            typedef Register<YAAL_ADDR(PINK)> PinKReg;
 #       endif
 #       ifdef DDRK
             typedef Register<YAAL_ADDR(DDRK)> DdrKReg;
@@ -134,7 +134,7 @@ namespace yaal {
 
         /*  port L  */
 #       ifdef PINL
-            typedef ReadonlyRegister<YAAL_ADDR(PINL)> PinLReg;
+            typedef Register<YAAL_ADDR(PINL)> PinLReg;
 #       endif
 #       ifdef DDRL
             typedef Register<YAAL_ADDR(DDRL)> DdrLReg;
@@ -145,7 +145,7 @@ namespace yaal {
 
         /*  port M  */
 #       ifdef PINM
-            typedef ReadonlyRegister<YAAL_ADDR(PINM)> PinMReg;
+            typedef Register<YAAL_ADDR(PINM)> PinMReg;
 #       endif
 #       ifdef DDRM
             typedef Register<YAAL_ADDR(DDRM)> DdrMReg;
@@ -156,7 +156,7 @@ namespace yaal {
 
         /*  port N  */
 #       ifdef PINN
-            typedef ReadonlyRegister<YAAL_ADDR(PINN)> PinNReg;
+            typedef Register<YAAL_ADDR(PINN)> PinNReg;
 #       endif
 #       ifdef DDRN
             typedef Register<YAAL_ADDR(DDRN)> DdrNReg;

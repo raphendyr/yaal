@@ -166,6 +166,8 @@ namespace yaal {
         typedef Pin<PortClass, bit> self_type;
         typedef internal::SingleBit<PortClass, bit> super;
 
+        internal::SingleBit<typename PortClass::input_type, bit> pin_reg;
+
     public:
         PortClass port;
         internal::PinMode<PortClass, bit> mode;
@@ -185,6 +187,19 @@ namespace yaal {
         YAAL_INLINE("Pin RAII wrapper")
         internal::RAIIPin<self_type> as(Mode mode) {
             return internal::RAIIPin<self_type>(mode);
+        }
+
+        /* Hardware pin toggle */
+        YAAL_INLINE("Pin operation")
+#       ifdef AVR_WITHOUT_PIN_TOGGLE
+            __attribute__ ((deprecated ("Your board doesn't support hardware toggling.")))
+#       endif
+        void toggle() {
+#           ifndef AVR_WITHOUT_PIN_TOGGLE
+                pin_reg = true;
+#           else
+                set(!get());
+#           endif
         }
     };
 

@@ -22,7 +22,7 @@ for c in $PORTS; do
 	echo
 	echo "        /*  port $c  */"
 	echo "#       ifdef PIN$c"
-	echo "            typedef ReadonlyRegister<YAAL_ADDR(PIN$c)> Pin${c}Reg;"
+	echo "            typedef Register<YAAL_ADDR(PIN$c)> Pin${c}Reg;"
 	echo '#       endif'
 	echo "#       ifdef DDR$c"
 	echo "            typedef Register<YAAL_ADDR(DDR$c)> Ddr${c}Reg;"
