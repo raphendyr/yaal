@@ -131,6 +131,39 @@ namespace yaal {
 #       ifdef PORTK
             typedef Register<YAAL_ADDR(PORTK)> PortKReg;
 #       endif
+
+        /*  port L  */
+#       ifdef PINL
+            typedef ReadonlyRegister<YAAL_ADDR(PINL)> PinLReg;
+#       endif
+#       ifdef DDRL
+            typedef Register<YAAL_ADDR(DDRL)> DdrLReg;
+#       endif
+#       ifdef PORTL
+            typedef Register<YAAL_ADDR(PORTL)> PortLReg;
+#       endif
+
+        /*  port M  */
+#       ifdef PINM
+            typedef ReadonlyRegister<YAAL_ADDR(PINM)> PinMReg;
+#       endif
+#       ifdef DDRM
+            typedef Register<YAAL_ADDR(DDRM)> DdrMReg;
+#       endif
+#       ifdef PORTM
+            typedef Register<YAAL_ADDR(PORTM)> PortMReg;
+#       endif
+
+        /*  port N  */
+#       ifdef PINN
+            typedef ReadonlyRegister<YAAL_ADDR(PINN)> PinNReg;
+#       endif
+#       ifdef DDRN
+            typedef Register<YAAL_ADDR(DDRN)> DdrNReg;
+#       endif
+#       ifdef PORTN
+            typedef Register<YAAL_ADDR(PORTN)> PortNReg;
+#       endif
     }
 
 }

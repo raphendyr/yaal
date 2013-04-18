@@ -1,9 +1,9 @@
 #!/bin/sh -e
 
-cd "${0%/*}"
+[ "${0%/*}" != "${0}" ] && cd ${0%/*}
 
-# PORTS='A B C D E F G H I J K L M N O P Q R S T U V W X Y Z'
-PORTS='A B C D E F G H I J K'
+PORTS='A B C D E F G H I J K L M N O P Q R S T U V W X Y Z'
+PORTS='A B C D E F G H I J K L M N'
 
 (
 echo '#ifndef __YAAL_IO__REGISTERS__PORT__'

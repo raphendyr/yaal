@@ -614,6 +614,171 @@ namespace yaal {
             typedef Pin<PortK, PORTK7> PortK7;
 #       endif
 #   endif
+
+    /*  port L  */
+#   if defined(PORTL) && defined(DDRL) && defined(PINL)
+        typedef Port<internal::PortLReg, internal::DdrLReg, internal::PinLReg, (0
+#       ifdef PORTL0
+          | _BV(PORTL0)
+#       endif
+#       ifdef PORTL1
+          | _BV(PORTL1)
+#       endif
+#       ifdef PORTL2
+          | _BV(PORTL2)
+#       endif
+#       ifdef PORTL3
+          | _BV(PORTL3)
+#       endif
+#       ifdef PORTL4
+          | _BV(PORTL4)
+#       endif
+#       ifdef PORTL5
+          | _BV(PORTL5)
+#       endif
+#       ifdef PORTL6
+          | _BV(PORTL6)
+#       endif
+#       ifdef PORTL7
+          | _BV(PORTL7)
+#       endif
+        )> PortL;
+
+#       ifdef PORTL0
+            typedef Pin<PortL, PORTL0> PortL0;
+#       endif
+#       ifdef PORTL1
+            typedef Pin<PortL, PORTL1> PortL1;
+#       endif
+#       ifdef PORTL2
+            typedef Pin<PortL, PORTL2> PortL2;
+#       endif
+#       ifdef PORTL3
+            typedef Pin<PortL, PORTL3> PortL3;
+#       endif
+#       ifdef PORTL4
+            typedef Pin<PortL, PORTL4> PortL4;
+#       endif
+#       ifdef PORTL5
+            typedef Pin<PortL, PORTL5> PortL5;
+#       endif
+#       ifdef PORTL6
+            typedef Pin<PortL, PORTL6> PortL6;
+#       endif
+#       ifdef PORTL7
+            typedef Pin<PortL, PORTL7> PortL7;
+#       endif
+#   endif
+
+    /*  port M  */
+#   if defined(PORTM) && defined(DDRM) && defined(PINM)
+        typedef Port<internal::PortMReg, internal::DdrMReg, internal::PinMReg, (0
+#       ifdef PORTM0
+          | _BV(PORTM0)
+#       endif
+#       ifdef PORTM1
+          | _BV(PORTM1)
+#       endif
+#       ifdef PORTM2
+          | _BV(PORTM2)
+#       endif
+#       ifdef PORTM3
+          | _BV(PORTM3)
+#       endif
+#       ifdef PORTM4
+          | _BV(PORTM4)
+#       endif
+#       ifdef PORTM5
+          | _BV(PORTM5)
+#       endif
+#       ifdef PORTM6
+          | _BV(PORTM6)
+#       endif
+#       ifdef PORTM7
+          | _BV(PORTM7)
+#       endif
+        )> PortM;
+
+#       ifdef PORTM0
+            typedef Pin<PortM, PORTM0> PortM0;
+#       endif
+#       ifdef PORTM1
+            typedef Pin<PortM, PORTM1> PortM1;
+#       endif
+#       ifdef PORTM2
+            typedef Pin<PortM, PORTM2> PortM2;
+#       endif
+#       ifdef PORTM3
+            typedef Pin<PortM, PORTM3> PortM3;
+#       endif
+#       ifdef PORTM4
+            typedef Pin<PortM, PORTM4> PortM4;
+#       endif
+#       ifdef PORTM5
+            typedef Pin<PortM, PORTM5> PortM5;
+#       endif
+#       ifdef PORTM6
+            typedef Pin<PortM, PORTM6> PortM6;
+#       endif
+#       ifdef PORTM7
+            typedef Pin<PortM, PORTM7> PortM7;
+#       endif
+#   endif
+
+    /*  port N  */
+#   if defined(PORTN) && defined(DDRN) && defined(PINN)
+        typedef Port<internal::PortNReg, internal::DdrNReg, internal::PinNReg, (0
+#       ifdef PORTN0
+          | _BV(PORTN0)
+#       endif
+#       ifdef PORTN1
+          | _BV(PORTN1)
+#       endif
+#       ifdef PORTN2
+          | _BV(PORTN2)
+#       endif
+#       ifdef PORTN3
+          | _BV(PORTN3)
+#       endif
+#       ifdef PORTN4
+          | _BV(PORTN4)
+#       endif
+#       ifdef PORTN5
+          | _BV(PORTN5)
+#       endif
+#       ifdef PORTN6
+          | _BV(PORTN6)
+#       endif
+#       ifdef PORTN7
+          | _BV(PORTN7)
+#       endif
+        )> PortN;
+
+#       ifdef PORTN0
+            typedef Pin<PortN, PORTN0> PortN0;
+#       endif
+#       ifdef PORTN1
+            typedef Pin<PortN, PORTN1> PortN1;
+#       endif
+#       ifdef PORTN2
+            typedef Pin<PortN, PORTN2> PortN2;
+#       endif
+#       ifdef PORTN3
+            typedef Pin<PortN, PORTN3> PortN3;
+#       endif
+#       ifdef PORTN4
+            typedef Pin<PortN, PORTN4> PortN4;
+#       endif
+#       ifdef PORTN5
+            typedef Pin<PortN, PORTN5> PortN5;
+#       endif
+#       ifdef PORTN6
+            typedef Pin<PortN, PORTN6> PortN6;
+#       endif
+#       ifdef PORTN7
+            typedef Pin<PortN, PORTN7> PortN7;
+#       endif
+#   endif
 }
 
 #endif
