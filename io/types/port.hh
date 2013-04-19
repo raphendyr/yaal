@@ -58,14 +58,28 @@ namespace yaal {
 
         YAAL_INLINE("Port operation")
         operator typename InputClass::size_type (void) const {
-            /* read: Port<> x; uint8_t value = x; */
+            // read: Port<> x; uint8_t value = x;
             return input;
         }
 
+        /* XXX: Removed as above is not used if this exists
         YAAL_INLINE("Port operation")
         operator typename OutputClass::size_type& (void) {
-            /* write: Register x; x = 3; x |= 1 << 4; */
+            // write: Port<> x; x = 3; x |= 1 << 4;
             return output;
+        }
+        */
+
+        YAAL_INLINE("Port |= operation")
+        self_type& operator|= (typename OutputClass::size_type value) {
+            output |= value;
+            return *this;
+        }
+
+        YAAL_INLINE("Port &= operation")
+        self_type& operator&= (typename OutputClass::size_type value) {
+            output &= value;
+            return *this;
         }
 
         YAAL_INLINE("Port operation")
