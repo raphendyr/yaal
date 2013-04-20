@@ -120,8 +120,7 @@ namespace yaal {
         }
 
         // Draw ASCII character in white.
-        // TODO: an arbitrary color.
-        bool draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color) {
+        bool draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color = 0xffff) {
             serial.transmit(internal::DRAWCHAR_TEXT);
             serial.transmit(c);
             serial.transmit(x);
