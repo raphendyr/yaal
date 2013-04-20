@@ -10,6 +10,7 @@ namespace yaal {
         static constexpr uint8_t NAK = 0x15;
 
         static constexpr uint8_t AUTOBAUD = 0x55;
+        static constexpr uint8_t SETBAUD = 0x51;
 
         static constexpr uint8_t CLEARSCREEN = 0x45;
         static constexpr uint8_t DRAWCHAR_TEXT = 0x54;
@@ -45,6 +46,77 @@ namespace yaal {
             serial.setFrameFormat();
             serial.transmit(internal::AUTOBAUD);
             return serial.receive() == internal::ACK;
+        }
+
+        YAAL_INLINE("4D touchscreen set baud")
+        bool set_baud(uint32_t baud) {
+            uint8_t rate;
+            switch (baud) {
+                case 110:
+                    rate = 0x00;
+                    break;
+                case 300:
+                    rate = 0x01;
+                    break;
+                case 600:
+                    rate = 0x02;
+                    break;
+                case 1200:
+                    rate = 0x03;
+                    break;
+                case 2400:
+                    rate = 0x04;
+                    break;
+                case 4800:
+                    rate = 0x05;
+                    break;
+                case 9600:
+                    rate = 0x06;
+                    break;
+                case 14400:
+                    rate = 0x07;
+                    break;
+                case 19200:
+                    rate = 0x08;
+                    break;
+                case 31250:
+                    rate = 0x09;
+                    break;
+                case 38400:
+                    rate = 0x0a;
+                    break;
+                case 56000:
+                    rate = 0x0b;
+                    break;
+                case 57600:
+                    rate = 0x0c;
+                    break;
+                case 115200:
+                    rate = 0x0d;
+                    break;
+                case 129032:
+                    rate = 0x0e;
+                    break;
+                case 282353:
+                    rate = 0x0f;
+                    break;
+                case 128000:
+                    rate = 0x10;
+                    break;
+                case 256000:
+                    rate = 0x11;
+                    break;
+                default:
+                    rate = 0xff;
+                    return false;
+            }
+
+            serial.transmit(internal::SETBAUD);
+            serial.transmit(rate);
+            if (serial.receive() != internal::ACK)
+                return false;
+
+            serial.setBaud(baud);
         }
 
         // Draw ASCII character in white.
