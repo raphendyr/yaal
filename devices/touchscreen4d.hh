@@ -11,6 +11,7 @@ namespace yaal {
 
         static constexpr uint8_t AUTOBAUD = 0x55;
 
+        static constexpr uint8_t CLEARSCREEN = 0x45;
         static constexpr uint8_t DRAWCHAR_TEXT = 0x54;
         static constexpr uint8_t DRAWELLIPSE = 0x65;
         static constexpr uint8_t TOUCHCOORDS = 0x6f;
@@ -67,6 +68,11 @@ namespace yaal {
             serial.transmit(ry); // Radius in the Y axis
             serial.transmit(color); // Color
 
+            return serial.receive() == internal::ACK;
+        }
+
+        bool clear_screen() {
+            serial.transmit(internal::CLEARSCREEN);
             return serial.receive() == internal::ACK;
         }
 
