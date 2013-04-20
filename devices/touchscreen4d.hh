@@ -117,6 +117,7 @@ namespace yaal {
                 return false;
 
             serial.setBaud(baud);
+            return true;
         }
 
         // Draw ASCII character in white.
