@@ -120,7 +120,8 @@ namespace yaal {
             return true;
         }
 
-        // Draw ASCII character in white.
+        // Draw ASCII character in the given color.
+        // The color format is R5G6B5.
         bool draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color = 0xffff) {
             serial.transmit(internal::DRAWCHAR_TEXT);
             serial.transmit(c);
@@ -130,16 +131,15 @@ namespace yaal {
             return serial.receive() == internal::ACK;
         }
 
+        // Draw an ellipse in the given color.
+        // The color format is R5G6B5.
         bool draw_ellipse(uint16_t x, uint16_t y, uint16_t rx, uint16_t ry, uint16_t color) {
-
             serial.transmit(internal::DRAWELLIPSE);
-
             serial.transmit(x); // X coordinate of center
             serial.transmit(y); // Y coordinate of center
             serial.transmit(rx); // Radius in the X axis
             serial.transmit(ry); // Radius in the Y axis
             serial.transmit(color); // Color
-
             return serial.receive() == internal::ACK;
         }
 
