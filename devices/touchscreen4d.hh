@@ -21,6 +21,10 @@ namespace yaal {
         static constexpr uint8_t CLEARSCREEN = 0x45;
         static constexpr uint8_t DRAWCHAR_TEXT = 0x54;
         static constexpr uint8_t DRAWELLIPSE = 0x65;
+        static constexpr uint8_t SETPENSIZE = 0x70;
+        static constexpr uint8_t PEN_SOLID = 0x00;
+        static constexpr uint8_t PEN_WIREFRAME = 0x01;
+
         static constexpr uint8_t TOUCHCOORDS = 0x6f;
         static constexpr uint8_t TOUCHCOORDS_STATUS = 0x04; // FIXME -> enum
     }
@@ -146,6 +150,12 @@ namespace yaal {
             serial.transmit(rx); // Radius in the X axis
             serial.transmit(ry); // Radius in the Y axis
             serial.transmit(color); // Color
+            return serial.receive() == internal::ACK;
+        }
+
+        bool set_pen_size(bool solid) {
+            serial.transmit(internal::SETPENSIZE);
+            serial.transmit(solid ? internal::PEN_SOLID : internal::PEN_WIREFRAME);
             return serial.receive() == internal::ACK;
         }
 
