@@ -12,6 +12,12 @@ namespace yaal {
         static constexpr uint8_t AUTOBAUD = 0x55;
         static constexpr uint8_t SETBAUD = 0x51;
 
+        static constexpr uint8_t DISPCONTROL = 0x59;
+        static constexpr uint8_t DISPCONTROL_TOUCH = 0x05;
+        static constexpr uint8_t DISPCONTROL_TOUCH_ENABLE = 0x00;
+        static constexpr uint8_t DISPCONTROL_TOUCH_DISABLE = 0x01;
+        static constexpr uint8_t DISPCONTROL_TOUCH_RESET_ACTIVE = 0x02;
+
         static constexpr uint8_t CLEARSCREEN = 0x45;
         static constexpr uint8_t DRAWCHAR_TEXT = 0x54;
         static constexpr uint8_t DRAWELLIPSE = 0x65;
@@ -148,7 +154,21 @@ namespace yaal {
             return serial.receive() == internal::ACK;
         }
 
-        enum TouchActType LCD_gettouchactivity() {
+        bool enable_touchscreen() {
+            serial.transmit(internal::DISPCONTROL);
+            serial.transmit(internal::DISPCONTROL_TOUCH);
+            serial.transmit(internal::DISPCONTROL_TOUCH_ENABLE);
+            return serial.receive() == internal::ACK;
+        }
+
+        bool reset_active_touch_region() {
+            serial.transmit(internal::DISPCONTROL);
+            serial.transmit(internal::DISPCONTROL_TOUCH);
+            serial.transmit(internal::DISPCONTROL_TOUCH_RESET_ACTIVE);
+            return serial.receive() == internal::ACK;
+        }
+
+        enum TouchActType get_touch_activity() {
             serial.transmit(internal::TOUCHCOORDS);
             serial.transmit(internal::TOUCHCOORDS_STATUS);
 
