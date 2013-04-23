@@ -40,14 +40,6 @@ namespace yaal {
             unsigned int y;
         };
 
-        enum TouchActType {
-            ACT_NONE = 0,
-            ACT_PRESS = 1,
-            ACT_RELEASE = 2,
-            ACT_MOVING = 3
-        };
-
-
     public:
 
         YAAL_INLINE("4D touchscreen init")
@@ -178,7 +170,14 @@ namespace yaal {
             return serial.receive() == internal::ACK;
         }
 
-        enum TouchActType get_touch_activity() {
+        enum TouchActType : uint8_t {
+            ACT_NONE = 0,
+            ACT_PRESS = 1,
+            ACT_RELEASE = 2,
+            ACT_MOVING = 3
+        };
+
+        enum TouchActType get_touch_status() {
             serial.transmit(internal::TOUCHCOORDS);
             serial.transmit(internal::TOUCHCOORDS_STATUS);
 
