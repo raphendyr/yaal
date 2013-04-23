@@ -26,19 +26,18 @@ namespace yaal {
         static constexpr uint8_t PEN_WIREFRAME = 0x01;
 
         static constexpr uint8_t TOUCHCOORDS = 0x6f;
+        static constexpr uint8_t TOUCHCOORDS_WAIT_ANY = 0x00;
+        static constexpr uint8_t TOUCHCOORDS_WAIT_PRESS = 0x01;
+        static constexpr uint8_t TOUCHCOORDS_WAIT_RELEASE = 0x02;
+        static constexpr uint8_t TOUCHCOORDS_WAIT_MOVING = 0x03;
         static constexpr uint8_t TOUCHCOORDS_STATUS = 0x04; // FIXME -> enum
+        static constexpr uint8_t TOUCHCOORDS_GETCOORDINATES = 0x05;
     }
-
 
     template <typename T>
     class Touchscreen4D {
     private:
         T serial;
-
-        struct Coords {
-            unsigned int x;
-            unsigned int y;
-        };
 
     public:
 
@@ -187,6 +186,44 @@ namespace yaal {
                 response[i] = serial.receive();
 
             return static_cast<TouchActType>(response[1]);
+        }
+
+        struct TouchCoords {
+            uint16_t x;
+            uint16_t y;
+        };
+
+        TouchCoords get_touch_coordinates() {
+            serial.transmit(internal::TOUCHCOORDS);
+            serial.transmit(internal::TOUCHCOORDS_GETCOORDINATES);
+
+            uint8_t response[4];
+            for (int i = 0; i < 4; ++i)
+                    response[i] = serial.receive();
+
+            TouchCoords ret = { (uint16_t)(response[0] << 8 | response[1]),
+                                (uint16_t)(response[2] << 8 | response[3]) };
+            return ret;
+        }
+
+        enum TouchKind : uint8_t {
+            WAIT_ANY = internal::TOUCHCOORDS_WAIT_ANY,
+            WAIT_PRESS = internal::TOUCHCOORDS_WAIT_PRESS,
+            WAIT_RELEASE = internal::TOUCHCOORDS_WAIT_RELEASE,
+            WAIT_MOVING = internal::TOUCHCOORDS_WAIT_MOVING
+        };
+
+        TouchCoords wait_until_touch(TouchKind kind = WAIT_ANY) {
+            serial.transmit(internal::TOUCHCOORDS);
+            serial.transmit(static_cast<uint8_t>(kind));
+
+            uint8_t response[4];
+            for (int i = 0; i < 4; ++i)
+                    response[i] = serial.receive();
+
+            TouchCoords ret = { (uint16_t)(response[0] << 8 | response[1]),
+                                (uint16_t)(response[2] << 8 | response[3]) };
+            return ret;
         }
 
     };
