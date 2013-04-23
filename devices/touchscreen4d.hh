@@ -156,10 +156,11 @@ namespace yaal {
             return serial.receive() == internal::ACK;
         }
 
-        bool enable_touchscreen() {
+        bool toggle_touchscreen(bool enabled) {
             serial.transmit(internal::DISPCONTROL);
             serial.transmit(internal::DISPCONTROL_TOUCH);
-            serial.transmit(internal::DISPCONTROL_TOUCH_ENABLE);
+            serial.transmit(enabled ? internal::DISPCONTROL_TOUCH_ENABLE
+                                    : internal::DISPCONTROL_TOUCH_DISABLE);
             return serial.receive() == internal::ACK;
         }
 
