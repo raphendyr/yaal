@@ -43,7 +43,11 @@ cat > "$file" <<EOF
 #include "${prefix}requirements.hh"
 #ifdef __YAAL__
 
-/* ... */
+namespace yaal {
+
+    /* ... */
+
+}
 
 #endif
 #endif
