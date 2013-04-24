@@ -10,6 +10,11 @@ if [ "$(git rev-parse --show-toplevel)" != "$(pwd)" ]; then
     exit 1
 fi
 
+if [ -e "$1" ]; then
+    echo "ERROR: file $1 allready exists"
+    exit 2
+fi
+
 file=$1
 name=$file
 name=${name#./}
