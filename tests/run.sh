@@ -1,6 +1,9 @@
 #!/bin/sh
 
-cd "${0%/*}"
+base=${0%/*}
+base=${base#./}
+cd "$base"
+
 tot=0
 err=0
 
@@ -25,6 +28,10 @@ build_and_run() {
 }
 
 for f in $selection; do
+    f=${f#./}
+    f=${f#$base}
+    f=${f#/}
+    echo "$f"
     [ -f "$f" ] && (echo "$f" | grep -q -s -E '\.(cc|cpp|c)$') || continue
 
     build_and_run $f
@@ -40,5 +47,10 @@ for f in $selection; do
     fi
 done
 
-echo " == $(($tot - $err)) of $tot ok, $err errors == "
+if [ $tot -eq 0 ]; then
+    echo "Nothing to do..."
+else
+    echo " == $(($tot - $err)) of $tot ok, $err errors == "
+fi
+
 exit $err
