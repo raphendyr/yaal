@@ -223,7 +223,7 @@ namespace yaal {
 
         TouchCoords wait_until_touch(TouchKind kind = WAIT_ANY) {
             serial.transmit(TOUCHCOORDS);
-            serial.transmit(static_cast<uint8_t>(kind));
+            serial.transmit(kind);
 
             uint8_t response[4];
             for (int i = 0; i < 4; ++i)
