@@ -18,7 +18,7 @@ namespace yaal {
         } data;
 
     public:
-        autounion() {}
+        autounion(): data(T()) {}
         autounion(T const& t): data(t) {}
 
         operator const T () const {
