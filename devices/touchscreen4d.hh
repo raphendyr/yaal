@@ -242,12 +242,12 @@ namespace yaal {
             serial.transmit(TOUCHCOORDS);
             serial.transmit(TOUCHCOORDS_GETCOORDINATES);
 
-            uint8_t response[4];
-            for (int i = 0; i < 4; ++i)
-                    response[i] = serial.receive();
+            autounion<uint16_t> response[2];
+            for (uint8_t i = 0; i < 2; ++i)
+                for (uint8_t j = 0; j < 2; ++j)
+                    response[i][j] = serial.receive();
 
-            TouchCoords ret = { (uint16_t)(response[0] << 8 | response[1]),
-                                (uint16_t)(response[2] << 8 | response[3]) };
+            TouchCoords ret = { response[0], response[1] };
             return ret;
         }
 
@@ -255,12 +255,12 @@ namespace yaal {
             serial.transmit(TOUCHCOORDS);
             serial.transmit(kind);
 
-            uint8_t response[4];
-            for (int i = 0; i < 4; ++i)
-                    response[i] = serial.receive();
+            autounion<uint16_t> response[2];
+            for (uint8_t i = 0; i < 2; ++i)
+                for (uint8_t j = 0; j < 2; ++j)
+                    response[i][j] = serial.receive();
 
-            TouchCoords ret = { (uint16_t)(response[0] << 8 | response[1]),
-                                (uint16_t)(response[2] << 8 | response[3]) };
+            TouchCoords ret = { response[0], response[1] };
             return ret;
         }
 
