@@ -5,7 +5,10 @@
 
 namespace yaal {
 
-    namespace internal {
+    template <typename T>
+    class Touchscreen4D {
+    private:
+
         static constexpr uint8_t ACK = 0x06;
         static constexpr uint8_t NAK = 0x15;
 
@@ -30,13 +33,9 @@ namespace yaal {
         static constexpr uint8_t TOUCHCOORDS_WAIT_PRESS = 0x01;
         static constexpr uint8_t TOUCHCOORDS_WAIT_RELEASE = 0x02;
         static constexpr uint8_t TOUCHCOORDS_WAIT_MOVING = 0x03;
-        static constexpr uint8_t TOUCHCOORDS_STATUS = 0x04; // FIXME -> enum
+        static constexpr uint8_t TOUCHCOORDS_STATUS = 0x04;
         static constexpr uint8_t TOUCHCOORDS_GETCOORDINATES = 0x05;
-    }
 
-    template <typename T>
-    class Touchscreen4D {
-    private:
         T serial;
 
     public:
@@ -45,8 +44,8 @@ namespace yaal {
         bool init(uint32_t baud = 9600) {
             serial.setBaud(baud);
             serial.setFrameFormat();
-            serial.transmit(internal::AUTOBAUD);
-            return serial.receive() == internal::ACK;
+            serial.transmit(AUTOBAUD);
+            return serial.receive() == ACK;
         }
 
         YAAL_INLINE("4D touchscreen set baud")
@@ -112,9 +111,9 @@ namespace yaal {
                     return false;
             }
 
-            serial.transmit(internal::SETBAUD);
+            serial.transmit(SETBAUD);
             serial.transmit(rate);
-            if (serial.receive() != internal::ACK)
+            if (serial.receive() != ACK)
                 return false;
 
             serial.setBaud(baud);
@@ -124,50 +123,50 @@ namespace yaal {
         // Draw ASCII character in the given color.
         // The color format is R5G6B5.
         bool draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color = 0xffff) {
-            serial.transmit(internal::DRAWCHAR_TEXT);
+            serial.transmit(DRAWCHAR_TEXT);
             serial.transmit(c);
             serial.transmit(x);
             serial.transmit(y);
             serial.transmit(color);
-            return serial.receive() == internal::ACK;
+            return serial.receive() == ACK;
         }
 
         // Draw an ellipse in the given color.
         // The color format is R5G6B5.
         bool draw_ellipse(uint16_t x, uint16_t y, uint16_t rx, uint16_t ry, uint16_t color) {
-            serial.transmit(internal::DRAWELLIPSE);
+            serial.transmit(DRAWELLIPSE);
             serial.transmit(x); // X coordinate of center
             serial.transmit(y); // Y coordinate of center
             serial.transmit(rx); // Radius in the X axis
             serial.transmit(ry); // Radius in the Y axis
             serial.transmit(color); // Color
-            return serial.receive() == internal::ACK;
+            return serial.receive() == ACK;
         }
 
         bool set_pen_size(bool solid) {
-            serial.transmit(internal::SETPENSIZE);
-            serial.transmit(solid ? internal::PEN_SOLID : internal::PEN_WIREFRAME);
-            return serial.receive() == internal::ACK;
+            serial.transmit(SETPENSIZE);
+            serial.transmit(solid ? PEN_SOLID : PEN_WIREFRAME);
+            return serial.receive() == ACK;
         }
 
         bool clear_screen() {
-            serial.transmit(internal::CLEARSCREEN);
-            return serial.receive() == internal::ACK;
+            serial.transmit(CLEARSCREEN);
+            return serial.receive() == ACK;
         }
 
         bool toggle_touchscreen(bool enabled) {
-            serial.transmit(internal::DISPCONTROL);
-            serial.transmit(internal::DISPCONTROL_TOUCH);
-            serial.transmit(enabled ? internal::DISPCONTROL_TOUCH_ENABLE
-                                    : internal::DISPCONTROL_TOUCH_DISABLE);
-            return serial.receive() == internal::ACK;
+            serial.transmit(DISPCONTROL);
+            serial.transmit(DISPCONTROL_TOUCH);
+            serial.transmit(enabled ? DISPCONTROL_TOUCH_ENABLE
+                                    : DISPCONTROL_TOUCH_DISABLE);
+            return serial.receive() == ACK;
         }
 
         bool reset_active_touch_region() {
-            serial.transmit(internal::DISPCONTROL);
-            serial.transmit(internal::DISPCONTROL_TOUCH);
-            serial.transmit(internal::DISPCONTROL_TOUCH_RESET_ACTIVE);
-            return serial.receive() == internal::ACK;
+            serial.transmit(DISPCONTROL);
+            serial.transmit(DISPCONTROL_TOUCH);
+            serial.transmit(DISPCONTROL_TOUCH_RESET_ACTIVE);
+            return serial.receive() == ACK;
         }
 
         enum TouchActType : uint8_t {
@@ -178,8 +177,8 @@ namespace yaal {
         };
 
         enum TouchActType get_touch_status() {
-            serial.transmit(internal::TOUCHCOORDS);
-            serial.transmit(internal::TOUCHCOORDS_STATUS);
+            serial.transmit(TOUCHCOORDS);
+            serial.transmit(TOUCHCOORDS_STATUS);
 
             uint8_t response[4];
             for (int i = 0; i < 4; ++i)
@@ -194,8 +193,8 @@ namespace yaal {
         };
 
         TouchCoords get_touch_coordinates() {
-            serial.transmit(internal::TOUCHCOORDS);
-            serial.transmit(internal::TOUCHCOORDS_GETCOORDINATES);
+            serial.transmit(TOUCHCOORDS);
+            serial.transmit(TOUCHCOORDS_GETCOORDINATES);
 
             uint8_t response[4];
             for (int i = 0; i < 4; ++i)
@@ -207,14 +206,14 @@ namespace yaal {
         }
 
         enum TouchKind : uint8_t {
-            WAIT_ANY = internal::TOUCHCOORDS_WAIT_ANY,
-            WAIT_PRESS = internal::TOUCHCOORDS_WAIT_PRESS,
-            WAIT_RELEASE = internal::TOUCHCOORDS_WAIT_RELEASE,
-            WAIT_MOVING = internal::TOUCHCOORDS_WAIT_MOVING
+            WAIT_ANY = TOUCHCOORDS_WAIT_ANY,
+            WAIT_PRESS = TOUCHCOORDS_WAIT_PRESS,
+            WAIT_RELEASE = TOUCHCOORDS_WAIT_RELEASE,
+            WAIT_MOVING = TOUCHCOORDS_WAIT_MOVING
         };
 
         TouchCoords wait_until_touch(TouchKind kind = WAIT_ANY) {
-            serial.transmit(internal::TOUCHCOORDS);
+            serial.transmit(TOUCHCOORDS);
             serial.transmit(static_cast<uint8_t>(kind));
 
             uint8_t response[4];
