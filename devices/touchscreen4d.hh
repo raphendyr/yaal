@@ -40,6 +40,25 @@ namespace yaal {
 
     public:
 
+        enum TouchActType : uint8_t {
+            ACT_NONE = 0,
+            ACT_PRESS = 1,
+            ACT_RELEASE = 2,
+            ACT_MOVING = 3
+        };
+
+        struct TouchCoords {
+            uint16_t x;
+            uint16_t y;
+        };
+
+        enum TouchKind : uint8_t {
+            WAIT_ANY = TOUCHCOORDS_WAIT_ANY,
+            WAIT_PRESS = TOUCHCOORDS_WAIT_PRESS,
+            WAIT_RELEASE = TOUCHCOORDS_WAIT_RELEASE,
+            WAIT_MOVING = TOUCHCOORDS_WAIT_MOVING
+        };
+
         YAAL_INLINE("4D touchscreen init")
         bool init(uint32_t baud = 9600) {
             serial.setBaud(baud);
@@ -169,13 +188,6 @@ namespace yaal {
             return serial.receive() == ACK;
         }
 
-        enum TouchActType : uint8_t {
-            ACT_NONE = 0,
-            ACT_PRESS = 1,
-            ACT_RELEASE = 2,
-            ACT_MOVING = 3
-        };
-
         enum TouchActType get_touch_status() {
             serial.transmit(TOUCHCOORDS);
             serial.transmit(TOUCHCOORDS_STATUS);
@@ -186,11 +198,6 @@ namespace yaal {
 
             return static_cast<TouchActType>(response[1]);
         }
-
-        struct TouchCoords {
-            uint16_t x;
-            uint16_t y;
-        };
 
         TouchCoords get_touch_coordinates() {
             serial.transmit(TOUCHCOORDS);
@@ -204,13 +211,6 @@ namespace yaal {
                                 (uint16_t)(response[2] << 8 | response[3]) };
             return ret;
         }
-
-        enum TouchKind : uint8_t {
-            WAIT_ANY = TOUCHCOORDS_WAIT_ANY,
-            WAIT_PRESS = TOUCHCOORDS_WAIT_PRESS,
-            WAIT_RELEASE = TOUCHCOORDS_WAIT_RELEASE,
-            WAIT_MOVING = TOUCHCOORDS_WAIT_MOVING
-        };
 
         TouchCoords wait_until_touch(TouchKind kind = WAIT_ANY) {
             serial.transmit(TOUCHCOORDS);
