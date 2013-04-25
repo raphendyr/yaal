@@ -63,11 +63,17 @@ namespace yaal {
         };
 
         YAAL_INLINE("4D touchscreen init")
-        bool init() {
+        bool init(uint32_t baud = initbaud) {
             serial.setBaud(initbaud);
             serial.setFrameFormat();
             serial.transmit(AUTOBAUD);
-            return serial.receive() == ACK;
+            if (serial.receive() != ACK)
+                return false;
+
+            if (baud != initbaud)
+                return set_baud(baud);
+
+            return true;
         }
 
         YAAL_INLINE("4D touchscreen set baud")
