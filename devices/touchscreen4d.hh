@@ -5,7 +5,10 @@
 
 namespace yaal {
 
-    template <typename T>
+    // The 4D Systems touchscreens use an initial baudrate of 9600 by default,
+    // but this can be changed with a tool. Hence, allow for a different
+    // default baudrate.
+    template <typename T, uint32_t initbaud = 9600>
     class Touchscreen4D {
     private:
 
@@ -60,8 +63,8 @@ namespace yaal {
         };
 
         YAAL_INLINE("4D touchscreen init")
-        bool init(uint32_t baud = 9600) {
-            serial.setBaud(baud);
+        bool init() {
+            serial.setBaud(initbaud);
             serial.setFrameFormat();
             serial.transmit(AUTOBAUD);
             return serial.receive() == ACK;
