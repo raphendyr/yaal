@@ -197,7 +197,7 @@ namespace yaal {
             return serial.receive() == ACK;
         }
 
-        enum TouchActType get_touch_status() {
+        TouchActType get_touch_status() {
             serial.transmit(TOUCHCOORDS);
             serial.transmit(TOUCHCOORDS_STATUS);
 
