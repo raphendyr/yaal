@@ -62,22 +62,50 @@ namespace yaal {
             WAIT_MOVING = TOUCHCOORDS_WAIT_MOVING
         };
 
+        enum RetStatus_ : uint8_t {
+            OK = 0,
+            FAIL = 1,
+            CONNECTION_ERROR = 2
+        };
+
+        class RetStatus {
+            RetStatus_ ret;
+        public:
+            RetStatus(bool code) = delete; // This is here to avoid bugs.
+
+            constexpr RetStatus(uint8_t code)
+                : ret(code == ACK ? OK : code == NAK ? FAIL : CONNECTION_ERROR) {}
+
+            constexpr RetStatus(RetStatus_ const status) : ret(status) {}
+
+            operator RetStatus_ () const {
+                return ret;
+            }
+
+            explicit operator bool () const {
+                return ret == OK;
+            }
+
+        };
+
         YAAL_INLINE("4D touchscreen init")
-        bool init(uint32_t baud = initbaud) {
+        RetStatus init(uint32_t baud = initbaud) {
             serial.setBaud(initbaud);
             serial.setFrameFormat();
             serial.transmit(AUTOBAUD);
-            if (serial.receive() != ACK)
-                return false;
+
+            RetStatus ret(serial.receive());
+            if (ret != OK)
+                return ret;
 
             if (baud != initbaud)
                 return set_baud(baud);
 
-            return true;
+            return OK;
         }
 
         YAAL_INLINE("4D touchscreen set baud")
-        bool set_baud(uint32_t baud) {
+        RetStatus set_baud(uint32_t baud) {
             uint8_t rate;
             switch (baud) {
                 case 110:
@@ -136,65 +164,67 @@ namespace yaal {
                     break;
                 default:
                     rate = 0xff;
-                    return false;
+                    return FAIL;
             }
 
             serial.transmit(SETBAUD);
             serial.transmit(rate);
-            if (serial.receive() != ACK)
-                return false;
+
+            RetStatus ret = serial.receive();
+            if (ret != OK)
+                return ret;
 
             serial.setBaud(baud);
-            return true;
+            return OK;
         }
 
         // Draw ASCII character in the given color.
         // The color format is R5G6B5.
-        bool draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color = 0xffff) {
+        RetStatus draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color = 0xffff) {
             serial.transmit(DRAWCHAR_TEXT);
             serial.transmit(c);
             serial.transmit(x);
             serial.transmit(y);
             serial.transmit(color);
-            return serial.receive() == ACK;
+            return serial.receive();
         }
 
         // Draw an ellipse in the given color.
         // The color format is R5G6B5.
-        bool draw_ellipse(uint16_t x, uint16_t y, uint16_t rx, uint16_t ry, uint16_t color) {
+        RetStatus draw_ellipse(uint16_t x, uint16_t y, uint16_t rx, uint16_t ry, uint16_t color) {
             serial.transmit(DRAWELLIPSE);
             serial.transmit(x); // X coordinate of center
             serial.transmit(y); // Y coordinate of center
             serial.transmit(rx); // Radius in the X axis
             serial.transmit(ry); // Radius in the Y axis
             serial.transmit(color); // Color
-            return serial.receive() == ACK;
+            return serial.receive();
         }
 
-        bool set_pen_size(bool solid) {
+        RetStatus set_pen_size(bool solid) {
             serial.transmit(SETPENSIZE);
             serial.transmit(solid ? PEN_SOLID : PEN_WIREFRAME);
-            return serial.receive() == ACK;
+            return serial.receive();
         }
 
-        bool clear_screen() {
+        RetStatus clear_screen() {
             serial.transmit(CLEARSCREEN);
-            return serial.receive() == ACK;
+            return serial.receive();
         }
 
-        bool toggle_touchscreen(bool enabled) {
+        RetStatus toggle_touchscreen(bool enabled) {
             serial.transmit(DISPCONTROL);
             serial.transmit(DISPCONTROL_TOUCH);
             serial.transmit(enabled ? DISPCONTROL_TOUCH_ENABLE
                                     : DISPCONTROL_TOUCH_DISABLE);
-            return serial.receive() == ACK;
+            return serial.receive();
         }
 
-        bool reset_active_touch_region() {
+        RetStatus reset_active_touch_region() {
             serial.transmit(DISPCONTROL);
             serial.transmit(DISPCONTROL_TOUCH);
             serial.transmit(DISPCONTROL_TOUCH_RESET_ACTIVE);
-            return serial.receive() == ACK;
+            return serial.receive();
         }
 
         TouchActType get_touch_status() {
