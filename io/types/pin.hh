@@ -204,7 +204,7 @@ namespace yaal {
     };
 
     /* NullPin */
-    typedef Pin<NullPort, 0> NullPin;
+    typedef Pin<NullPort, 0xff> NullPin;
 
     /* Reversed<Pin> */
     template<typename PinClass>
