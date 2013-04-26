@@ -1,8 +1,7 @@
+#include "testing.hh"
 #include "yaal/types/autounion.hh"
-using namespace yaal;
 
-#include <iostream>
-#include <assert.h>
+using namespace yaal;
 using namespace std;
 
 
@@ -21,21 +20,30 @@ int main(void) {
     fancy(0xff00);
     fancy(0xbeaf);
 
-    // asserts for automatic testing
+    // read bytes
     {
         autounion<uint16_t> a = 0xbeaf;
-        assert(a[0] == 0xbe);
-        assert(a[1] == 0xaf);
+        EQ(a[0], 0xbe);
+        EQ(a[1], 0xaf);
     }
+    // read as int
     {
         autounion<uint16_t> a = 0xbeaf;
-        assert(a == 0xbeaf);
+        EQ(a, 0xbeaf);
     }
+    // editing as int
     {
         autounion<uint16_t> a = 0xbeaf;
         a += 10;
-        assert(a == (0xbeaf + 10));
+        EQ(a, (0xbeaf + 10));
         a -= 20;
-        assert(a == (0xbeaf - 10));
+        EQ(a, (0xbeaf - 10));
+    }
+    // building a new
+    {
+        autounion<uint16_t> a;
+        a[1] = 0xaf;
+        a[0] = 0xbe;
+        EQ(a, 0xbeaf);
     }
 }
