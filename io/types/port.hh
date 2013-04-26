@@ -17,7 +17,7 @@ namespace yaal {
     template< typename OutputClass,
               typename DirectionClass,
               typename InputClass,
-              uint8_t bitmask >
+              uint8_t bitmask = 0xff >
     class Port {
         typedef Port<OutputClass, DirectionClass, InputClass, bitmask> self_type;
 

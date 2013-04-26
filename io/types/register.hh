@@ -28,6 +28,17 @@ namespace yaal {
 
     namespace internal {
 
+        //! Mask for Bit
+        /*! Generates valid mask for a bit.
+         *  Similar to _BV but doesn't trow warning when
+         *  called with too big number.
+         */
+        template<typename T>
+        constexpr uint8_t mask_for_bit(T bit) {
+            return (bit < sizeof(T)*8) ? (1 << bit) : 0;
+        }
+
+
         template <reg_a_t reg, typename reg_size = reg8_t>
         struct ReadableRegister {
             static YAAL_INLINE("Register operation")
@@ -62,13 +73,15 @@ namespace yaal {
 
         public:
 
+            static constexpr uint8_t mask = mask_for_bit(bit);
+
             YAAL_INLINE("RegisterBit operation")
             void set(bool state = true) {
                 RegisterClass reg;
                 if (state)
-                    reg |= (1 << bit);
+                    reg |= mask;
                 else
-                    reg &= ~(1 << bit);
+                    reg &= ~mask;
             }
 
             YAAL_INLINE("RegisterBit operation")
