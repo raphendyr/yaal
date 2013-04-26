@@ -31,7 +31,6 @@ for f in $selection; do
     f=${f#./}
     f=${f#$base}
     f=${f#/}
-    echo "$f"
     [ -f "$f" ] && (echo "$f" | grep -q -s -E '\.(cc|cpp|c)$') || continue
 
     build_and_run $f
