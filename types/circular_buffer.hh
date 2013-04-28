@@ -12,8 +12,7 @@ namespace yaal {
     template< uint8_t buffer_size, typename elem_t = uint8_t >
     class CircularBuffer {
         typedef CircularBuffer<buffer_size, elem_t> self_type;
-        typedef typename ::yaal::internal::TypeTraits<elem_t>::on_input elem_t_on_input;
-        typedef typename ::yaal::internal::TypeTraits<elem_t>::on_input elem_t_on_modify;
+        typedef typename type_traits<elem_t>::as_arg elem_t_on_input;
 
     public:
         typedef elem_t element_type;
@@ -90,7 +89,7 @@ namespace yaal {
 
         /* opers on front */
 
-        elem_t_on_modify front() {
+        elem_t& front() {
             return buffer[tail];
         }
 
@@ -118,7 +117,7 @@ namespace yaal {
 
         /* opers on back */
 
-        elem_t_on_modify back() {
+        elem_t& back() {
             uint8_t h = head;
             backward(h);
             return buffer[h];
@@ -147,19 +146,19 @@ namespace yaal {
 
         /* random access */
 
-        elem_t_on_modify at(uint8_t i) {
+        elem_t& at(uint8_t i) {
             return buffer[forward_modulo(tail, i)];
         }
 
-        const elem_t_on_modify at(uint8_t i) const {
+        const elem_t at(uint8_t i) const {
             return buffer[forward_modulo(tail, i)];
         }
 
-        elem_t_on_modify operator[] (uint8_t i) {
+        elem_t& operator[] (uint8_t i) {
             return at(i);
         }
 
-        const elem_t_on_modify operator[] (uint8_t i) const {
+        const elem_t operator[] (uint8_t i) const {
             return at(i);
         }
 

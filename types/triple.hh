@@ -11,12 +11,12 @@ namespace yaal {
     class Triple {
         typedef Triple<T1, T2, T3> self_type;
 
-        typedef typename ::yaal::internal::TypeTraits<T1>::on_input T1_on_input;
-        typedef typename ::yaal::internal::TypeTraits<T1>::on_modify T1_on_modify;
-        typedef typename ::yaal::internal::TypeTraits<T2>::on_input T2_on_input;
-        typedef typename ::yaal::internal::TypeTraits<T2>::on_modify T2_on_modify;
-        typedef typename ::yaal::internal::TypeTraits<T3>::on_input T3_on_input;
-        typedef typename ::yaal::internal::TypeTraits<T3>::on_modify T3_on_modify;
+        typedef typename type_traits<T1>::as_arg T1_on_input;
+        typedef T1& T1_on_modify;
+        typedef typename type_traits<T2>::as_arg T2_on_input;
+        typedef T2& T2_on_modify;
+        typedef typename type_traits<T3>::as_arg T3_on_input;
+        typedef T3& T3_on_modify;
 
         T1 val1;
         T2 val2;
@@ -68,9 +68,9 @@ namespace yaal {
     };
 
     template<typename T1, typename T2 = T1, typename T3 = T2>
-    Triple<T1, T2, T3> make_triple(const typename TypeTraits<T1>::on_input v1,
-                                   const typename TypeTraits<T2>::on_input v2,
-                                   const typename TypeTraits<T3>::on_input v3)
+    Triple<T1, T2, T3> make_triple(const typename type_traits<T1>::as_arg v1,
+                                   const typename type_traits<T2>::as_arg v2,
+                                   const typename type_traits<T3>::as_arg v3)
     {
         return Triple<T1, T2, T3>(v1, v2, v3);
     }

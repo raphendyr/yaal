@@ -11,6 +11,8 @@
 // FIXME: find out why
 #include "register.hh"
 
+#include "../../util/constexpr.hh"
+
 namespace yaal {
 
     // Port<Register port, Register ddr, ReadonlyRegister pin, bit_mask>
@@ -25,7 +27,8 @@ namespace yaal {
         typedef OutputClass output_type;
         typedef DirectionClass direction_type;
         typedef InputClass input_type;
-        static const uint8_t mask = bitmask;
+        static constexpr uint8_t mask = bitmask;
+        static constexpr uint8_t size = bits_up_ce(bitmask);
 
         OutputClass output;
         DirectionClass direction;
