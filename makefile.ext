@@ -1,4 +1,4 @@
-# -*- makefile -*-
+# Hi, I'm yaal -*- makefile -*-
 #----------------------------------------------------------------------------
 # This is YAAL makefile system. This makefile is splitted in multiple sources
 # for easier code maintainability.
