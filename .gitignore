@@ -10,6 +10,6 @@
 *.o
 *.so
 .dep/
-*.d
+examples/*/*.d
 tests/*.bin
 tests/*.log
