@@ -65,7 +65,7 @@ CFLAGS += -Wstrict-prototypes
 #CFLAGS += -Wundef
 #CFLAGS += -Wunreachable-code
 #CFLAGS += -Wsign-compare
-CFLAGS += -Wa,-adhlns=$(<:%.c=$(OBJDIR)/%.lst)
+CFLAGS += -Wa,-adhlns=$(@:%.o=%.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 
@@ -95,7 +95,7 @@ CPPFLAGS += -Wundef
 #CPPFLAGS += -Wstrict-prototypes
 #CPPFLAGS += -Wunreachable-code
 #CPPFLAGS += -Wsign-compare
-CPPFLAGS += -Wa,-adhlns=$(<:%.cpp=$(OBJDIR)/%.lst)
+CPPFLAGS += -Wa,-adhlns=$(@:%.o=%.lst)
 CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CPPFLAGS += $(CPPSTANDARD)
 
@@ -111,7 +111,7 @@ CPPFLAGS += $(CPPSTANDARD)
 #  -listing-cont-lines: Sets the maximum number of continuation lines of hex
 #       dump that will be displayed for a given single line of source input.
 ASFLAGS += $(ADEFS)
-ASFLAGS += -Wa,-adhlns=$(<:%.S=$(OBJDIR)/%.lst),-gstabs,--listing-cont-lines=100
+ASFLAGS += -Wa,-adhlns=$(@:%.o=%.lst),-gstabs,--listing-cont-lines=100
 
 
 
@@ -170,7 +170,8 @@ EXTMEMOPTS =
 #  -Wl,...:     tell GCC to pass this to linker.
 #    -Map:      create map file
 #    --cref:    add cross reference to  map file
-LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
+LDFLAGS += $(CFLAGS)
+LDFLAGS += -Wl,-Map=$(TARGET).map,--cref
 LDFLAGS += -Wl,--relax
 LDFLAGS += -Wl,--gc-sections
 LDFLAGS += -Wl,--print-gc-sections # from sooda
@@ -186,19 +187,13 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 
 
 
+
 #------------------- Commons -------------------
 # Define all object files.
-# FIXME: support for %.cc
-OBJ = $(SRC:%.c=$(OBJDIR)/%.o) \
-      $(CPPSRC:%.cpp=$(OBJDIR)/%.o) \
-      $(ASRC:%.S=$(OBJDIR)/%.o) \
-      $(YAALSRC:$(YAAL)/%.cpp=$(OBJDIR)/yaal/%.o)
+OBJ = $(patsubst %,$(OBJDIR)/%.o,$(basename $(SRC)))
 
 # Define all listing files.
-LST = $(SRC:%.c=$(OBJDIR)/%.lst) \
-      $(CPPSRC:%.cpp=$(OBJDIR)/%.lst) \
-      $(ASRC:%.S=$(OBJDIR)/%.lst) \
-      $(YAALSRC:$(YAAL)/%.cpp=$(OBJDIR)/yaal/%.lst)
+LST = $(OBJ:%.o=%.lst)
 
 # Compiler flags to generate dependency files.
 GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
@@ -208,6 +203,7 @@ GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
 ALL_CPPFLAGS = -mmcu=$(MCU) -I. -x c++ $(CPPFLAGS) $(GENDEPFLAGS)
 ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
+ALL_LDFLAGS = -mmcu=$(MCU) -I. $(LDFLAGS)
 
 
 
@@ -237,11 +233,10 @@ clean_list:
 	$(REMOVE) $(TARGET).lss
 	$(REMOVE) $(OBJ)
 	$(REMOVE) $(LST)
-	# FIXME: support *.cc
-	$(REMOVE) $(SRC:.c=.s) $(CPPSRC:.cpp=.s)
-	$(REMOVE) $(SRC:.c=.d) $(CPPSRC:.cpp=.d)
-	$(REMOVE) $(SRC:.c=.i) $(CPPSRC:.cpp=.i)
-	$(REMOVE) $(SRC:.c=.m) $(CPPSRC:.cpp=.m)
+	$(REMOVE) $(addsuffix .s,$(basename $(SRC)))
+	$(REMOVE) $(addsuffix .d,$(basename $(SRC)))
+	$(REMOVE) $(addsuffix .i,$(basename $(SRC)))
+	$(REMOVE) $(addsuffix .m,$(basename $(SRC)))
 	$(REMOVEDIR) .dep
 
 
@@ -343,59 +338,56 @@ extcoff: $(TARGET).elf
 %.elf: $(OBJ)
 	@echo
 	@echo $(MSG_LINKING) $@
-	$(CC) $(ALL_CFLAGS) $^ --output $@ $(LDFLAGS)
+	$(CC) $(ALL_LDFLAGS) -o $@ $^
 
 
 
+# Compile: create object files from C, C++ and assembly source files.
 .PRECIOUS : $(OBJ)
 
-# Compile: create object files from C source files.
 $(OBJDIR)/%.o : %.c
 	@echo
 	@echo $(MSG_COMPILING) $<
 	@mkdir -p $(dir $@)
 	$(CC) -c $(ALL_CFLAGS) $< -o $@
 
-
-
-# Compile: create object files from C++ source files.
-# FIXME: %.cc support
 $(OBJDIR)/%.o : %.cpp
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	@mkdir -p $(dir $@)
 	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
 
-
-
-# Compile: create object files from YAAL C++ source files.
-$(OBJDIR)/yaal/%.o : $(YAAL)/%.cpp
+$(OBJDIR)/%.o : %.cc
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	@mkdir -p $(dir $@)
 	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
 
-
-
-# Compile: create assembler files from C source files.
-%.s : %.c
-	$(CC) -S $(ALL_CFLAGS) $< -o $@
-
-
-
-# Compile: create assembler files from C++ source files.
-# FIXME: %.cc support
-%.s : %.cpp
-	$(CC) -S $(ALL_CPPFLAGS) $< -o $@
-
-
-
-# Assemble: create object files from assembler source files.
 $(OBJDIR)/%.o : %.S
 	@echo
 	@echo $(MSG_ASSEMBLING) $<
 	@mkdir -p $(dir $@)
 	$(CC) -c $(ALL_ASFLAGS) $< -o $@
+
+# yaal specific
+$(OBJDIR)/yaal/%.o : $(YAAL)/%.cpp
+	@echo
+	@echo $(MSG_COMPILING_YAAL) $<
+	@mkdir -p $(dir $@)
+	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
+
+
+# Compile: create assembler files from C and C++ source files.
+%.s : %.c
+	$(CC) -S $(ALL_CFLAGS) $< -o $@
+
+%.s : %.cpp
+	$(CC) -S $(ALL_CPPFLAGS) $< -o $@
+
+%.s : %.cc
+	$(CC) -S $(ALL_CPPFLAGS) $< -o $@
+
+
 
 
 
@@ -416,6 +408,10 @@ $(OBJDIR)/%.o : %.S
 	$(CC) -dM -E -mmcu=$(MCU) -I. $(CPPFLAGS) $< -o $@
 
 
+
+
+
+#======================================
 
 # Create object files directory
 $(shell mkdir $(OBJDIR) 2>/dev/null)

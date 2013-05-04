@@ -27,24 +27,14 @@ endif
 # Target file name (without extension).
 TARGET ?= $(shell basename $(shell pwd))
 
-# List C source files here.
+# List C, C++ and assembly source files here.
 #SRC = 
-
-# List C++ source files here. (C dependencies are automatically generated.)
-# CPPSRC defaults to main.* or $(TARGET).*, where * is extension we know howto build
-CPPSRC ?= $(word 1,$(foreach base,main $(TARGET),$(wildcard $(base).cpp)))
-
-# List Assembler source files here.
-#     Make them always end in a capital .S.  Files ending in a lowercase .s
-#     will not be considered source files but generated files (assembler
-#     output from the compiler), and will be deleted upon "make clean"!
-#     Even though the DOS/Win* filesystem matches both .s and .S the same,
-#     it will preserve the spelling of the filenames, and gcc itself does
-#     care about how the name is spelled on its command-line.
-#ASRC =
+# SRC defaults to main.* or $(TARGET).*, where * is extension we know howto build
+# FIXME: get prefixes from build.mk
+SRC ?= $(word 1,$(foreach base,main $(TARGET),$(foreach ext,.c .cpp .cc .S,$(wildcard $(base)$(ext)))))
 
 # Test that at least something is included
-ifeq ($(SRC)$(CPPSRC)$(ASRC),)
+ifeq ($(SRC),)
 $(error No file matching main.* nor TARGET.* were found, also no SRC was specified in Makefile (before include))
 endif
 
