@@ -1,16 +1,16 @@
-#include "yaal/core.hh"
-#include "yaal/io.hh"
-#include "yaal/communication/spi.hh"
-#include <util/delay.h>
+#include <yaal/core.hh>
+#include <yaal/io.hh>
+#include <yaal/communication/spi.hh>
 
 using namespace yaal;
 
 SPI<PortD1, PortD2, PortD3, PortD0> spi;
 
-void main() {
-
+void setup() {
     spi.setup();
+}
 
+void loop() {
     uint8_t value;
 
     // read
@@ -19,5 +19,4 @@ void main() {
     value = spi.transfer(value);
     // write
     spi.write(value);
-
 }

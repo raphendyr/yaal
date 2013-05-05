@@ -1,18 +1,6 @@
-/*** Don't mide this start crap. Arduino IDE would hide it. ***/
-
-// there is no better infrastructure for this yet
-#define ARDUINO_teensy
-
-#include "yaal/arduino.hh"
+#include <yaal/arduino.hh>
 #include <util/delay.h>
 
-
-// FIXME: these should not be needed
-using namespace yaal;
-using namespace yaal::arduino;
-
-
-/*** Arduino like code starts here ***/
 // FIXME: create delay() based on _delay_ms()
 
 D5 button;

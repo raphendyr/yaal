@@ -1,14 +1,16 @@
-#include "yaal/io/serials.hh"
+#include <yaal/core.hh>
+#include <yaal/io/serials.hh>
 
 using namespace yaal;
 
-int main() {
-    Serial0 serial;
+Serial0 serial;
 
-    // Initialization
+void setup() {
     serial.setBaud(9600);
     serial.setFrameFormat(DATA_EIGHT, STOP_ONE, PARITY_EVEN);
+}
 
+void loop() {
     // Transmit one byte.
     serial.transmit('A');
 
@@ -23,6 +25,4 @@ int main() {
 
     // Transmit one more byte to indicate success.
     serial.transmit('D');
-
-    return 0;
 }

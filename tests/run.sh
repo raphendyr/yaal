@@ -14,7 +14,7 @@ build_and_run() {
     [ "$1" ] || return -1
     file=$1
     base=${file%.*}
-    g++ -o $base.bin -std=c++11 -Wall $file 2>&1 > $base.log
+    g++ -I../include -o $base.bin -std=c++11 -Wall $file 2>&1 > $base.log
     ret=$?
     if [ $ret -eq 0 ]; then
         ./$base.bin 2>&1 > $base.log

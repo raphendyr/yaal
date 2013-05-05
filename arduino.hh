@@ -11,4 +11,7 @@
 /* include compatiility to old arduino funktions */
 #include "arduino/compatibility.hh"
 
+using namespace yaal;
+using namespace yaal::arduino;
+
 #endif

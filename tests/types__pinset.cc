@@ -1,6 +1,5 @@
 #include "testing.hh"
-
-#include "yaal/types/pinset.hh"
+#include <yaal/types/pinset.hh>
 
 using namespace yaal;
 using namespace std;
