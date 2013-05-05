@@ -1,4 +1,5 @@
 #include <util/delay.h>
+#include <yaal/core.hh>
 #include <yaal/io/serials.hh>
 #include <yaal/devices/touchscreen4d.hh>
 
@@ -11,7 +12,7 @@ using namespace yaal;
 typedef Touchscreen4D<Serial1> LCD;
 LCD lcd;
 
-int main() {
+void setup() {
     // Wait for the LCD to bootup
     _delay_ms(1000);
 
@@ -20,7 +21,9 @@ int main() {
 
     // Clear the screen.
     lcd.clear_screen();
+}
 
+void main() {
     // Draw a character.
     lcd.draw_char('A', 1, 1);
 
