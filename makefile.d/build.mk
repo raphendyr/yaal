@@ -208,12 +208,25 @@ ALL_LDFLAGS = -mmcu=$(MCU) -I. $(LDFLAGS)
 
 
 
-#============================================================================
+# ========================
+# targets for user to call
+# ========================
+
+.PHONY: build_help
+build_help:
+	$(HELP_TITTLE) compiling
+	$(HELP_DESC) "This section is used to compile your sourecode into bytecode"
+	$(HELP_ATTRS)
+	$(HELP_ATTR) SRC "list of sourcefiles (main.* and TARGET.* are used if none given)"
+	$(HELP_ATTR) TARGET "target filename prefix, seults TARGET.hex etc. (we use current directory name if none given"
+	$(HELP_TARGETS)
+	$(HELP_TARGET) build "build project files"
+	$(HELP_TARGET) clean "clean build files"
 
 
 # Target: build project
 .PHONY: build
-build: elf hex eep lss sym
+build: begin gccversion sizebefore elf hex eep lss sym sizeafter end
 
 
 
@@ -292,6 +305,12 @@ extcoff: $(TARGET).elf
 	@echo $(MSG_EXTENDED_COFF) $(TARGET).cof
 	$(COFFCONVERT) -O coff-ext-avr $< $(TARGET).cof
 
+
+
+
+# -----------------------------------
+# Generic pattern targets for actions
+# -----------------------------------
 
 
 # Create final output files (.hex, .eep) from ELF output file.

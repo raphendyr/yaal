@@ -3,9 +3,22 @@
 # If no other programmer is set
 PROGRAMMER ?= avrdude
 
+# programming help
+program_help:
+	$(HELP_TITTLE) programming
+	$(HELP_DESC) "This section is used to flash your code into your board/mcu"
+	$(HELP_ATTRS)
+	$(HELP_ATTR) PROGRAMMER "select programming backend to use (avrdude|teensy)"
+	$(HELP_ATTR) AVRDUDE_PROGRAMMER "avrdude programmer (eq. stk500v2)"
+	$(HELP_ATTR) AVRDUDE_PORT "avrdude programmer connection port"
+	$(HELP_TARGETS)
+	$(HELP_TARGET) program "flash your programmer"
 
+
+
+#--------- avrdude ---------
 ifeq ($(PROGRAMMER),avrdude)
-#-------------- avrdude ---------------
+#---------------------------
 
 # avrdude executable
 AVRDUDE ?= avrdude
@@ -49,13 +62,14 @@ program: $(TARGET).hex $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
 
-# end, avrdude
 endif
+# end, avrdude
 
 
 
+#--------- teensy ---------
 ifeq ($(PROGRAMMER),teensy)
-#--------------- teensy ---------------
+# -------------------------
 
 TEENSY := $(YAAL)/vendor/teensy/teensy_loader_cli/teensy_loader_cli
 TEENSY_FLAGS = -v -w -mmcu=$(MCU)
@@ -74,8 +88,8 @@ program: $(TARGET).hex $(TEENSY)
 	$(TEENSY) $(TEENSY_FLAGS) $<
 
 
-# end, teensy
 endif
+# end, teensy
 
 #============================================================================
 

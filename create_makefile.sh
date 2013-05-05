@@ -46,6 +46,8 @@ cat > Makefile <<MAKEFILE
 
 # Include YAAL makefile
 include $YAAL/makefile.ext
+
+# ps. run 'make help' for more info
 MAKEFILE
 
 echo "OK. I created Makefile for you. You should edit it."

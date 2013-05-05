@@ -72,3 +72,14 @@ COPY = cp
 ARCH := $(shell uname -p)
 # FIXME: I'm sure that there is better way to do this
 LANG := $(shell locale | grep -E '^(LANG|LANGUAGE|LC_MESSAGES|LC_ALL)' | cut -d '=' -f 2 | tr -d '"' | tr '[\n-_:]' ' ' | cut -d ' ' -f 1)
+
+
+
+# Help target
+# -----------
+environment_help:
+	$(HELP_TITTLE) environment
+	$(HELP_DESC) "This section defines common variables about your avr environment"
+	$(HELP_ATTRS)
+	$(HELP_ATTR) MCU "Microcontroller Chip Unit (eq. attiny8)"
+	$(HELP_ATTR) F_CPU "Frequency your chip is going to run (eq. for <util/delay.h>)"
