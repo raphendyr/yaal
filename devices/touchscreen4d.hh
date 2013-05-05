@@ -1,5 +1,5 @@
-#ifndef __YAAL_DEVICE__TOUCHSCREEN4D__
-#define __YAAL_DEVICE__TOUCHSCREEN4D__ 1
+#ifndef __YAAL_DEVICES__TOUCHSCREEN4D__
+#define __YAAL_DEVICES__TOUCHSCREEN4D__ 1
 #include "../requirements.hh"
 #ifdef __YAAL__
 
