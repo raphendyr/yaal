@@ -1,11 +1,22 @@
 # Board
 # -----
 
+# MCU clock (crystal) frequency (external or internal)
+#   This variable is similar to F_CPU, but defines orginal clock frequency.
+#   For eq. when you set cpu prescaler to 2 then F_CPU = F_CLOCK / 2
+#   This information is known for dirrefent boards, so F_CPU defaults to it
+#   as normally you want to run with full speed.
+ifdef F_CLOCK
+F_CPU ?= $(F_CLOCK)
+endif
+
+
 # Processor frequency.
 #   Normally the first thing your program should do is set the clock prescaler,
 #   so your program will run at the correct speed.  You should also set this
 #   variable to same clock speed.  The _delay_ms() macro uses this, and many
 #   examples use this variable to calculate timings.  Do not add a "UL" here.
+#   Yaal handles setting the processor speed if F_CLOCK and F_CPU are both set.
 #F_CPU = 16000000
 ifndef F_CPU
 $(error You need to define F_CPU before including yaal makefile.)
@@ -14,6 +25,7 @@ endif
 
 # MCU name
 #   you MUST set this to match the chip you are using
+#   If you use BOARD option, this is set for you.
 #MCU = atmega8
 ifndef MCU
 $(error You need to define MCU before including yaal makefile.)

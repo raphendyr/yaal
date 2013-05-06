@@ -1,0 +1,37 @@
+BOARD               MCU         F_CLOCK     ARDUINO_BOARD   PROGRAMMER  BOARD_NAME
+
+#-------------- Teensys ---------------
+#  : http://www.pjrc.com/teensy/
+teensy1             at90usb162  16000000    teensy          teensy      "teensy 1.0"
+teensy2             atmega32u4  16000000    teensy          teensy      "teensy 2.0"
+teensy++1           at90usb646  16000000    teensy          teensy      "teensy++ 1.0"
+teensy++2           at90usb1286 16000000    teensy          teensy      "teensy++ 2.0"
+
+#------------- Arduinos ---------------
+#  : http://www.arduino.cc/
+#  : http://en.wikipedia.org/wiki/List_of_Arduino_boards_and_compatible_systems
+arduino_lilypad328  atmega328p  8000000     standard        -           "lilypad arduino w/ atmega328"
+arduino_lilypad     atmega168   8000000     standard        -           "lilypad arduino w/ atmega168"
+arduino_uno         atmega328p  16000000    standard        -           "arduino uno"
+arduino_pro5v328    atmega328p  16000000    standard        -           "arduino pro or pro mini (5v, 16 mhz) w/ atmega328"
+arduino_pro5v       atmega168   16000000    standard        -           "arduino pro or pro mini (5v, 16 mhz) w/ atmega168"
+arduino_pro328      atmega328p  8000000     standard        -           "arduino pro or pro mini (3.3v, 8 mhz) w/ atmega328"
+arduino_pro         atmega168   8000000     standard        -           "arduino pro or pro mini (3.3v, 8 mhz) w/ atmega168"
+arduino_atmega8     atmega8     16000000    standard        -           "arduino ng or older w/ atmega8"
+arduino_atmega168   atmega168   16000000    standard        -           "arduino ng or older w/ atmega168"
+arduino_ethernet    atmega328p  16000000    standard        -           "arduino ethernet"
+arduino_atmega328   atmega328p  16000000    standard        -           "arduino duemilanove w/ atmega328"
+arduino_diecimila   atmega168   16000000    standard        -           "arduino diecimila or duemilanove w/ atmega168"
+arduino_micro       atmega32u4  16000000    micro           -           "arduino micro"
+arduino_mega        atmega1280  16000000    mega            -           "arduino mega (atmega1280)"
+arduino_mega2560    atmega2560  16000000    mega            -           "arduino mega 2560 or mega adk"
+arduino_lilypadusb  atmega32u4  8000000     leonardo        -           "lilypad arduino usb"
+arduino_leonardo    atmega32u4  16000000    leonardo        -           "arduino leonardo"
+arduino_esplora     atmega32u4  16000000    leonardo        -           "arduino esplora"
+arduino_nano328     atmega328p  16000000    eightanaloginputs -         "arduino nano w/ atmega328"
+arduino_nano        atmega168   16000000    eightanaloginputs -         "arduino nano w/ atmega168"
+arduino_mini328     atmega328p  16000000    eightanaloginputs -         "arduino mini w/ atmega328"
+arduino_mini        atmega168   16000000    eightanaloginputs -         "arduino mini w/ atmega168"
+arduino_fio         atmega328p  8000000     eightanaloginputs -         "arduino fio"
+arduino_bt328       atmega328p  16000000    eightanaloginputs -         "arduino bt w/ atmega328"
+arduino_bt          atmega168   16000000    eightanaloginputs -         "arduino bt w/ atmega168"

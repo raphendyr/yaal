@@ -52,6 +52,8 @@
 YAAL := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 
+# Include boards, as that should define MCU and F_CLOCK, if BOARD is used
+include $(YAAL)/makefile.d/boards.mk
 
 # Include defines about project environment
 include $(YAAL)/makefile.d/environment.mk
