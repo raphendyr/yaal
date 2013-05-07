@@ -1,12 +1,6 @@
-// there is no better infrastructure for this yet
-#define ARDUINO_teensy
-
-#include "yaal/arduino.hh"
-#include "yaal/communication/spi.hh"
+#include <yaal/arduino.hh>
+#include <yaal/communication/spi.hh>
 #include <util/delay.h>
-
-using namespace yaal;
-using namespace yaal::arduino;
 
 typedef D21 Latch;
 typedef D18 Data;

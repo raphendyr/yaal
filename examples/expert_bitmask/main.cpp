@@ -1,12 +1,12 @@
-#include "yaal/core.hh"
-#include "yaal/io.hh"
-#include "yaal/bitmask.hh"
+#include <yaal/core.hh>
+#include <yaal/io.hh>
+#include <yaal/bitmask.hh>
 
 using namespace yaal;
 
 PortB row;
 
-void main() {
+void loop() {
 
     row |= BitMask<1,2>::left;
     row |= BitMask<2,2>::left;

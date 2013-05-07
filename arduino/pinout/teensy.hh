@@ -3,7 +3,7 @@
 #include "../../requirements.hh"
 #ifdef __YAAL__
 
-#ifndef __YAAL_ARDUINO__PINOUT__
+#ifndef __YAAL_ARDUINO__PINOUT__LOCK
 # error "Do not include arduino pinouts for boards directly. Include yaal/arduino/pinout.hh instead."
 #else
 

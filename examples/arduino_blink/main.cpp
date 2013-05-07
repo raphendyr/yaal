@@ -1,12 +1,5 @@
-// there is no better infrastructure for this yet
-#define ARDUINO_teensy
-
-#include "yaal/arduino.hh"
+#include <yaal/arduino.hh>
 #include <util/delay.h>
-
-
-using namespace yaal;
-using namespace yaal::arduino;
 
 D5 button;
 D6 led;

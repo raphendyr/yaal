@@ -1,5 +1,6 @@
-#include "yaal/core.hh"
-#include "yaal/io.hh"
+#include <yaal/core.hh>
+#include <yaal/io.hh>
+
 #include <util/delay.h>
 
 using namespace yaal;
@@ -25,9 +26,7 @@ void main() {
 
     for (;;) {
         led = true;
-        //_delay_ms(800);
         led = false;
-        //_delay_ms(800);
     }
 
 }

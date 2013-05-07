@@ -1,17 +1,17 @@
-#include "yaal/core.hh"
-#include "yaal/io.hh"
-#include "yaal/atomic.hh"
+#include <yaal/core.hh>
+#include <yaal/io.hh>
+#include <yaal/atomic.hh>
 #include <util/atomic.h>
-
 
 using namespace yaal;
 
 PortB data;
 
-void main() {
-
+void setup() {
     sei();
+}
 
+void loop() {
     uint8_t local_data;
 
     // C style
@@ -26,7 +26,4 @@ void main() {
         local_data = data;
     }
     data = 0x02;
-
-    cli();
-
 }

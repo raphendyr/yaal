@@ -1,5 +1,5 @@
 #include "testing.hh"
-#include "yaal/types/autounion.hh"
+#include <yaal/types/autounion.hh>
 
 using namespace yaal;
 using namespace std;

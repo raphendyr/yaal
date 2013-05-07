@@ -1,5 +1,5 @@
 #include "testing.hh"
-#include "yaal/util/constexpr.hh"
+#include <yaal/util/constexpr.hh>
 
 using namespace yaal;
 using namespace std;

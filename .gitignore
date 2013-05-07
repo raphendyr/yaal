@@ -10,6 +10,7 @@
 *.o
 *.so
 .dep/
-*.d
+examples/*/*.d
 tests/*.bin
 tests/*.log
+vendor/teensy/teensy_loader_cli/teensy_loader_cli
