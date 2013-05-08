@@ -30,46 +30,6 @@ namespace yaal {
             typedef Register<YAAL_ADDR(UBRR3), reg16_t> Ubrr3;
 #       endif
 
-#       ifdef UBRR0H
-            typedef Register<YAAL_ADDR(UBRR0H), reg8_t> Ubrr0h;
-#       endif
-
-#       ifdef UBRR0L
-            typedef Register<YAAL_ADDR(UBRR0L), reg8_t> Ubrr0l;
-#       endif
-
-#       ifdef UBRR1H
-            typedef Register<YAAL_ADDR(UBRR1H), reg8_t> Ubrr1h;
-#       endif
-
-#       ifdef UBRR1L
-            typedef Register<YAAL_ADDR(UBRR1L), reg8_t> Ubrr1l;
-#       endif
-
-#       ifdef UBRR2H
-            typedef Register<YAAL_ADDR(UBRR2H), reg8_t> Ubrr2h;
-#       endif
-
-#       ifdef UBRR2L
-            typedef Register<YAAL_ADDR(UBRR2L), reg8_t> Ubrr2l;
-#       endif
-
-#       ifdef UBRR3H
-            typedef Register<YAAL_ADDR(UBRR3H), reg8_t> Ubrr3h;
-#       endif
-
-#       ifdef UBRR3L
-            typedef Register<YAAL_ADDR(UBRR3L), reg8_t> Ubrr3l;
-#       endif
-
-#       ifdef UBRRH
-            typedef Register<YAAL_ADDR(UBRRH), reg8_t> Ubrrh;
-#       endif
-
-#       ifdef UBRRL
-            typedef Register<YAAL_ADDR(UBRRL), reg8_t> Ubrrl;
-#       endif
-
 #       ifdef UCSR0A
             typedef Register<YAAL_ADDR(UCSR0A), reg8_t> Ucsr0a;
 #       endif

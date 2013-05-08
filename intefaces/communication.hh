@@ -15,13 +15,18 @@
  */
 class SyncronousPointToPointCommunicationInterface {
 
-
     /* REQUIRED methods */
 
     /*! Setup connection
      */
     // NOTE: if constructors do start working, this will change to that and may be ommitted (in caller side)
     void setup();
+
+
+    /*! Read byte
+     */
+    uint8_t get();
+
 
     /*! Read data
      * This funktion reads sizeof(T) bytes from connection
@@ -30,7 +35,18 @@ class SyncronousPointToPointCommunicationInterface {
      * \return \a read returns sizeof(T) bytes of data from connection
      */
     template<typename T>
-    T read();
+    void read(T& data) {
+        autounion<T> res;
+        for (uint8_t i = 0; i < data.size; i++)
+            res[i] = get();
+        data = res;
+    }
+
+
+    /*! Write byte
+     */
+    void put(uint8_t);
+
 
     /*! Write data
      * This funktion writes sizeof(T) bytes of data from \a data
@@ -39,7 +55,11 @@ class SyncronousPointToPointCommunicationInterface {
      * \param data bytes to be writtend.
      */
     template<typename T>
-    void write(const T data);
+    void write(const T value) {
+        autounion<T> data = value;
+        for (uint8_t i = 0; i < data.size; i++)
+            put(data[i]);
+    }
 
 
 
@@ -68,6 +88,7 @@ class SyncronousPointToPointCommunicationInterface {
     void exchange(T& data, uint8_t amount_of_bits);
 
 };
+
 
 #endif
 #endif

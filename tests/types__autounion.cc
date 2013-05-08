@@ -14,6 +14,13 @@ void fancy(autounion<uint16_t> value) {
     cout << endl;
 }
 
+void risky(uint16_t& data, uint8_t a, uint8_t b) {
+    autounion<uint16_t> value;
+    value[0] = a;
+    value[1] = b;
+    data = value;
+}
+
 int main(void) {
     // some visual tests
     fancy(0xffff);
@@ -45,5 +52,12 @@ int main(void) {
         a[1] = 0xaf;
         a[0] = 0xbe;
         EQ(a, 0xbeaf);
+    }
+    // as reference parameter
+    {
+        uint16_t val;
+        uint8_t a = 5, b = 0x1e;
+        risky(val, a, b);
+        EQ(val, ((a << 8) | b));
     }
 }

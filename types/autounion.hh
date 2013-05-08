@@ -21,12 +21,20 @@ namespace yaal {
         autounion(): data(T()) {}
         autounion(T const& t): data(t) {}
 
-        operator const T () const {
+        T value() const {
+            return data.value;
+        }
+
+        operator T () const {
+            return value();
+        }
+
+        T& value() {
             return data.value;
         }
 
         operator T& () {
-            return data.value;
+            return value();
         }
 
         uint8_t& operator[] (uint8_t const i) {

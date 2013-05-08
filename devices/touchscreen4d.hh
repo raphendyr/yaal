@@ -89,12 +89,12 @@ namespace yaal {
         };
 
         YAAL_INLINE("4D touchscreen init")
-        RetStatus init(uint32_t baud = initbaud) {
+        RetStatus setup(uint32_t baud = initbaud) {
             serial.setBaud(initbaud);
             serial.setFrameFormat();
-            serial.transmit(AUTOBAUD);
+            serial.put(AUTOBAUD);
 
-            RetStatus ret(serial.receive());
+            RetStatus ret(serial.get());
             if (ret != OK)
                 return ret;
 
@@ -167,10 +167,10 @@ namespace yaal {
                     return FAIL;
             }
 
-            serial.transmit(SETBAUD);
-            serial.transmit(rate);
+            serial.put(SETBAUD);
+            serial.put(rate);
 
-            RetStatus ret = serial.receive();
+            RetStatus ret = serial.get();
             if (ret != OK)
                 return ret;
 
@@ -181,84 +181,81 @@ namespace yaal {
         // Draw ASCII character in the given color.
         // The color format is R5G6B5.
         RetStatus draw_char(uint8_t c, uint8_t x, uint8_t y, uint16_t color = 0xffff) {
-            serial.transmit(DRAWCHAR_TEXT);
-            serial.transmit(c);
-            serial.transmit(x);
-            serial.transmit(y);
-            serial.transmit(color);
-            return serial.receive();
+            serial.put(DRAWCHAR_TEXT);
+            serial.put(c);
+            serial.put(x);
+            serial.put(y);
+            serial.write(color);
+            return serial.get();
         }
 
         // Draw an ellipse in the given color.
         // The color format is R5G6B5.
         RetStatus draw_ellipse(uint16_t x, uint16_t y, uint16_t rx, uint16_t ry, uint16_t color) {
-            serial.transmit(DRAWELLIPSE);
-            serial.transmit(x); // X coordinate of center
-            serial.transmit(y); // Y coordinate of center
-            serial.transmit(rx); // Radius in the X axis
-            serial.transmit(ry); // Radius in the Y axis
-            serial.transmit(color); // Color
-            return serial.receive();
+            serial.put(DRAWELLIPSE);
+            serial.write(x); // X coordinate of center
+            serial.write(y); // Y coordinate of center
+            serial.write(rx); // Radius in the X axis
+            serial.write(ry); // Radius in the Y axis
+            serial.write(color); // Color
+            return serial.get();
         }
 
         RetStatus set_pen_size(bool solid) {
-            serial.transmit(SETPENSIZE);
-            serial.transmit(solid ? PEN_SOLID : PEN_WIREFRAME);
-            return serial.receive();
+            serial.put(SETPENSIZE);
+            serial.put(solid ? PEN_SOLID : PEN_WIREFRAME);
+            return serial.get();
         }
 
         RetStatus clear_screen() {
-            serial.transmit(CLEARSCREEN);
-            return serial.receive();
+            serial.put(CLEARSCREEN);
+            return serial.get();
         }
 
         RetStatus toggle_touchscreen(bool enabled) {
-            serial.transmit(DISPCONTROL);
-            serial.transmit(DISPCONTROL_TOUCH);
-            serial.transmit(enabled ? DISPCONTROL_TOUCH_ENABLE
-                                    : DISPCONTROL_TOUCH_DISABLE);
-            return serial.receive();
+            serial.put(DISPCONTROL);
+            serial.put(DISPCONTROL_TOUCH);
+            serial.put(enabled ? DISPCONTROL_TOUCH_ENABLE : DISPCONTROL_TOUCH_DISABLE);
+            return serial.get();
         }
 
         RetStatus reset_active_touch_region() {
-            serial.transmit(DISPCONTROL);
-            serial.transmit(DISPCONTROL_TOUCH);
-            serial.transmit(DISPCONTROL_TOUCH_RESET_ACTIVE);
-            return serial.receive();
+            serial.put(DISPCONTROL);
+            serial.put(DISPCONTROL_TOUCH);
+            serial.put(DISPCONTROL_TOUCH_RESET_ACTIVE);
+            return serial.get();
         }
 
         TouchActType get_touch_status() {
-            serial.transmit(TOUCHCOORDS);
-            serial.transmit(TOUCHCOORDS_STATUS);
+            serial.put(TOUCHCOORDS);
+            serial.put(TOUCHCOORDS_STATUS);
 
             uint8_t response[4];
             for (int i = 0; i < 4; ++i)
-                response[i] = serial.receive();
+                response[i] = serial.get();
 
             return static_cast<TouchActType>(response[1]);
         }
 
         TouchCoords get_touch_coordinates() {
-            serial.transmit(TOUCHCOORDS);
-            serial.transmit(TOUCHCOORDS_GETCOORDINATES);
+            serial.put(TOUCHCOORDS);
+            serial.put(TOUCHCOORDS_GETCOORDINATES);
 
             autounion<uint16_t> response[2];
             for (uint8_t i = 0; i < 2; ++i)
-                for (uint8_t j = 0; j < 2; ++j)
-                    response[i][j] = serial.receive();
+                serial.read(response[i].value());
 
             TouchCoords ret = { response[0], response[1] };
             return ret;
         }
 
         TouchCoords wait_until_touch(TouchKind kind = WAIT_ANY) {
-            serial.transmit(TOUCHCOORDS);
-            serial.transmit(kind);
+            serial.put(TOUCHCOORDS);
+            serial.put(kind);
 
             autounion<uint16_t> response[2];
             for (uint8_t i = 0; i < 2; ++i)
-                for (uint8_t j = 0; j < 2; ++j)
-                    response[i][j] = serial.receive();
+                serial.read(response[i].value());
 
             TouchCoords ret = { response[0], response[1] };
             return ret;

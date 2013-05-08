@@ -31,106 +31,124 @@ namespace yaal {
     namespace internal {
 
         // FIXME: no synchronous mode, no MSPIM mode
-        template< typename udrRegister,
-                  typename ucsrARegister,
-                  typename ucsrBRegister,
-                  typename ucsrCRegister,
-                  typename ubrrlRegister,
-                  typename ubrrhRegister >
+        template< typename dataister,
+                  typename controlAister,
+                  typename controlBister,
+                  typename controlCister,
+                  typename ubrrRegister >
         class Serial {
-            udrRegister udrReg;
-            ucsrARegister ucsrAReg;
-            ucsrBRegister ucsrBReg;
-            ucsrCRegister ucsrCReg;
-            ubrrlRegister ubrrlReg;
-            ubrrhRegister ubrrhReg;
+            static dataister data;
+            static controlAister controlA;
+            static controlBister controlB;
+            static controlCister controlC;
+            static ubrrRegister ubrr;
 
         public:
-            YAAL_INLINE("Serial set mode")
-            void setMode() {
+            YAAL_INLINE("Serial::setup")
+            static void setup(uint32_t baud = 9600,
+                       DataBits databits = DATA_EIGHT,
+                       StopBits stopbits = STOP_ONE,
+                       Parity parity = PARITY_DISABLED,
+                       bool enableRX = true,
+                       bool enableTX = true)
+            {
+                setMode();
+                setBaud(baud);
+                setFrameFormat(databits, stopbits, parity, enableRX, enableTX);
+            }
+
+            YAAL_INLINE("Serial::setMode")
+            static void setMode() {
                 // FIXME: Only asynchronous mode
-                ucsrCReg &= ~((1<<UMSEL10)|(1<<UMSEL11));
+                controlC &= ~((1 << UMSEL10) | (1 << UMSEL11));
             }
 
-            YAAL_INLINE("Serial set baud")
-            void setBaud(uint32_t baud, bool U2X = false) {
-                autounion<uint16_t, false> ubrr = F_CPU/(baud)/(U2X ? 8UL : 16UL) - 1UL;
-                ubrrhReg = ubrr[0];
-                ubrrlReg = ubrr[1];
+            YAAL_INLINE("Serial::setBaud")
+            static void setBaud(uint32_t baud, bool U2X = false) {
+                ubrr = F_CPU/(baud)/(U2X ? 8UL : 16UL) - 1UL;
             }
 
-            YAAL_INLINE("Serial set frame format")
-            void setFrameFormat(enum DataBits databits = DATA_EIGHT,
-                                enum StopBits stopbits = STOP_ONE,
-                                enum Parity parity = PARITY_DISABLED,
+            YAAL_INLINE("Serial::setFrameFormat")
+            static void setFrameFormat(DataBits databits = DATA_EIGHT,
+                                StopBits stopbits = STOP_ONE,
+                                Parity parity = PARITY_DISABLED,
                                 bool enableRX = true,
-                                bool enableTX = true) {
-
+                                bool enableTX = true)
+            {
                 // Enable receiver and transmitter if asked to.
-                ucsrBReg = (enableRX ? (1<<RXEN1) : 0)|
+                controlB = (enableRX ? (1<<RXEN1) : 0)|
                            (enableTX ? (1<<TXEN1) : 0);
 
                 // Set frame format.
 
                 // Parity bits.
                 if (parity == PARITY_DISABLED)
-                    ucsrCReg &= ~((1<<UPM10)|(1<<UPM11));
+                    controlC &= ~((1<<UPM10)|(1<<UPM11));
                 else if (parity == PARITY_EVEN) {
-                    ucsrCReg &= ~(1<<UPM10);
-                    ucsrCReg |= (1<<UPM11);
+                    controlC &= ~(1<<UPM10);
+                    controlC |= (1<<UPM11);
                 }
                 else
-                    ucsrCReg |= (1<<UPM10)|(1<<UPM11);
+                    controlC |= (1<<UPM10)|(1<<UPM11);
 
                 // Stop bits.
                 if (stopbits == STOP_ONE)
-                    ucsrCReg &= ~(1<<USBS1);
+                    controlC &= ~(1<<USBS1);
                 else
-                    ucsrCReg |= (1<<USBS1);
+                    controlC |= (1<<USBS1);
 
                 // Data bits.
                 if (databits == DATA_NINE) {
-                    ucsrCReg |= (1<<UCSZ10)|(1<<UCSZ11)|(1<<UCSZ12);
+                    controlC |= (1<<UCSZ10)|(1<<UCSZ11)|(1<<UCSZ12);
                 }
                 else if (databits == DATA_EIGHT) {
-                    ucsrCReg &= ~(1<<UCSZ12);
-                    ucsrCReg |= (1<<UCSZ10)|(1<<UCSZ11);
+                    controlC &= ~(1<<UCSZ12);
+                    controlC |= (1<<UCSZ10)|(1<<UCSZ11);
                 }
                 else if (databits == DATA_SEVEN) {
-                    ucsrCReg &= ~((1<<UCSZ10)|(1<<UCSZ12));
-                    ucsrCReg |= (1<<UCSZ11);
+                    controlC &= ~((1<<UCSZ10)|(1<<UCSZ12));
+                    controlC |= (1<<UCSZ11);
                 }
                 else if (databits == DATA_SIX) {
-                    ucsrCReg &= ~((1<<UCSZ11)|(1<<UCSZ12));
-                    ucsrCReg |= (1<<UCSZ10);
+                    controlC &= ~((1<<UCSZ11)|(1<<UCSZ12));
+                    controlC |= (1<<UCSZ10);
                 }
                 else if (databits == DATA_FIVE) {
-                    ucsrCReg &= ~(1<<UCSZ10)|(1<<UCSZ11)|(1<<UCSZ12);
+                    controlC &= ~(1<<UCSZ10)|(1<<UCSZ11)|(1<<UCSZ12);
                 }
+            }
+
+            YAAL_INLINE("Serial::put")
+            void put(uint8_t value) {
+                // XXX: I guess it's OK to use UDRE1 here instead of UDREn?
+                while (!(controlA & (1<<UDRE1)));
+                data = value;
+            }
+
+            YAAL_INLINE("Serial::get")
+            uint8_t get() {
+                // XXX: I guess it's OK to use RXC1 here instead of UDREn?
+                while (!(controlA & (1<<RXC1)));
+                return data;
             }
 
             template<typename T>
-            YAAL_INLINE("Serial transmit")
-            void transmit(T val) {
-                autounion<T, false> value = val;
-                for (uint8_t i = 0; i < value.size; ++i)
-                    transmit(value[i]);
+            YAAL_INLINE("Serial::write")
+            void write(const T value) {
+                autounion<T> data = value;
+                for (uint8_t i = 0; i < data.size; ++i)
+                    put(data[i]);
             }
 
-            YAAL_INLINE("Serial transmit byte")
-            void transmit(uint8_t value) {
-                // XXX: I guess it's OK to use UDRE1 here instead of UDREn?
-                while (!(ucsrAReg & (1<<UDRE1)));
-                udrReg = value;
+            template<typename T>
+            YAAL_INLINE("Serial::read")
+            void read(T& data) {
+                autounion<T> res;
+                for (uint8_t i = 0; i < res.size; i++)
+                    res[i] = get();
+                data = res;
             }
 
-            YAAL_INLINE("Serial receive")
-            uint8_t receive() {
-                // XXX: I guess it's OK to use RXC1 here instead of UDREn?
-                while (!(ucsrAReg & (1<<RXC1)));
-
-                return udrReg;
-            }
         };
     }
 }

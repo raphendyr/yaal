@@ -1,6 +1,6 @@
 #include <util/delay.h>
 #include <yaal/core.hh>
-#include <yaal/io/serials.hh>
+#include <yaal/io/serial.hh>
 #include <yaal/devices/touchscreen4d.hh>
 
 using namespace yaal;
@@ -17,7 +17,7 @@ void setup() {
     _delay_ms(1000);
 
     // Send the required Auto-Baud command.
-    lcd.init();
+    lcd.setup();
 
     // Clear the screen.
     lcd.clear_screen();

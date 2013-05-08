@@ -10,7 +10,7 @@
 #include "io/ports.hh"
 
 // USART/Serial interface
-#include "io/serials.hh"
+#include "io/serial.hh"
 
 // All other registers
 #include "io/other.hh"

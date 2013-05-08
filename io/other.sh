@@ -7,18 +7,18 @@ for f in /usr/lib/avr/include/avr/io*.h; do grep _SFR_IO $f | awk '{print $2 " "
 	grep -v "_CONFIG" | \
 	grep -v "SPDR0" | \
 	grep -vE "^(PORT|DDR|PIN)[A-Z] " | \
-	grep -vE "^(UDR(|[[:digit:]])|UCSR(|[[:digit:]])[A-C]|UBRR(|[[:digit:]])(|H|L))" | \
-	sort -u > registers.txt
+	grep -vE "^(UDR[[:digit:]]?|UCSR[[:digit:]]?[A-Z]|UBRR[[:digit:]]?(|HI?|LO?)) " | \
+	sort -u > registers.tmp
 
 # 16 bits
-grep "IO16$" registers.txt | awk '{print $1}' > registers_16.txt
+grep "IO16$" registers.tmp | awk '{print $1}' > registers_16.tmp
 
 # 8 bits
-awk '{print $1}' registers.txt > registers_8.txt
+awk '{print $1}' registers.tmp > registers_8.tmp
 while read l; do
-	grep -Ev "^${l}"'(L|H|LO|HI)?$' registers_8.txt > registers_8.txt.tmp
-	mv registers_8.txt.tmp registers_8.txt
-done < registers_16.txt
+	grep -Ev "^${l}"'(L|H|LO|HI)?$' registers_8.tmp > registers_8.tmp.tmp
+	mv registers_8.tmp.tmp registers_8.tmp
+done < registers_16.tmp
 
 echo "#ifndef __YAAL_IO__OTHER__"
 echo "#define __YAAL_IO__OTHER__ 1"
@@ -38,14 +38,14 @@ while read r16; do
 	echo "            typedef Register<YAAL_ADDR($r16), reg16_t> $r16o;"
 	echo "#       endif"
 	echo ""
-done < registers_16.txt
+done < registers_16.tmp
 while read r8; do
 	echo "#       ifdef $r8"
 	r8o=$(python -c "print '$r8'.lower().capitalize()")
 	echo "            typedef Register<YAAL_ADDR($r8), reg8_t> $r8o;"
 	echo "#       endif"
 	echo ""
-done < registers_8.txt
+done < registers_8.tmp
 
 echo "    }"
 echo "}"
