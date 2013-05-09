@@ -44,6 +44,14 @@ cat > Makefile <<MAKEFILE
 #MCU = atmegaXXX
 #F_CPU = 16000000
 
+# List macro defines here (-D for gcc)
+# DEFS = -DFOOBAR="foo bar" -DBAZ=baz
+
+# Uncomment if you do not want to have yaal to setup cpu prescaler and
+# do not want to use void loop nor void setup
+#YAAL_NO_INIT = 1
+# else, remembe to add '#include <yaal/core.hh>' in your main.*
+
 # Include YAAL makefile
 include $YAAL/makefile.ext
 

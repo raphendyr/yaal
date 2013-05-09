@@ -1,18 +1,14 @@
-#------------- Common Compiler Options --------------
+# Common Compiler Options
+# -----------------------
 
 # Standard
 CSTANDARD ?= -std=c99
+
 # yaal requires c++11
-CPPSTANDARD ?= -std=c++11
+CXXSTANDARD ?= -std=c++11
 
-# Place -D or -U options here for C sources
-CDEFS += -DF_CPU=$(F_CPU)UL
-
-# Place -D or -U options here for C++ sources
-CPPDEFS += -DF_CPU=$(F_CPU)UL
-
-# Place -D or -U options here for ASM sources
-ADEFS += -DF_CPU=$(F_CPU)
+# Place your -D or -U options here
+# DEFS +=
 
 # Output format. (can be srec, ihex, binary)
 FORMAT ?= ihex
@@ -37,85 +33,96 @@ DEBUG ?= dwarf-2
 #     Each directory must be seperated by a space.
 #     Use forward slashes for directory separators.
 #     For a directory that has spaces, enclose it in quotes.
-EXTRAINCDIRS += $(YAAL)/include
+#EXTRAINCDIRS +=
+
+# List any extra directories to look for libraries here.
+#     Each directory must be seperated by a space.
+#     Use forward slashes for directory separators.
+#     For a directory that has spaces, enclose it in quotes.
+#EXTRALIBDIRS +=
 
 
 
-#---------------- Compiler Options C ----------------
+# Common Compiler Options
+# -----------------------
 #  -g*:          generate debugging information
 #  -O*:          optimization level
 #  -f...:        tuning, see GCC manual and avr-libc documentation
-#  -Wall...:     warning level
-#  -Wa,...:      tell GCC to pass this to the assembler.
-#    -adhlns...: create assembler listing
-CFLAGS += -g$(DEBUG)
-CFLAGS += $(CDEFS)
-CFLAGS += -O$(OPT)
-CFLAGS += -funsigned-char
-CFLAGS += -funsigned-bitfields
-CFLAGS += -ffunction-sections
-CFLAGS += -fpack-struct
-CFLAGS += -fshort-enums
-CFLAGS += -ffreestanding
-CFLAGS += -flto # required here to have any effect on linking
-CFLAGS += -Wall
-CFLAGS += -Wstrict-prototypes
-#CFLAGS += -mshort-calls
-#CFLAGS += -fno-unit-at-a-time
-#CFLAGS += -Wundef
-#CFLAGS += -Wunreachable-code
-#CFLAGS += -Wsign-compare
-CFLAGS += -Wa,-adhlns=$(@:%.o=%.lst)
-CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
-CFLAGS += $(CSTANDARD)
-
-
-
-#---------------- Compiler Options C++ ----------------
-#  -g*:          generate debugging information
-#  -O*:          optimization level
-#  -f...:        tuning, see GCC manual and avr-libc documentation
-#  -Wall...:     warning level
-#  -Wa,...:      tell GCC to pass this to the assembler.
-#    -adhlns...: create assembler listing
-CPPFLAGS += -g$(DEBUG)
-CPPFLAGS += $(CPPDEFS)
-CPPFLAGS += -O$(OPT)
-CPPFLAGS += -funsigned-char
-CPPFLAGS += -funsigned-bitfields
-CPPFLAGS += -fpack-struct
-CPPFLAGS += -fshort-enums
-CPPFLAGS += -ffreestanding      # from sooda
-CPPFLAGS += -fno-exceptions
-CPPFLAGS += -flto # required here to have any effect on linking
-CPPFLAGS += -Wall
-CPPFLAGS += -Wundef
-#CPPFLAGS += -mshort-calls
-#CPPFLAGS += -fno-unit-at-a-time
-#CPPFLAGS += -Wstrict-prototypes
-#CPPFLAGS += -Wunreachable-code
-#CPPFLAGS += -Wsign-compare
-CPPFLAGS += -Wa,-adhlns=$(@:%.o=%.lst)
-CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
-CPPFLAGS += $(CPPSTANDARD)
-
-
-
-#---------------- Assembler Options ----------------
 #  -Wa,...:   tell GCC to pass this to the assembler.
-#  -adhlns:   create listing
-#  -gstabs:   have the assembler create line number information; note that
+#    -adhlns: create listing
+#    -gstabs: have the assembler create line number information; note that
 #             for use in COFF files, additional information about filenames
 #             and function names needs to be present in the assembler source
 #             files -- see avr-libc docs [FIXME: not yet described there]
-#  -listing-cont-lines: Sets the maximum number of continuation lines of hex
-#       dump that will be displayed for a given single line of source input.
-ASFLAGS += $(ADEFS)
-ASFLAGS += -Wa,-adhlns=$(@:%.o=%.lst),-gstabs,--listing-cont-lines=100
+#    -listing-cont-lines: Sets the maximum number of continuation lines of hex
+#             dump that will be displayed for a given single line of source input.
+
+# target arch, with avr-gcc this means MCU
+TARGET_ARCH = -mmcu=$(MCU)
+
+# preprocessor options
+CPPFLAGS += -g$(DEBUG)
+CPPFLAGS += $(DEFS)
+ifdef F_CPU
+CPPFLAGS += -DF_CPU=$(patsubst %kHz,%000,$(patsubst %MHz,%000000,$(F_CPU:%UL=%)))UL
+endif
+ifdef F_CLOCK
+CPPFLAGS += -DF_CLOCK=$(F_CLOCK:%UL=%)UL
+endif
+ifdef YAAL_NO_INIT
+CPPFLAGS += -DYAAL_NO_INIT
+endif
+CPPFLAGS += -MMD -MP -MF .dep/$(@F).d # generate dependency files.
+
+# optimizer options
+COFLAGS += -O$(OPT)
+COFLAGS += -funsigned-char
+COFLAGS += -funsigned-bitfields
+COFLAGS += -ffunction-sections
+COFLAGS += -fpack-struct
+COFLAGS += -fshort-enums
+COFLAGS += -ffreestanding
+COFLAGS += -fno-exceptions
+COFLAGS += -flto # required here to have any effect on linking
+#COFLAGS += -fno-unit-at-a-time
+
+# warning options
+CWFLAGS += -Wall
+CWFLAGS += -Wundef
+CWFLAGS += -Wsign-compare
+#CWFLAGS += -Wunreachable-code
+
+# assembler options
+CAFLAGS += -Wa,-adhlns=$(@:%.o=%.lst)
+
+# include dirs
+CIFLAGS += -I. -I$(YAAL)/include $(patsubst %,-I%,$(EXTRAINCDIRS))
 
 
 
-#---------------- Library Options ----------------
+# Compiler options per source
+# ---------------------------
+CFLAGS  = $(CSTANDARD)
+CFLAGS += $(COFLAGS)
+CFLAGS += $(CWFLAGS)
+CFLAGS += -Wstrict-prototypes
+CFLAGS += $(CAFLAGS)
+CFLAGS += $(CIFLAGS)
+
+CXXFLAGS  = $(CXXSTANDARD)
+CXXFLAGS += $(COFLAGS)
+CXXFLAGS += $(CWFLAGS)
+CXXFLAGS += $(CAFLAGS)
+CXXFLAGS += $(CIFLAGS)
+
+ASFLAGS  = $(COFLAGS)
+ASFLAGS += $(CAFLAGS)
+ASFLAGS += -Wa,-g$(DEBUG),--listing-cont-lines=100
+
+
+
+# Library Options
+#----------------
 # FIXME: generalize
 # Minimalistic printf version
 PRINTF_LIB_MIN = -Wl,-u,vfprintf -lprintf_min
@@ -144,15 +151,9 @@ SCANF_LIB =
 MATH_LIB = -lm
 
 
-# List any extra directories to look for libraries here.
-#     Each directory must be seperated by a space.
-#     Use forward slashes for directory separators.
-#     For a directory that has spaces, enclose it in quotes.
-#EXTRALIBDIRS =
 
-
-
-#---------------- External Memory Options ----------------
+# External Memory Options
+#------------------------
 
 # 64 KB of external RAM, starting after internal RAM (ATmega128!),
 # used for variables (.data/.bss) and heap (malloc()).
@@ -166,44 +167,40 @@ EXTMEMOPTS =
 
 
 
-#---------------- Linker Options ----------------
+# Linker Options
+#---------------
 #  -Wl,...:     tell GCC to pass this to linker.
 #    -Map:      create map file
 #    --cref:    add cross reference to  map file
-LDFLAGS += $(CFLAGS)
 LDFLAGS += -Wl,-Map=$(TARGET).map,--cref
 LDFLAGS += -Wl,--relax
 LDFLAGS += -Wl,--gc-sections
 LDFLAGS += -Wl,--print-gc-sections # from sooda
-LDFLAGS += -ffreestanding       # from sooda
+LDFLAGS += $(COFLAGS)
 LDFLAGS += -fwhole-program      # from sooda
 #LDFLAGS += -combine            # from sooda
-LDFLAGS += -flto                # link time optimization
 LDFLAGS += $(EXTMEMOPTS)
 LDFLAGS += $(patsubst %,-L%,$(EXTRALIBDIRS))
 LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
-
 #LDFLAGS += -T linker_script.x
 
 
 
-
-#------------------- Commons -------------------
+# Commons
+# -------
 # Define all object files.
 OBJ = $(patsubst %,$(OBJDIR)/%.o,$(basename $(SRC)))
 
-# Define all listing files.
-LST = $(OBJ:%.o=%.lst)
+# Commands
+#CC = from environment.mk
+CXX = $(CC) -x c++
+ASM = $(CC) -x assembler-with-cpp
 
-# Compiler flags to generate dependency files.
-GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
+COMPILE.c = $(CC) $(TARGET_ARCH) $(CFLAGS) $(CPPFLAGS)
+COMPILE.cc = $(CXX) $(TARGET_ARCH) $(CXXFLAGS) $(CPPFLAGS)
+COMPILE.S = $(ASM) $(TARGET_ARCH) $(ASFLAGS) $(CPPFLAGS:%00UL=%00)
 
-# Combine all necessary flags and optional flags.
-# Add target processor to flags.
-ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
-ALL_CPPFLAGS = -mmcu=$(MCU) -I. -x c++ $(CPPFLAGS) $(GENDEPFLAGS)
-ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
-ALL_LDFLAGS = -mmcu=$(MCU) -I. $(LDFLAGS)
+LINK.o = $(CC) $(TARGET_ARCH) $(LDFLAGS) $(CPPFLAGS)
 
 
 
@@ -245,7 +242,7 @@ clean_list:
 	$(REMOVE) $(TARGET).sym
 	$(REMOVE) $(TARGET).lss
 	$(REMOVE) $(OBJ)
-	$(REMOVE) $(LST)
+	$(REMOVE) $(OBJ:%.o=%.lst)
 	$(REMOVE) $(addsuffix .s,$(basename $(SRC)))
 	$(REMOVE) $(addsuffix .d,$(basename $(SRC)))
 	$(REMOVE) $(addsuffix .i,$(basename $(SRC)))
@@ -357,7 +354,7 @@ extcoff: $(TARGET).elf
 %.elf: $(OBJ)
 	@echo
 	@echo $(MSG_LINKING) $@
-	$(CC) $(ALL_LDFLAGS) -o $@ $^
+	$(LINK.o) -o $@ $^
 
 
 
@@ -368,63 +365,65 @@ $(OBJDIR)/%.o : %.c
 	@echo
 	@echo $(MSG_COMPILING) $<
 	@mkdir -p $(dir $@)
-	$(CC) -c $(ALL_CFLAGS) $< -o $@
+	$(COMPILE.c) -c -o $@ $<
 
 $(OBJDIR)/%.o : %.cpp
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	@mkdir -p $(dir $@)
-	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
+	$(COMPILE.cc) -c -o $@ $<
 
 $(OBJDIR)/%.o : %.cc
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	@mkdir -p $(dir $@)
-	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
+	$(COMPILE.cc) -c -o $@ $<
 
 $(OBJDIR)/%.o : %.S
 	@echo
 	@echo $(MSG_ASSEMBLING) $<
 	@mkdir -p $(dir $@)
-	$(CC) -c $(ALL_ASFLAGS) $< -o $@
+	$(COMPILE.S) -c -o $@ $<
 
 # yaal specific
 $(OBJDIR)/yaal/%.o : $(YAAL)/%.cpp
 	@echo
 	@echo $(MSG_COMPILING_YAAL) $<
 	@mkdir -p $(dir $@)
-	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
+	$(COMPILE.cc) -c -o $@ $<
 
 
 # Compile: create assembler files from C and C++ source files.
 %.s : %.c
-	$(CC) -S $(ALL_CFLAGS) $< -o $@
+	$(COMPILE.c) -S -o $@ $<
 
 %.s : %.cpp
-	$(CC) -S $(ALL_CPPFLAGS) $< -o $@
+	$(COMPILE.cc) -S -o $@ $<
 
 %.s : %.cc
-	$(CC) -S $(ALL_CPPFLAGS) $< -o $@
-
-
-
+	$(COMPILE.cc) -S -o $@ $<
 
 
 # Create preprocessed source for use in sending a bug report.
 %.i : %.c
-	$(CC) -E -mmcu=$(MCU) -I. $(CFLAGS) $< -o $@
+	$(COMPILE.c) -E -o $@ $<
 
 %.i : %.cpp
-	$(CC) -E -mmcu=$(MCU) -I. $(CPPFLAGS) $< -o $@
+	$(COMPILE.cc) -E -o $@ $<
 
+%.i : %.cc
+	$(COMPILE.cc) -E -o $@ $<
 
 
 # Create list of defined macros
 %.m : %.c
-	$(CC) -dM -E -mmcu=$(MCU) -I. $(CFLAGS) $< -o $@
+	$(COMPILE.c) -dM -E -o $@ $<
 
 %.m : %.cpp
-	$(CC) -dM -E -mmcu=$(MCU) -I. $(CPPFLAGS) $< -o $@
+	$(COMPILE.cc) -dM -E -o $@ $<
+
+%.m : %.cc
+	$(COMPILE.cc) -dM -E -o $@ $<
 
 
 

@@ -59,6 +59,8 @@
 #endif
 
 
+#ifndef YAAL_NO_INIT
+
 namespace yaal {
 
     EXTERN void pre_init() SECTION(".init3");
@@ -69,12 +71,16 @@ namespace yaal {
 
 }
 
-
+// dummy implementations of setup and loop in init.cc
 EXTERN void setup() SECTION(".init8");
 
 EXTERN void loop() WEAK;
 
+#endif // !defined(YAAL_NO_INIT)
+
+// dummy implementation of main in init.cc, but it's ok to be left here anycase
 EXTERN void main() NORETURN;
+
 
 
 #undef EXTERN

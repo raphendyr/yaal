@@ -49,7 +49,7 @@ endif
 
 # If user or some ov above have defined ARDUINO_BOARD, add it for yaal to use
 ifdef ARDUINO_BOARD
-CPPDEFS += -DARDUINO_$(ARDUINO_BOARD)
+DEFS += -DARDUINO_$(ARDUINO_BOARD)
 endif
 
 
