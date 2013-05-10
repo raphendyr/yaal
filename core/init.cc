@@ -11,13 +11,15 @@
 
 void yaal::pre_init() {
 #if defined(F_CLOCK) && defined(F_CPU)
-    cpu.prescaler = Cpu::CPU_SLOW;
+    // 200kHz -> 128kHz with 16MHz clock and 156kHz with 20MHz clock
+    cpu.clock = khz(200);
 #endif
 }
 
 void yaal::cpu_init() {
 #if defined(F_CLOCK) && defined(F_CPU)
-    cpu.speed = F_CPU;
+    // Set 'full' speed
+    cpu.clock = F_CPU;
 #endif
 }
 
