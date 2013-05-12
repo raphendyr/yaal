@@ -3,6 +3,8 @@
 #include "../requirements.hh"
 #ifdef __YAAL__
 
+#include "streamable.hh"
+
 /*! Syncronous point-to-point communication interface
  *
  * All this kind of communication connections should implement
@@ -13,7 +15,9 @@
  *
  * FIXME: implement a way to know that is implemented.
  */
-class SyncronousPointToPointCommunicationInterface {
+class SyncronousPointToPointCommunicationInterface :
+  public StreamableInterface
+{
 
     /* REQUIRED methods */
 
@@ -23,9 +27,8 @@ class SyncronousPointToPointCommunicationInterface {
     void setup();
 
 
-    /*! Read byte
-     */
-    uint8_t get();
+    /* Read byte */
+    using Streamable::get;
 
 
     /*! Read data
@@ -43,9 +46,8 @@ class SyncronousPointToPointCommunicationInterface {
     }
 
 
-    /*! Write byte
-     */
-    void put(uint8_t);
+    /* Write byte */
+    using Streamable::put;
 
 
     /*! Write data
