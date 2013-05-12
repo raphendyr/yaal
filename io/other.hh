@@ -226,10 +226,6 @@ namespace yaal {
             typedef Register<YAAL_ADDR(CLKMSR), reg8_t> Clkmsr;
 #       endif
 
-#       ifdef CLKPR
-            typedef Register<YAAL_ADDR(CLKPR), reg8_t> Clkpr;
-#       endif
-
 #       ifdef CLKPSR
             typedef Register<YAAL_ADDR(CLKPSR), reg8_t> Clkpsr;
 #       endif

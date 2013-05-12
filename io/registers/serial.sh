@@ -28,6 +28,7 @@ while read r16; do
 	echo "#       ifdef $r16"
 	r16o=$(python -c "print '$r16'.lower().capitalize()")
 	echo "            typedef Register<YAAL_ADDR($r16), reg16_t> $r16o;"
+	echo "#           undef $r16"
 	echo "#       endif"
 	echo ""
 done < serial_registers_16.tmp
@@ -35,6 +36,9 @@ while read r8; do
 	echo "#       ifdef $r8"
 	r8o=$(python -c "print '$r8'.lower().capitalize()")
 	echo "            typedef Register<YAAL_ADDR($r8), reg8_t> $r8o;"
+	if ! echo "$r8" | grep -E -q -s "^UDR[0-9]?$"; then
+	    echo "#           undef $r8"
+	fi
 	echo "#       endif"
 	echo ""
 done < serial_registers_8.tmp

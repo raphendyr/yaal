@@ -32,8 +32,12 @@ for c in $PORTS; do
 	for i in 0 1 2 3 4 5 6 7; do
 		echo "#       ifdef PORT$c$i"
 		echo "            typedef Pin<Port$c, PORT$c$i> Port$c$i;"
+		echo "#           undef PORT$c$i"
 		echo '#       endif'
 	done
+	echo "#       undef PORT$c"
+	echo "#       undef DDR$c"
+	echo "#       undef PIN$c"
 	echo '#   endif'
 done
 echo '}'

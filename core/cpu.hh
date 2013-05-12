@@ -127,5 +127,8 @@ namespace yaal {
     static Cpu cpu __attribute__ ((unused));
 }
 
+// CLKPR is handled by use. undefine
+#  undef CLKPR
+
 #endif
 #endif
