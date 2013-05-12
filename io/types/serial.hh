@@ -5,6 +5,8 @@
 
 // FIXME: should not need avr/io.hh here.
 #include <avr/io.h>
+#include "register.hh"
+#include "../../core/cpu.hh"
 #include "../../types/autounion.hh"
 
 namespace yaal {
@@ -31,16 +33,16 @@ namespace yaal {
     namespace internal {
 
         // FIXME: no synchronous mode, no MSPIM mode
-        template< typename dataister,
-                  typename controlAister,
-                  typename controlBister,
-                  typename controlCister,
+        template< typename dataRegister,
+                  typename controlARegister,
+                  typename controlBRegister,
+                  typename controlCRegister,
                   typename ubrrRegister >
         class Serial {
-            static dataister data;
-            static controlAister controlA;
-            static controlBister controlB;
-            static controlCister controlC;
+            static dataRegister data;
+            static controlARegister controlA;
+            static controlBRegister controlB;
+            static controlCRegister controlC;
             static ubrrRegister ubrr;
 
         public:
@@ -64,8 +66,74 @@ namespace yaal {
             }
 
             YAAL_INLINE("Serial::setBaud")
-            static void setBaud(uint32_t baud, bool U2X = false) {
-                ubrr = F_CPU/(baud)/(U2X ? 8UL : 16UL) - 1UL;
+            static void setBaud(uint32_t baud) {
+                uint32_t f_cpu = cpu.clock; // get static or dynamic cpu clock frequency
+                bool use_u2x;
+                internal::SingleBit<controlARegister, U2X0> u2x;
+
+                // from datasheet: UBRR = F_CPU / (16UL * BAUD);
+                // from setbaud.h: UBRR = (F_CPU + 8UL * BAUD) / (16UL * BAUD);
+                // calculate value for 16(UBRR + 1), which is used later as is
+                uint16_t ubrr_val;
+                {
+                    uint32_t ubrr_tmp = f_cpu / baud;
+                    if (ubrr_tmp > 0xffff) {
+                        // ERROR: wont fit in 12-bit UBRR register (max value is 4095)
+                        return;
+                    }
+                    ubrr_val = static_cast<uint32_t>(ubrr_tmp);
+                }
+
+#if 1
+                // Basically baud rate isn't what it's supposed to be
+                // if bits lost in division have lot of meaning,
+                // So lets have very simple test
+                // NOTE: This is tested with common F_CPUs and BAUDs (refer serial_baud_test.py)
+                use_u2x = (static_cast<uint8_t>(ubrr_val) & 0xf) > (ubrr_val >> 6);
+#else
+                // this is left here as another (more accurate) implementation as it should be good enough
+                use_u2x = false;
+                // if ubrr_val * 2 still fits, so we can try to find out if better tolerance can be archieved using u2x
+                if (ubrr_val < (4096/2 * 16)) {
+                    // from setbaud.h
+                    // check that result is in 2% tolerance margin (BAUD_TOL = 2)
+                    // 100 * (F_CPU) > (16 * ((UBRR_VALUE) + 1)) * (100 * (BAUD) + (BAUD) * (BAUD_TOL))
+                    // 100 * (F_CPU) < (16 * ((UBRR_VALUE) + 1)) * (100 * (BAUD) - (BAUD) * (BAUD_TOL))
+
+                    // we use 128 as scaler (7-bits), that means that maxinum freq is ~33MHz, so this code should work up to 32MHz clocks
+                    // as we use 128, then ~1.56% tolerance is nice as it's 2 (1.56/100*128), which is one bitshift
+                    uint32_t scaled_f_cpu = f_cpu << 7; // 128 * f_cpu
+                    uint32_t scaled_baud = baud << 7; // 128 * baud
+                    uint32_t baud_tol = baud << 1; // 128 * baud * (tolerance% / 100)
+                    uint32_t ubrr_filtered = ubrr_val & 0xfff0; // (UBRR/16)*16 aka (UBRR >> 4) << 4
+                    // if any of following, then use u2x
+                    // 128 * F_CPU  >  16*(UBRR+1) * (128 * baud + 128 * baud * (tolerance%/100))
+                    // 128 * F_CPU  <  16*(UBRR+1) * (128 * baud - 128 * baud * (tolerance%/100))
+                    use_u2x = (scaled_f_cpu > ubrr_filtered * (scaled_baud + baud_tol)) || \
+                              (scaled_f_cpu < ubrr_filtered * (scaled_baud - baud_tol));
+#if 0
+                    if (use_u2x) {
+                        ubrr_filtered = ubrr_val % 0xfff8; // (UBRR/8)*8 aka (UBRR >> 3) << 3;
+
+                        if (scaled_f_cpu > ubrr_filtered * (scaled_baud + baud_tol)) || \
+                           (scaled_f_cpu < ubrr_filtered * (scaled_baud - baud_tol))
+                        {
+                            // ERROR: Baud rate not in tolerance
+                            return;
+                        }
+                    }
+#endif
+                }
+#endif
+
+                // u2x = true;  UBRR = ubrr_val/8 - 1
+                // u2x = false; UBRR = ubrr_val/16 - 1
+                ubrr_val >>= 3;
+                if (!use_u2x)
+                    ubrr_val >>= 1;
+                ubrr = ubrr_val - 1;
+                // set/clear u2x bit in control register
+                u2x = use_u2x;
             }
 
             YAAL_INLINE("Serial::setFrameFormat")

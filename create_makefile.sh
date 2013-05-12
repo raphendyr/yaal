@@ -52,6 +52,11 @@ cat > Makefile <<MAKEFILE
 #YAAL_NO_INIT = 1
 # else, remembe to add '#include <yaal/core.hh>' in your main.*
 
+# If you are planning to change cpu.clock (F_CPU) at runtime,
+# you should set following option, so yaal methods will get F_CPU at runtime
+#DEFS += -DYAAL_UNSTABLE_F_CPU
+# NOTO: this could make your code slow and big
+
 # Include YAAL makefile
 include $YAAL/makefile.ext
 

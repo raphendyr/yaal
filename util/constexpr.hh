@@ -20,6 +20,19 @@ namespace yaal {
                !!(value & 0x08) + !!(value & 0x04) + !!(value & 0x02) + !!(value & 0x01);
     }
 
+
+    /* max */
+    template<typename T>
+    constexpr T max_ce(T left, T right) {
+        return (left > right) ? left : right;
+    }
+
+    /* min */
+    template<typename T>
+    constexpr T min_ce(T left, T right) {
+        return (left < right) ? left : right;
+    }
+
 }
 
 #endif

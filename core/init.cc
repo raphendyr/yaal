@@ -19,7 +19,7 @@ void yaal::pre_init() {
 void yaal::cpu_init() {
 #if defined(F_CLOCK) && defined(F_CPU)
     // Set 'full' speed
-    cpu.clock = F_CPU;
+    cpu.clock = cpu.clock.f_cpu;
 #endif
 }
 

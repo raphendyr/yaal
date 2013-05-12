@@ -18,13 +18,13 @@ namespace yaal {
     }
 
     class Cpu {
-        template<freq_t f_clock>
+        template<freq_t f_clock_, freq_t f_cpu_>
         class Clock {
             class Prescaler {
             public:
                 YAAL_INLINE("Cpu::Clock::Prescaler::set")
                 void set(uint8_t divider) {
-                    if (divider <= 0x08) { // 0x00001000
+                    if (divider <= 0x08) { // 0b00001000
                         CLKPR = 0x80;
                         CLKPR = divider;
                     }
@@ -35,9 +35,22 @@ namespace yaal {
                     set(divider);
                     return *this;
                 }
+
+                YAAL_INLINE("Cpu::Clock::Prescaler::get")
+                uint8_t get() {
+                    return CLKPR;
+                }
+
+                YAAL_INLINE("Cpu::Clock::Prescaler::operator uint8_t")
+                operator uint8_t () {
+                    return get();
+                }
             };
 
         public:
+            constexpr static freq_t f_clock = f_clock_;
+            constexpr static freq_t f_cpu = f_cpu_;
+
             constexpr static freq_t NO_DIVIDER = f_clock;
             constexpr static freq_t FULL = f_clock;
             constexpr static freq_t HALF = f_clock / 2;
@@ -45,6 +58,7 @@ namespace yaal {
             constexpr static freq_t EIGHTH = f_clock / 8;
 
             Prescaler prescaler;
+
 
             YAAL_INLINE("Cpu::Clock::set")
             void set(freq_t frequency) {
@@ -77,13 +91,31 @@ namespace yaal {
                 set(frequency);
                 return *this;
             }
+
+            YAAL_INLINE("Cpu::Clock::get")
+            freq_t get() {
+#ifdef YAAL_UNSTABLE_F_CPU
+                return f_clock >> prescaler;
+#else
+                return f_cpu;
+#endif
+            }
+
+            YAAL_INLINE("Cpu::Clock::operator freq_t")
+            operator freq_t () {
+                return get();
+            }
         };
     public:
 
 #if defined(F_CLOCK)
-        Clock<F_CLOCK> clock;
+#  if defined(F_CPU)
+        Clock<F_CLOCK, F_CPU> clock;
+#  else
+        Clock<F_CLOCK, F_CLOCK> clock;
+#  endif
 #elif defined(F_CPU)
-        Clock<F_CPU> clock;
+        Clock<F_CPU, F_CPU> clock;
 #  warning "No F_CLOCK, so I set cpu.clock to base on F_CPU value instead. YOUR CODE MAY MISS BEHAVE!"
 #else
 #  warning "No F_CLOCK nor F_CPU, so I couldn't define cpu.speed"
