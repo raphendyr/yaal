@@ -69,7 +69,14 @@ namespace yaal {
             static void setBaud(uint32_t baud) {
                 uint32_t f_cpu = cpu.clock; // get static or dynamic cpu clock frequency
                 bool use_u2x;
+// FIXME
+#if defined(U2X)
+                internal::SingleBit<controlARegister, U2X> u2x;
+#elif defined(U2X0)
                 internal::SingleBit<controlARegister, U2X0> u2x;
+#elif defined(U2X1)
+                internal::SingleBit<controlARegister, U2X1> u2x;
+#endif
 
                 // from datasheet: UBRR = F_CPU / (16UL * BAUD);
                 // from setbaud.h: UBRR = (F_CPU + 8UL * BAUD) / (16UL * BAUD);
