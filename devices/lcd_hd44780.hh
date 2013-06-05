@@ -4,59 +4,52 @@
 #include <util/delay.h>
 #ifdef __YAAL__
 
-// The #defines below are borrowed from the Arduino LiquidCrystal library.
-
-// commands
-#define LCD_CLEARDISPLAY 0x01
-#define LCD_RETURNHOME 0x02
-#define LCD_ENTRYMODESET 0x04
-#define LCD_DISPLAYCONTROL 0x08
-#define LCD_CURSORSHIFT 0x10
-#define LCD_FUNCTIONSET 0x20
-#define LCD_SETCGRAMADDR 0x40
-#define LCD_SETDDRAMADDR 0x80
-
-// flags for display entry mode
-#if 0
-        // megari sez: These are very misleadingly named.
-        #define LCD_ENTRYRIGHT 0x00
-        #define LCD_ENTRYLEFT 0x02
-        #define LCD_ENTRYSHIFTINCREMENT 0x01
-        #define LCD_ENTRYSHIFTDECREMENT 0x00
-#else
-// megari sez: These are far better names.
-#define LCD_ENTRYINCREMENT 0x02
-#define LCD_ENTRYDECREMENT 0x00
-#define LCD_ENTRYSHIFT 0x01
-#define LCD_ENTRYNOSHIFT 0x00
-#endif
-
-// flags for display on/off control
-#define LCD_DISPLAYON 0x04
-#define LCD_DISPLAYOFF 0x00
-#define LCD_CURSORON 0x02
-#define LCD_CURSOROFF 0x00
-#define LCD_BLINKON 0x01
-#define LCD_BLINKOFF 0x00
-
-// flags for display/cursor shift
-#define LCD_DISPLAYMOVE 0x08
-#define LCD_CURSORMOVE 0x00
-#define LCD_MOVERIGHT 0x04
-#define LCD_MOVELEFT 0x00
-
-// flags for function set
-#define LCD_8BITMODE 0x10
-#define LCD_4BITMODE 0x00
-#define LCD_2LINE 0x08
-#define LCD_1LINE 0x00
-#define LCD_5x10DOTS 0x04
-#define LCD_5x8DOTS 0x00
-
 namespace yaal {
 
     template<typename Interface, uint8_t lines = 2, bool bigfont = false>
     class LiquidCrystalHD44780 {
+        // The constants below are mostly borrowed from the Arduino
+        // LiquidCrystal library.
+
+        // commands
+        static constexpr uint8_t LCD_CLEARDISPLAY = 0x01;
+        static constexpr uint8_t LCD_RETURNHOME = 0x02;
+        static constexpr uint8_t LCD_ENTRYMODESET = 0x04;
+        static constexpr uint8_t LCD_DISPLAYCONTROL = 0x08;
+        static constexpr uint8_t LCD_CURSORSHIFT = 0x10;
+        static constexpr uint8_t LCD_FUNCTIONSET = 0x20;
+        static constexpr uint8_t LCD_SETCGRAMADDR = 0x40;
+        static constexpr uint8_t LCD_SETDDRAMADDR = 0x80;
+
+        // flags for display entry mode
+        // (These are named differently from Arduino LiquidCrystal.)
+        static constexpr uint8_t LCD_ENTRYINCREMENT = 0x02;
+        static constexpr uint8_t LCD_ENTRYDECREMENT = 0x00;
+        static constexpr uint8_t LCD_ENTRYSHIFT = 0x01;
+        static constexpr uint8_t LCD_ENTRYNOSHIFT = 0x00;
+
+        // flags for display on/off control
+        static constexpr uint8_t LCD_DISPLAYON = 0x04;
+        static constexpr uint8_t LCD_DISPLAYOFF = 0x00;
+        static constexpr uint8_t LCD_CURSORON = 0x02;
+        static constexpr uint8_t LCD_CURSOROFF = 0x00;
+        static constexpr uint8_t LCD_BLINKON = 0x01;
+        static constexpr uint8_t LCD_BLINKOFF = 0x00;
+
+        // flags for display/cursor shift
+        static constexpr uint8_t LCD_DISPLAYMOVE = 0x08;
+        static constexpr uint8_t LCD_CURSORMOVE = 0x00;
+        static constexpr uint8_t LCD_MOVERIGHT = 0x04;
+        static constexpr uint8_t LCD_MOVELEFT = 0x00;
+
+        // flags for function set
+        static constexpr uint8_t LCD_8BITMODE = 0x10;
+        static constexpr uint8_t LCD_4BITMODE = 0x00;
+        static constexpr uint8_t LCD_2LINE = 0x08;
+        static constexpr uint8_t LCD_1LINE = 0x00;
+        static constexpr uint8_t LCD_5x10DOTS = 0x04;
+        static constexpr uint8_t LCD_5x8DOTS = 0x00;
+
         Interface interface;
 
         uint8_t read_bf_addr() {
@@ -82,7 +75,9 @@ namespace yaal {
 
         void init() {
             // Function set: set bitmode, # of lines and font.
-            const uint8_t bits = interface.init();
+            const uint8_t bits = interface.init() == Interface::_4BIT
+                                 ? LCD_4BITMODE
+                                 : LCD_8BITMODE;
             const uint8_t l = lines > 1 ? LCD_2LINE : LCD_1LINE;
             const uint8_t f = bigfont ? LCD_5x10DOTS : LCD_5x8DOTS;
             interface.write(LCD_FUNCTIONSET | bits | l | f);
@@ -209,6 +204,11 @@ namespace yaal {
 
     public:
 
+        enum BitMode : uint8_t {
+            _4BIT,
+            _8BIT
+        };
+
         // Returns the correct bit mode.
         uint8_t init() {
             rs_pin.mode = OUTPUT;
@@ -251,7 +251,7 @@ namespace yaal {
             pulse_enable();
             _delay_us(50); // >37 us is enough for commands.
 
-            return LCD_4BITMODE;
+            return _4BIT;
         }
 
         // An 8-bit write, with a delay to wait for command completion.
