@@ -1,5 +1,6 @@
 #include <yaal/io/ports.hh>
 #include <yaal/devices/lcd_hd44780.hh>
+#include <yaal/types/pinset.hh>
 
 using namespace yaal;
 
@@ -11,8 +12,9 @@ uint16_t byte_to_hex(uint8_t byte) {
     return hbyte_to_hex(byte >> 4) << 8 | hbyte_to_hex(byte & 0x0f);
 }
 
-typedef FourBitLCDInterface<PortB5, PortB4, PortB3, PortD5, PortD4, PortD3, PortD2> FourBit;
-typedef LiquidCrystalHD44780<FourBit, 2, false> LCD;
+typedef Pinset<PortD5, PortD4, PortD3, PortD2> FourBitSet;
+typedef FourBitLCDInterface<PortB5, PortB4, PortB3, FourBitSet> FourBitInterface;
+typedef LiquidCrystalHD44780<FourBitInterface, 2, false> LCD;
 
 void main() {
 

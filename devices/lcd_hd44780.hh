@@ -162,15 +162,14 @@ namespace yaal {
         }
     };
 
-    template<typename RS, typename RW, typename Enable, typename D0, typename D1, typename D2, typename D3>
+    template<typename RS, typename RW, typename Enable, typename DataSet>
     class FourBitLCDInterface {
+        static_assert(DataSet::size == 4, "Only DataSet with size of 4 is supported.");
+
         RS rs_pin;
         RW rw_pin;
         Enable enable_pin;
-        D0 D0_pin;
-        D1 D1_pin;
-        D2 D2_pin;
-        D3 D3_pin;
+        DataSet data;
 
         void pulse_enable() {
             enable_pin = true;
@@ -179,10 +178,7 @@ namespace yaal {
         }
 
         void write4(uint8_t value) {
-            D0_pin = value & 0x01;
-            D1_pin = value & 0x02;
-            D2_pin = value & 0x04;
-            D3_pin = value & 0x08;
+            data = value;
             pulse_enable();
         }
 
@@ -192,10 +188,7 @@ namespace yaal {
             _delay_us(1); // >450 ns is a sufficient pulse width.
                           // This also includes a max 160 ns delay for data.
 
-            uint8_t ret = (D0_pin ? 0x01 : 0x00) |
-                          (D1_pin ? 0x02 : 0x00) |
-                          (D2_pin ? 0x04 : 0x00) |
-                          (D3_pin ? 0x08 : 0x00);
+            uint8_t ret = data;
 
             enable_pin = false;
 
@@ -214,10 +207,7 @@ namespace yaal {
             rs_pin.mode = OUTPUT;
             rw_pin.mode = OUTPUT;
             enable_pin.mode = OUTPUT;
-            D0_pin.mode = OUTPUT;
-            D1_pin.mode = OUTPUT;
-            D2_pin.mode = OUTPUT;
-            D3_pin.mode = OUTPUT;
+            data.set_output();
 
             _delay_ms(50);
 
@@ -229,10 +219,7 @@ namespace yaal {
             // Effectively, LCD_FUNCTIONSET | LCD_8BITMODE
             // is sent 3 times when the interface length is still 8 bits
             // and finally the interface is set to 4 bits long.
-            D0_pin = true;
-            D1_pin = true;
-            D2_pin = false;
-            D3_pin = false;
+            data = 0x03;
 
             // One.
             pulse_enable();
@@ -247,7 +234,7 @@ namespace yaal {
             _delay_us(50); // >37 us is enough for commands.
 
             // Four: finally set 4-bit mode.
-            D0_pin = false;
+            data = 0x02;
             pulse_enable();
             _delay_us(50); // >37 us is enough for commands.
 
@@ -272,20 +259,14 @@ namespace yaal {
 
         // An 8-bit read without a delay. Used for reading the busy flag.
         uint8_t read_fast() {
-            D0_pin.mode = INPUT;
-            D1_pin.mode = INPUT;
-            D2_pin.mode = INPUT;
-            D3_pin.mode = INPUT;
+            data.set_input();
             rw_pin = true;
 
             uint8_t ret = read4() << 4;
             ret |= read4() & 0x0f;
 
             rw_pin = false;
-            D0_pin.mode = OUTPUT;
-            D1_pin.mode = OUTPUT;
-            D2_pin.mode = OUTPUT;
-            D3_pin.mode = OUTPUT;
+            data.set_output();
 
             return ret;
         }
