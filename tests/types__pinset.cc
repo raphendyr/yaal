@@ -6,7 +6,7 @@ using namespace std;
 
 
 /* XXX: when ever you edit this code, set reg_start to printed reg_start */
-constexpr unsigned long long reg_start = 0x603554;
+constexpr unsigned long long reg_start = 0x6034d4;
 
 volatile uint8_t port = 0;
 volatile uint8_t ddr = 0;
@@ -53,7 +53,7 @@ int main(void) {
     // get
     cout << "get" << endl;
     pin = 0x08;
-    uint8_t val = test.get();
+    uint8_t val = test;
     EQ(val, 0x08);
 
     // output

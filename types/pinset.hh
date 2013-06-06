@@ -60,7 +60,7 @@ namespace yaal {
                 p7 = value & 0x80;
             }
 
-            uint8_t get() {
+            uint8_t get() const {
                 uint8_t value = 0;
                 if (p0.mask && p0)
                     value |= 0x01;
