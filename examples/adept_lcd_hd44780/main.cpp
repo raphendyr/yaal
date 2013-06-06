@@ -13,7 +13,7 @@ uint16_t byte_to_hex(uint8_t byte) {
 }
 
 typedef Pinset<PortD5, PortD4, PortD3, PortD2> FourBitSet;
-typedef FourBitLCDInterface<PortB5, PortB4, PortB3, FourBitSet> FourBitInterface;
+typedef LCDInterface<PortB5, PortB4, PortB3, FourBitSet> FourBitInterface;
 typedef LiquidCrystalHD44780<FourBitInterface, 2, false> LCD;
 
 void main() {

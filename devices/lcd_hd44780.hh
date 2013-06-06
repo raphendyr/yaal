@@ -163,8 +163,9 @@ namespace yaal {
     };
 
     template<typename RS, typename RW, typename Enable, typename DataSet>
-    class FourBitLCDInterface {
-        static_assert(DataSet::size == 4, "Only DataSet with size of 4 is supported.");
+    class LCDInterface {
+        static_assert(DataSet::size == 4 || DataSet::size == 8,
+                      "Only DataSet with size of 4 or 8 is supported.");
 
         RS rs_pin;
         RW rw_pin;
@@ -177,16 +178,15 @@ namespace yaal {
             enable_pin = false;
         }
 
-        void write4(uint8_t value) {
+        void write_real(uint8_t value) {
             data = value;
             pulse_enable();
         }
 
-        // A 4-bit read.
-        uint8_t read4() {
+        uint8_t read_real() {
             enable_pin = true;
             _delay_us(1); // >450 ns is a sufficient pulse width.
-                          // This also includes a max 160 ns delay for data.
+                          // This also includes a max 360 ns delay for data.
 
             uint8_t ret = data;
 
@@ -198,8 +198,8 @@ namespace yaal {
     public:
 
         enum BitMode : uint8_t {
-            _4BIT,
-            _8BIT
+            _4BIT = 4,
+            _8BIT = 8
         };
 
         // Returns the correct bit mode.
@@ -215,36 +215,61 @@ namespace yaal {
             rw_pin = false;
             enable_pin = false;
 
-            // Set 4-bit interface in four steps.
-            // Effectively, LCD_FUNCTIONSET | LCD_8BITMODE
-            // is sent 3 times when the interface length is still 8 bits
-            // and finally the interface is set to 4 bits long.
-            data = 0x03;
+            if (DataSet::size == 4) {
+                // Set 4-bit interface in four steps.
+                // Effectively, LCD_FUNCTIONSET | LCD_8BITMODE
+                // is sent 3 times when the interface length is still 8 bits
+                // and finally the interface is set to 4 bits long.
+                data = 0x03;
 
-            // One.
-            pulse_enable();
-            _delay_us(4500); // >4.1 ms + >37 us is enough.
+                // One.
+                pulse_enable();
+                _delay_us(4500); // >4.1 ms + >37 us is enough.
 
-            // Two.
-            pulse_enable();
-            _delay_us(150); // >100 us + >37 us is enough.
+                // Two.
+                pulse_enable();
+                _delay_us(150); // >100 us + >37 us is enough.
 
-            // Three.
-            pulse_enable();
-            _delay_us(50); // >37 us is enough for commands.
+                // Three.
+                pulse_enable();
+                _delay_us(50); // >37 us is enough for commands.
 
-            // Four: finally set 4-bit mode.
-            data = 0x02;
-            pulse_enable();
-            _delay_us(50); // >37 us is enough for commands.
+                // Four: finally set 4-bit mode.
+                data = 0x02;
+                pulse_enable();
+                _delay_us(50); // >37 us is enough for commands.
+            }
+            else {
+                // Set 8-bit interface in 3 steps.
+                // Effectively, LCD_FUNCTIONSET | LCD_8BITMODE
+                // is sent 3 times.
+                data = 0x30;
 
-            return _4BIT;
+                // One.
+                pulse_enable();
+                _delay_us(4500); // >4.1 ms + >37 us is enough.
+
+                // Two.
+                pulse_enable();
+                _delay_us(150); // >100 us + >37 us is enough.
+
+                // Three.
+                pulse_enable();
+                _delay_us(50); // >37 us is enough for commands.
+            }
+
+            return DataSet::size;
         }
 
         // An 8-bit write, with a delay to wait for command completion.
         void write(uint8_t value) {
-            write4(value >> 4);
-            write4(value);
+            if (DataSet::size == 4) {
+                write_real(value >> 4);
+                write_real(value);
+            }
+            else
+                write_real(value);
+
             _delay_us(50); // >37 us is enough for commands.
         }
 
@@ -262,8 +287,14 @@ namespace yaal {
             data.set_input();
             rw_pin = true;
 
-            uint8_t ret = read4() << 4;
-            ret |= read4() & 0x0f;
+            uint8_t ret;
+
+            if (DataSet::size == 4) {
+                ret = read_real() << 4;
+                ret |= read_real() & 0x0f;
+            }
+            else
+                ret = read_real();
 
             rw_pin = false;
             data.set_output();
