@@ -81,7 +81,7 @@ namespace yaal {
                 if (state)
                     reg |= mask;
                 else
-                    reg &= ~mask;
+                    reg &= static_cast<uint8_t>(~mask);
             }
 
             YAAL_INLINE("RegisterBit operation")
