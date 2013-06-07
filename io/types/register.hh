@@ -98,7 +98,7 @@ namespace yaal {
             YAAL_INLINE("RegisterBit operation")
             bool get() const {
                 const RegisterClass reg;
-                return reg & (1 << bit);
+                return reg & mask;
             }
 
             YAAL_INLINE("RegisterBit operation")
