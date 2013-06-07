@@ -6,7 +6,7 @@ using namespace std;
 
 
 /* XXX: when ever you edit this code, set reg_start to printed reg_start */
-constexpr unsigned long long reg_start = 0x6018b4;
+constexpr unsigned long long reg_start = 0x601814;
 
 
 typedef Register<reg_start, uint8_t> port_reg;

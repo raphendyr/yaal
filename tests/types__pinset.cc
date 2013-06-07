@@ -6,11 +6,11 @@ using namespace std;
 
 
 /* XXX: when ever you edit this code, set reg_start to printed reg_start */
-constexpr unsigned long long reg_start = 0x6023f4;
+constexpr unsigned long long reg_start = 0x6034d4;
 
-volatile uint8_t port;
-volatile uint8_t ddr;
-volatile uint8_t pin;
+volatile uint8_t port = 0;
+volatile uint8_t ddr = 0;
+volatile uint8_t pin = 0;
 
 typedef Register<reg_start, uint8_t> port_reg;
 typedef Register<reg_start + 1, uint8_t> ddr_reg;
@@ -33,18 +33,40 @@ int main(void) {
 
     TPinset test;
     TPinsetR test2;
-    uint8_t port_ref/*, ddr_ref, pin_ref*/;
+    uint8_t port_ref, ddr_ref/*, pin_ref*/;
 
+    // size
+    cout << "size" << endl;
     EQ(TPinset::size, 4);
     EQ(test.size, 4);
 
 
+    // set
+    cout << "set" << endl;
     OPER(test, port_ref, =, 0x0f);
     EQ(port, port_ref);
 
     OPER(test2, port_ref, =, 0x01);
     port_ref = 0x08;
     EQ(port, port_ref);
+
+    // get
+    cout << "get" << endl;
+    pin = 0x08;
+    uint8_t val = test;
+    EQ(val, 0x08);
+
+    // output
+    cout << "output" << endl;
+    test.set_output();
+    ddr_ref = 0xf;
+    EQ(ddr, ddr_ref);
+
+    // input
+    cout << "input" << endl;
+    test.set_input();
+    ddr_ref = 0;
+    EQ(ddr, ddr_ref);
 
     return 0;
 }
