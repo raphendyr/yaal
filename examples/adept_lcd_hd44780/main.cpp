@@ -22,7 +22,7 @@ void main() {
     LCD lcd;
 
     // Initialize the interface.
-    lcd.init();
+    lcd.setup();
 
     // Display on, cursor on, blink on.
     lcd.display_control(true, true, true);

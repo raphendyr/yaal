@@ -73,9 +73,9 @@ namespace yaal {
             LEFT
         };
 
-        void init() {
+        void setup() {
             // Function set: set bitmode, # of lines and font.
-            const uint8_t bits = interface.init() == Interface::_4BIT
+            const uint8_t bits = interface.setup() == Interface::_4BIT
                                  ? LCD_4BITMODE
                                  : LCD_8BITMODE;
             const uint8_t l = lines > 1 ? LCD_2LINE : LCD_1LINE;
@@ -203,7 +203,7 @@ namespace yaal {
         };
 
         // Returns the correct bit mode.
-        uint8_t init() {
+        uint8_t setup() {
             rs_pin.mode = OUTPUT;
             rw_pin.mode = OUTPUT;
             enable_pin.mode = OUTPUT;
