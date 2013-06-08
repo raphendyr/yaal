@@ -32,7 +32,7 @@ fi
 upper=$(echo "$name" | sed 's,/,__,g' | tr '[a-z]' '[A-Z]')
 prefix=$(echo "$dir" | sed 's,[^/]*/,../,g')
 
-if ! [ -d "$dir" ]; then
+if [ "$dir"] && ! [ -d "$dir" ]; then
     mkdir -p "$dir"
     echo "Created directory: ${dir%/}"
 fi
