@@ -19,6 +19,7 @@
 
 // common includes
 #  include <stdint.h>
+#  include "common_macros.hh"
 #  include "qualifiers.hh"
 
 // end requirements block

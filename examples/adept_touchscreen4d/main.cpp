@@ -1,6 +1,5 @@
 #include <util/delay.h>
-#include <yaal/core.hh>
-#include <yaal/io/serial.hh>
+#include <yaal.hh>
 #include <yaal/devices/touchscreen4d.hh>
 
 using namespace yaal;

@@ -1,6 +1,4 @@
-#include <yaal/core.hh>
-#include <yaal/io.hh>
-#include <yaal/communication/spi.hh>
+#include <yaal.hh>
 
 using namespace yaal;
 

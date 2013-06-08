@@ -1,5 +1,4 @@
-#include <yaal/core.hh>
-#include <yaal/io/serial.hh>
+#include <yaal.hh>
 
 using namespace yaal;
 

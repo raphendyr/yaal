@@ -1,9 +1,8 @@
-#include <yaal/core.hh>
-#include <yaal/io.hh>
+#include <yaal.hh>
 #include <util/delay.h>
 
-//#define DL _delay_ms(800)
-#define DL {}
+// simple delay method
+void delay() { _delay_ms(800); }
 
 using namespace yaal;
 
@@ -24,22 +23,22 @@ void main() {
     for (;;) {
         // blink red
         redLed = HIGH;
-        DL;
+        delay();
         redLed = LOW;
-        DL;
+        delay();
 
         // blink green
         grnLed = true;
-        DL;
+        delay();
         grnLed = false;
-        DL;
+        delay();
 
         // blink both
         redLed.set();
         grnLed.set();
-        DL;
+        delay();
         redLed.clear();
         grnLed.clear();
-        DL;
+        delay();
     }
 }
