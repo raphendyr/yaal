@@ -55,7 +55,7 @@ cat > Makefile <<MAKEFILE
 # If you are planning to change cpu.clock (F_CPU) at runtime,
 # you should set following option, so yaal methods will get F_CPU at runtime
 #DEFS += -DYAAL_UNSTABLE_F_CPU
-# NOTO: this could make your code slow and big
+# NOTE: this could make your code slow and big
 
 # Include YAAL makefile
 include $YAAL/makefile.ext
