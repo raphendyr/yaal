@@ -146,7 +146,9 @@ namespace yaal {
 
     struct NullRegister {
         typedef uint32_t size_type;
-        size_type tmp = 0;
+        size_type tmp;
+
+        NullRegister() : tmp(0) {}
 
         /* read */
         static YAAL_INLINE("Register operation")
