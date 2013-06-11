@@ -4,26 +4,16 @@
 using namespace yaal;
 using namespace std;
 
+#define pin  REG0
+#define ddr  REG1
+#define port REG2
 
-/* XXX: when ever you edit this code, set reg_start to printed reg_start */
-constexpr unsigned long long reg_start = 0x601814;
+typedef Register<ADDR(port), uint8_t> port_reg;
+typedef Register<ADDR(ddr), uint8_t> ddr_reg;
+typedef Register<ADDR(pin), uint8_t> pin_reg;
 
-
-typedef Register<reg_start, uint8_t> port_reg;
-typedef Register<reg_start + 1, uint8_t> ddr_reg;
-typedef Register<reg_start + 2, uint8_t> pin_reg;
-
-
-volatile uint8_t port;
-volatile uint8_t ddr;
-volatile uint8_t pin;
-
-
-int main(void) {
-    if (reg_start != (unsigned long long)&port) {
-        cout << "FIXME: reg_start = 0x" << hex << (long long)&port << endl;
-        return 255;
-    }
+int main() {
+    test_reg_start();
 
     Port<port_reg, ddr_reg, pin_reg, 0xff> the_port;
     uint8_t port_ref, ddr_ref, pin_ref;

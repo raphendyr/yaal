@@ -21,7 +21,7 @@ void risky(uint16_t& data, uint8_t a, uint8_t b) {
     data = value;
 }
 
-int main(void) {
+int main() {
     // some visual tests
     fancy(0xffff);
     fancy(0xff00);

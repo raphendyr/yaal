@@ -10,20 +10,28 @@ err=0
 selection=$@
 selection=${selection:-$(ls -1)}
 
+GXX=g++
+GXXFLAGS="-I../include -std=c++11 -Wall"
+
+
 build_and_run() {
     [ "$1" ] || return -1
     file=$1
     base=${file%.*}
-    g++ -I../include -o $base.bin -std=c++11 -Wall $file 2>&1 > $base.log
+
+    (
+        echo "# $GXX $GXXFLAGS -o $base.bin $file" && \
+        $GXX $GXXFLAGS -o $base.bin $file 2>&1 && \
+        start=$(nm -n $base.bin | grep "B __registers" | cut -d ' ' -f 1) && \
+        echo "# $GXX $GXXFLAGS -DREG_START__=0x$start -o $base.bin $file" && \
+        $GXX $GXXFLAGS -DREG_START__=0x$start -o $base.bin $file 2>&1 && \
+        echo "# ./$base.bin" && \
+        ./$base.bin 2>&1
+    ) > $base.log
     ret=$?
-    if [ $ret -eq 0 ]; then
-        ./$base.bin 2>&1 > $base.log
-        ret=$?
-    fi
     if [ $ret -ne 0 ]; then
-        cat $base.log
+        cat $base.log | awk '{print "(LOG) " $0}'
     fi
-    #rm $base.bin $base.log 2>&1 >/dev/null || true
     return $ret
 }
 
