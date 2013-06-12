@@ -21,6 +21,13 @@ namespace yaal {
     }
 
 
+    /* find first set */
+    template<typename T>
+    constexpr uint8_t ffs_ce(T value, uint8_t bit = 1) {
+        return !value ? 0 : ( value & (1 << (bit-1)) ? bit : ffs_ce(value, bit + 1) );
+    }
+
+
     /* max */
     template<typename T>
     constexpr T max_ce(T left, T right) {
