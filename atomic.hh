@@ -3,6 +3,8 @@
 #include "requirements.hh"
 #ifdef __YAAL__
 
+#ifdef __AVR__
+
 #include <avr/interrupt.h> // SREG, sei, cli
 
 namespace yaal {
@@ -24,13 +26,13 @@ namespace yaal {
     public:
         YAAL_INLINE("Atomic")
         Atomic() {
-            state = SREG;
+            state = AVR_STATUS_REG; // SREG
             cli();
         }
 
         YAAL_INLINE("~Atomic")
         ~Atomic() {
-            SREG = state;
+            AVR_STATUS_REG = state; // SREG
         }
     };
 
@@ -50,17 +52,27 @@ namespace yaal {
     public:
         YAAL_INLINE("Interruptable")
         Interruptable() {
-            state = SREG;
+            state = AVR_STATUS_REG; // SREG
             sei();
         }
 
         YAAL_INLINE("~Interruptable")
         ~Interruptable() {
-            SREG = state;
+            AVR_STATUS_REG = state; // SREG
         }
     };
 
 }
+
+#else
+
+// Dummy implementation for tests
+namespace yaal {
+    class Atomic {};
+    class Interruptable {};
+}
+
+#endif
 
 #endif
 #endif
