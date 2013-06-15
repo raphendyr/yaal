@@ -22,17 +22,22 @@ namespace yaal {
      */
     class Atomic {
         uint8_t state;
+        bool required;
 
     public:
         YAAL_INLINE("Atomic")
-        Atomic() {
-            state = AVR_STATUS_REG; // SREG
-            cli();
+        Atomic(bool required = true) : required(required) {
+            if (required) {
+                state = AVR_STATUS_REG; // SREG
+                cli();
+            }
         }
 
         YAAL_INLINE("~Atomic")
         ~Atomic() {
-            AVR_STATUS_REG = state; // SREG
+            if (required) {
+                AVR_STATUS_REG = state; // SREG
+            }
         }
     };
 

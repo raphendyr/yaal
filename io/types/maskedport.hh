@@ -12,11 +12,15 @@ namespace yaal {
 
     namespace internal {
 
-        template< typename PortClass, uint8_t bitmask, bool shift_it = true >
+        template< typename PortClass, uint8_t bitmask, bool shift_it = true, bool atomiced = true >
         class BaseMaskedPort {
-        public:
             static_assert(bitmask, "MaskedPort requires effective bitmask");
 
+        protected:
+            typedef BaseMaskedPort<PortClass, bitmask, shift_it, true>  Atomiced;
+            typedef BaseMaskedPort<PortClass, bitmask, shift_it, false> NonAtomiced;
+
+        public:
             static constexpr uint8_t mask = bitmask;
             static constexpr uint8_t shift = ffs_ce(bitmask) - 1;
 
@@ -27,7 +31,7 @@ namespace yaal {
                 value <<= shift;
                 value &= mask;
                 {
-                    Atomic block;
+                    Atomic block(atomiced);
                     uint8_t val = port;
                     val &= mask;
                     val |= value;
@@ -47,10 +51,13 @@ namespace yaal {
                 typename PortClass::direction_type direction;
                 typename PortClass::output_type output;
 
-                // Clear pullup if present
-                output &= ~mask;
-                // Set direction output
-                direction |= mask;
+                {
+                    Atomic block(atomiced);
+                    // Clear pullup if present
+                    output &= ~mask;
+                    // Set direction output
+                    direction |= mask;
+                }
             }
 
             YAAL_INLINE("MaskedPort::set_input(pullup)")
@@ -58,11 +65,14 @@ namespace yaal {
                 typename PortClass::direction_type direction;
                 typename PortClass::output_type output;
 
-                // set direction input
-                direction &= ~mask;
-                // Set pullup if wanted
-                if (pullup)
-                    output |= mask;
+                {
+                    Atomic block(atomiced);
+                    // set direction input
+                    direction &= ~mask;
+                    // Set pullup if wanted
+                    if (pullup)
+                        output |= mask;
+                }
             }
         };
 

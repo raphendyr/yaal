@@ -13,6 +13,7 @@ namespace yaal {
                  typename Pin4 = NullPin, typename Pin5 = NullPin, typename Pin6 = NullPin, typename Pin7 = NullPin>
         class BasePinset {
             // implements PinTupleInterface
+            typedef BasePinset<Pin0, Pin1, Pin2, Pin3, Pin4, Pin5, Pin6, Pin7> self_type;
 
             Pin0 p0;
             Pin1 p1;
@@ -22,6 +23,10 @@ namespace yaal {
             Pin5 p5;
             Pin6 p6;
             Pin7 p7;
+
+        protected:
+            typedef self_type Atomiced;
+            typedef self_type NonAtomiced;
 
         public:
             static constexpr uint8_t mask = (!!Pin7::mask<<7) + (!!Pin6::mask<<6) + (!!Pin5::mask<<5) + (!!Pin4::mask<<4) + \

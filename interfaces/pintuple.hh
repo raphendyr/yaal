@@ -14,6 +14,11 @@ namespace yaal {
     class PinTupleInterface {
         typedef PinTupleInterface self_type;
     public:
+        /** type definitions ***/
+        /*! Should define atomiced and non atomiced versions of self type */
+        typedef PinTupleInterface Atomiced;
+        typedef PinTupleInterface NonAtomiced;
+
         /** constant variables **/
 
         /*! mask - bitmask defining which bits in byte are used by this tuple */
@@ -58,6 +63,9 @@ namespace yaal {
         typedef PinTuple<BasePinTuple> self_type;
 
     public:
+        typedef PinTuple<typename BasePinTuple::Atomiced> Atomiced;
+        typedef PinTuple<typename BasePinTuple::NonAtomiced> NonAtomiced;
+
         static constexpr uint8_t size = bits_up_ce(BasePinTuple::mask);
 
         operator uint8_t () const {
