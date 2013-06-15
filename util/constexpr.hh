@@ -40,6 +40,28 @@ namespace yaal {
         return (left < right) ? left : right;
     }
 
+    /* all */
+    template< typename T >
+    constexpr bool all_ce(T t) {
+        return bool(t);
+    }
+
+    template< typename T, typename... Types >
+    constexpr bool all_ce(T t, Types... types) {
+        return t && all_ce(types...);
+    }
+
+    /* any */
+    template< typename T >
+    constexpr bool any_ce(T t) {
+        return bool(t);
+    }
+
+    template< typename T, typename... Types >
+    constexpr bool any_ce(T t, Types... types) {
+        return t || any_ce(types...);
+    }
+
 }
 
 #endif
