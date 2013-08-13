@@ -26,7 +26,7 @@ void main() {
 
     // Display on, cursor on, blink on.
     lcd.display_control(true, true, true);
-    
+
     // Clear display.
     lcd.clear();
 
@@ -78,7 +78,6 @@ void main() {
         lcd.put_char(' ');
     }
 
-
     // Create a custom character glyph and use it.
     // Borrowed the glyph from the CustomCharacter
     // Arduino sketch.
@@ -101,6 +100,16 @@ void main() {
     // Position the cursor right after "Hi, mom!".
     lcd.set_cursor_pos(0, 9);
 
-    lcd.put_char(0x00);                
+    lcd.put_char(0x00);
+
+    // Position the cursor on the end of the third line.
+    lcd.set_cursor_pos(2, 19);
+
+    lcd.put_char(0x00);
+
+    // Position the cursor on the end of the fourth line.
+    lcd.set_cursor_pos(3, 19);
+
+    lcd.put_char(0x00);
 }
 
