@@ -195,6 +195,14 @@ namespace yaal {
             return ret;
         }
 
+        // Wait until the LCD clears the busy flag.
+        void wait_busy() {
+            bool old_rs = rs_pin.output;
+            rs_pin = false;
+            while (read_fast() & 0x80);
+            rs_pin = old_rs;
+        }
+
     public:
 
         enum BitMode : uint8_t {
@@ -261,28 +269,27 @@ namespace yaal {
             return DataSet::size;
         }
 
-        // An 8-bit write, with a delay to wait for command completion.
+        // An 8-bit write, with a wait for the busy flag.
         void write(uint8_t value) {
+            wait_busy();
+
             if (DataSet::size == 4) {
-                write_real(value >> 4);
+                write_real(value >> static_cast<uint8_t>(4));
                 write_real(value);
             }
             else
                 write_real(value);
-
-            _delay_us(50); // >37 us is enough for commands.
         }
 
-        // An 8-bit read, with a delay to wait for command completion.
+        // An 8-bit read, with a wait for the busy flag.
         // Used for other read commands than reading the busy flag.
         uint8_t read() {
+            wait_busy();
             uint8_t ret = read_fast();
-            _delay_us(50); // >37 us is enough for commands.
-
             return ret;
         }
 
-        // An 8-bit read without a delay. Used for reading the busy flag.
+        // An 8-bit read without a wait. Used for reading the busy flag.
         uint8_t read_fast() {
             data.set_input();
             rw_pin = true;
@@ -290,7 +297,7 @@ namespace yaal {
             uint8_t ret;
 
             if (DataSet::size == 4) {
-                ret = read_real() << 4;
+                ret = read_real() << static_cast<uint8_t>(4);
                 ret |= read_real() & 0x0f;
             }
             else
