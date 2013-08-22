@@ -171,6 +171,9 @@ namespace yaal {
     public:
         PortClass port;
         internal::PinMode<PortClass, bit> mode;
+        internal::SingleBit<typename PortClass::input_type, bit> input;
+        internal::SingleBit<typename PortClass::output_type, bit> output;
+        internal::SingleBit<typename PortClass::direction_type, bit> direction;
 
         /* assignment operator is not inherited */
         YAAL_INLINE("Pin operation")
