@@ -50,7 +50,6 @@ cat > Makefile <<MAKEFILE
 # Uncomment if you do not want to have yaal to setup cpu prescaler and
 # do not want to use void loop nor void setup
 #YAAL_NO_INIT = 1
-# else, remembe to add '#include <yaal/core.hh>' in your main.*
 
 # If you are planning to change cpu.clock (F_CPU) at runtime,
 # you should set following option, so yaal methods will get F_CPU at runtime
@@ -64,4 +63,5 @@ include $YAAL/makefile.ext
 MAKEFILE
 
 echo "OK. I created Makefile for you. You should edit it."
+echo "Remembe to include <yaal/core.hh> in your main."
 exit 0
