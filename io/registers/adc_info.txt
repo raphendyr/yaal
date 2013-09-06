@@ -1,0 +1,71 @@
+
+atmega32u4:
+###########
+
+MUXn,   Single ended input, positive differential, negative differential, gain (for diff.)
+------------------------------------------------------------------------------------------
+000000, ADC0
+000001, ADC1
+000010,
+000011,
+000100, ADC4
+000101, ADC5
+000110, ADC6
+000111, ADC7
+001000,
+001001,             ADC1        ADC0        10x
+001010,
+001011,             ADC1        ADC0        200x
+001100,
+001101,
+001110,
+001111,
+010000,             ADC0        ADC1        1x
+010001,
+010010,
+010011,
+010100,             ADC4        ADC1        1x
+010101,             ADC5        ADC1        1x
+010110,             ADC6        ADC1        1x
+010111,             ADC7        ADC1        1x
+011000,
+011001,
+011010,
+011011,
+011100,
+011101,
+011110, 1.1V (V_band_gap)
+011111, 0V GND
+100000, ADC8
+100001, ADC9
+100010, ADC10
+100011, ADC11
+100100, ADC12
+100101, ADC13
+100110,             ADC1        ADC0        40x
+100111, Temperature sensor (Put A_ref to 2.56V)
+101000,             ADC4        ADC0        10x
+101001,             ADC5        ADC0        10x
+101010,             ADC6        ADC0        10x
+101011,             ADC7        ADC0        10x
+101100,             ADC4        ADC1        10x
+101101,             ADC5        ADC1        10x
+101110,             ADC6        ADC1        10x
+101111,             ADC7        ADC1        10x
+110000,             ADC4        ADC0        40x
+110001,             ADC5        ADC0        40x
+110010,             ADC6        ADC0        40x
+110011,             ADC7        ADC0        40x
+110100,             ADC4        ADC1        40x
+110101,             ADC5        ADC1        40x
+110110,             ADC6        ADC1        40x
+110111,             ADC7        ADC1        40x
+111000,             ADC4        ADC0        200x
+111001,             ADC5        ADC0        200x
+111010,             ADC6        ADC0        200x
+111011,             ADC7        ADC0        200x
+111100,             ADC4        ADC1        200x
+111101,             ADC5        ADC1        200x
+111110,             ADC6        ADC1        200x
+111111,             ADC7        ADC1        200x
+

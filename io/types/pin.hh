@@ -160,6 +160,15 @@ namespace yaal {
     template<typename PinClass>
     class Reversed;
 
+/* assignment operator is not inherited */
+#   define YAAL_PIN_ASSINGMENT_OPER(classname, valuetype) \
+        YAAL_INLINE(classname " assingment operation") \
+        self_type& operator= (valuetype state) { \
+            this->set(state); \
+            return *this; \
+        }
+
+
     /* Pin<Port, bit> */
     template<typename PortClass, bit_t bit>
     class Pin : public internal::SingleBit<PortClass, bit> {
@@ -175,12 +184,7 @@ namespace yaal {
         internal::SingleBit<typename PortClass::output_type, bit> output;
         internal::SingleBit<typename PortClass::direction_type, bit> direction;
 
-        /* assignment operator is not inherited */
-        YAAL_INLINE("Pin operation")
-        self_type& operator= (bool state) {
-            this->set(state);
-            return *this;
-        }
+        YAAL_PIN_ASSINGMENT_OPER("Pin", bool)
 
         YAAL_INLINE("Pin Reversed wrapper")
         Reversed<self_type> reversed() {
@@ -201,13 +205,26 @@ namespace yaal {
 #           ifndef AVR_WITHOUT_PIN_TOGGLE
                 pin_reg = true;
 #           else
-                set(!get());
+                set(!output.get());
 #           endif
         }
     };
 
     /* NullPin */
     typedef Pin<NullPort, 0xff> NullPin;
+
+    /* PinWithAdc */
+    template<typename PortClass, bit_t bit, typename AdcClass>
+    class PinWithAdc : public Pin<PortClass, bit> {
+        typedef PinWithAdc<PortClass, bit, AdcClass> self_type;
+        typedef Pin<PortClass, bit> super;
+
+    public:
+        typedef AdcClass Analog;
+        AdcClass analog;
+
+        YAAL_PIN_ASSINGMENT_OPER("PinWithAdc", bool)
+    };
 
     /* Reversed<Pin> */
     template<typename PinClass>
@@ -221,6 +238,8 @@ namespace yaal {
             super::set(!state);
         }
 
+        YAAL_PIN_ASSINGMENT_OPER("Reversed", bool)
+
         YAAL_INLINE("Reversed pin operation")
         void clear() {
             set(false);
@@ -229,12 +248,6 @@ namespace yaal {
         YAAL_INLINE("Reversed pin operation")
         bool get() const {
             return !super::get();
-        }
-
-        YAAL_INLINE("Reversed pin operation")
-        self_type& operator= (bool state) {
-            set(state);
-            return *this;
         }
 
         YAAL_INLINE("Reversed pin operation")
@@ -322,6 +335,9 @@ namespace yaal {
             p = false;
         }
     };
+
+#   undef YAAL_PIN_ASSINGMENT_OPER
+
 }
 
 #endif

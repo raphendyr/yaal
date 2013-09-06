@@ -14,7 +14,9 @@ echo '/* Generated using ports.sh */'
 echo
 echo '#include "types/port.hh"'
 echo '#include "types/pin.hh"'
+echo '#include "types/adc.hh"'
 echo '#include "registers/port.hh"'
+echo '#include "registers/adc.hh"'
 echo
 echo 'namespace yaal {'
 for c in $PORTS; do
@@ -31,7 +33,13 @@ for c in $PORTS; do
 	echo
 	for i in 0 1 2 3 4 5 6 7; do
 		echo "#       ifdef PORT$c$i"
-		echo "            typedef Pin<Port$c, PORT$c$i> Port$c$i;"
+		echo "#           ifdef PORT$c${i}_ADC"
+		echo "                typedef PinWithAdc<Port$c, PORT$c$i, __CONCAT(AdcChannel, PORT$c${i}_ADC)> Port$c$i;"
+		echo "                typedef Port$c$i __CONCAT(Adc, PORT$c${i}_ADC);"
+		echo "#               undef PORT$c${i}_ADC"
+		echo "#           else"
+		echo "                typedef Pin<Port$c, PORT$c$i> Port$c$i;"
+		echo "#           endif"
 		echo '#       endif'
 	done
 	echo '#   endif'
