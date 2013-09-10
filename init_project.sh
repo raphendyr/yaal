@@ -123,11 +123,13 @@ if ! $has_main; then
 #include <yaal/core.hh>
 #include <yaal/io.hh>
 
-setup() {
+using namespace yaal;
+
+void setup() {
     // initialization
 }
 
-loop() {
+void loop() {
     // repeatable
 }
 MAIN
