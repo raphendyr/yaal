@@ -181,8 +181,10 @@ LDFLAGS += -fwhole-program      # from sooda
 #LDFLAGS += -combine            # from sooda
 LDFLAGS += $(EXTMEMOPTS)
 LDFLAGS += $(patsubst %,-L%,$(EXTRALIBDIRS))
-LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 #LDFLAGS += -T linker_script.x
+
+# This is seperate variable as some libraries need to be after object files
+LDLIBS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 
 
 
@@ -354,7 +356,8 @@ extcoff: $(TARGET).elf
 %.elf: $(OBJ)
 	@echo
 	@echo $(MSG_LINKING) $@
-	$(LINK.o) -o $@ $^
+	# LDLIBS needs to be after object files for some library stuff to work correctly
+	$(LINK.o) -o $@ $^ $(LDLIBS)
 
 
 
