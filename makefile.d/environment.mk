@@ -43,7 +43,8 @@ TARGET ?= $(shell basename $(shell pwd))
 #SRC = 
 # SRC defaults to main.* or $(TARGET).*, where * is extension we know howto build
 # FIXME: get prefixes from build.mk
-SRC ?= $(word 1,$(foreach base,main $(TARGET),$(foreach ext,.c .cpp .cc .S,$(wildcard $(base)$(ext)))))
+SRC_MAIN = $(word 1,$(foreach base,main $(TARGET),$(foreach ext,.c .cpp .cc .S,$(wildcard $(base)$(ext)))))
+SRC ?= $(SRC_MAIN)
 
 # Test that at least something is included
 ifeq ($(SRC),)
