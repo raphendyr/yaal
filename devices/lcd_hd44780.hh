@@ -86,13 +86,11 @@ namespace yaal {
         void clear() {
             interface.set_RS(false); // Select instruction register.
             interface.write(LCD_CLEARDISPLAY);
-            _delay_us(2000); // Clearing takes at most 1.52 ms.
         }
 
         void home() {
             interface.set_RS(false); // Select instruction register.
             interface.write(LCD_RETURNHOME);
-            _delay_us(2000); // Returning home takes at most 1.52 ms.
         }
 
         void display_control(bool display_on, bool cursor_on, bool blink_on) {
