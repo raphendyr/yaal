@@ -17,16 +17,34 @@ typedef unsigned long long reg_size_t;
 
 // helpers...
 #define ASSERT(left, test, right) do { \
-    std::cout << "assert(0x" << std::hex << (int)(left) << " " #test " 0x" << std::hex << (int)right << ");" << std::endl; \
+    std::cout << "assert("; \
+    print_hex(std::cout, left); \
+    std::cout << " " #test " "; \
+    print_hex(std::cout, right); \
+    std::cout << ");" << std::endl; \
     assert(left test right); \
 } while (0)
 
 #define EQ(left, right) ASSERT(left, ==, right)
 
+#define EQ_F2(left, right, mult, accuracy) do { \
+    cout << left << " =?= " << right << endl; \
+    signed long a_ = (signed long)(left * mult); \
+    signed long b_ = (signed long)(right * mult); \
+    signed long d_  = a_ - b_; \
+    signed long ad_ = d_ < 0 ? -d_ : d_; \
+    ASSERT(ad_, < , accuracy); \
+} while (0)
+#define EQ_F(left, right) EQ_F2(left, right, 100, 30)
+
+#define _s(var) #var
 #define OPER(left, ref, oper, value) do { \
+    std::cout << _s(left) << " " << _s(oper) << " " << value << std::endl; \
     left oper value; \
+    std::cout << _s(ref) << " " << _s(oper) << " " << value << std::endl; \
     ref oper value; \
 } while (0)
+
 
 // memory location
 #ifndef REG_START__
@@ -46,6 +64,7 @@ uint8_t __registers[10];
 #define REG9 REG(9)
 #define ADDR(r) ((unsigned long long)(&(r)))
 
+static void test_reg_start() __attribute__ ((used));
 static void test_reg_start() {
     using std::cout; using std::endl; using std::hex;
 
@@ -58,5 +77,31 @@ static void test_reg_start() {
         exit(255);
     }
 }
+
+// print formatters for different types
+template<typename T>
+void print_hex(std::ostream& out, const T& value) {
+    out << "?" << value;
+};
+template<>
+void print_hex<int>(std::ostream& out, const int& value) {
+    out << "0x" << std::hex << value;
+};
+template<>
+void print_hex<short int>(std::ostream& out, const short int& value) {
+    out << "0x" << std::hex << (int)value;
+};
+template<>
+void print_hex<long>(std::ostream& out, const long& value) {
+    out << "0x" << std::hex << value;
+};
+template<>
+void print_hex<double>(std::ostream& out, const double& value) {
+    out << "0x" << std::hex << value;
+};
+template<>
+void print_hex<float>(std::ostream& out, const float& value) {
+    out << "0x" << std::hex << *(int*)&value << " (" << value << ")";
+};
 
 #endif
