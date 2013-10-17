@@ -34,6 +34,23 @@ Why should I use YAAL instead of Arduino. Arduino is so easy to use!
 
 Well. Because of the performance. Read more in [why_yaal.md](https://github.com/raphendyr/yaal/blob/master/why_yaal.md)
 
+
+Howto start project using yaal?
+-------------------------------
+
+Run commands from following (change paths and commends to match your liking).
+
+```sh
+mkdir my_project_path
+cd my_project_path
+git init .
+git submodule add https://github.com/raphendyr/yaal.git vendor/yaal
+./vendor/yaal/init_project.sh
+git commit -m "Project initialization"
+```
+
+You should now edit `Makefile` to match your project and start coding into `main.cpp`.
+
 License and using
 -----------------
 
