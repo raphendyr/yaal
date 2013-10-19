@@ -1,4 +1,3 @@
-%2. Basics
 2. Basics
 =========
 
@@ -54,7 +53,7 @@ void loop() {
 }
 ```
 
-First include lines will literally include `yaal/core.hh` and `yaal/io.hh` files. First one has some core stuff like function prototypes for `setup` and `loop` and other things to make program to call these functions. Second one will allo use of types like `PortB4`.
+First include lines will literally include `yaal/core.hh` and `yaal/io.hh` files. First one has some core stuff like function prototypes for `setup` and `loop` and other things to make program to call these functions. Second one will allow use of types like `PortB4`.
 
 If you are using arduino board and would like to refer ports with arduino names (`D4`, `D5` and so on) you should add line `#include <yaal/arduino.hh>`.
 
@@ -79,3 +78,5 @@ void main() {
 ```
 
 If you write this function `loop` won't be called. So you can use only one.
+
+Lets look more closely howto do something with this in [basic io](3_basic_io.md)
