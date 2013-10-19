@@ -1,4 +1,3 @@
-%1. Starting a roject
 1. Starting a project
 =====================
 
