@@ -10,3 +10,6 @@ Also you might have used to Arduino's way of doing thins. `int led = 3; digitalW
 AVR controls pins trough ports. That means there is 8 pins in single byte sized register. Thus normal AVR c code looks like `PORTB |= 1 << PB4;`
 As thats not very handy when creating libraries. C++ has classes (refered as types). For these types we can define actions on assingment and other operators. So YAAL invents types for pins.
 Result is like `PortB4 led; led = HIGH;`
+
+There is also C++ templates present in your coding. For example this makes true/false make other way around: `Reversed<PortB4> led;`.
+
