@@ -5,7 +5,13 @@
 Requirements
 ------------
 
-YAAL is coded using C++ and it relies on GCC compiler with AVR backend. It also needs GCC with support for C++11 standard. When you try to compile your project it will tell you if your compiler isn't ok for YAAL.
+YAAL is coded using C++ and it relies on GCC compiler with AVR backend.
+It also needs GCC with support for C++11 standard.
+When you try to compile your project it will tell you if your compiler isn't ok for YAAL.
+
+Current YAAL framework relays on [make](http://en.wikipedia.org/wiki/Make_(software)) (`Makefile` in your project root).
+This allows us to deliver simple console based "IDE" which can be later used backend for real IDE (eclipse, Arduino or similar).
+For now this allows us to define actions for different programmers and tools used in building and programming your AVR.
 
 
 Makefile
