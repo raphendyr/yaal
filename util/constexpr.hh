@@ -40,6 +40,12 @@ namespace yaal {
         return (left < right) ? left : right;
     }
 
+    /* constrain */
+    template<typename T>
+    constexpr T constrain_ce(T value, T low, T high) {
+        return (value < low) ? low : ((value > high) ? high : value);
+    }
+
 }
 
 #endif

@@ -5,6 +5,8 @@
 
 #include <avr/io.h>
 
+#include "../util/constexpr.hh"
+
 namespace yaal {
 
     typedef unsigned long long freq_t;
@@ -24,10 +26,23 @@ namespace yaal {
             public:
                 YAAL_INLINE("Cpu::Clock::Prescaler::set")
                 void set(uint8_t divider) {
+#  ifdef CLKPR
                     if (divider <= 0x08) { // 0b00001000
+                        // f_clk = f_src / 2^divider
                         CLKPR = 0x80;
                         CLKPR = divider;
                     }
+#  elif defined(XDIV)
+                    if (divider <= 0x80) { // 0x10000000
+                        // f_clk = f_src / (129 - divider)
+                        XDIV = 0;
+                        if (divider < 0x80) {
+                            XDIV = 0x80 | divider;
+                        }
+                    }
+#  else
+#    error "No known cpu prescaler register defined"
+#  endif
                 }
 
                 YAAL_INLINE("Cpu::Clock::Prescaler::operator=")
@@ -38,7 +53,14 @@ namespace yaal {
 
                 YAAL_INLINE("Cpu::Clock::Prescaler::get")
                 uint8_t get() {
+#  ifdef CLKPR
                     return CLKPR;
+#  elif defined(XDIV)
+                    uint8_t value = XDIV;
+                    return (value == 0) ? 0x80 : value & 0x7f;
+#  else
+#    error "No known cpu prescaler register defined"
+#  endif
                 }
 
                 YAAL_INLINE("Cpu::Clock::Prescaler::operator uint8_t")
@@ -62,6 +84,7 @@ namespace yaal {
 
             YAAL_INLINE("Cpu::Clock::set")
             void set(freq_t frequency) {
+#  ifdef CLKPR
                 if (__builtin_constant_p(frequency)) {
                     if (frequency >= (f_clock >> 0)) {
                         prescaler = 0;
@@ -84,6 +107,13 @@ namespace yaal {
                     }
                 }
                 // TODO: else throw error
+#  elif defined(XDIV)
+                if (__builtin_constant_p(frequency)) {
+                    prescaler = constrain_ce<int>(129 - f_clock / frequency, 0, 0x80);
+                }
+#  else
+#    error "No known cpu prescaler register defined"
+#  endif
             }
 
             YAAL_INLINE("Cpu::Clock::operator=")
@@ -95,7 +125,13 @@ namespace yaal {
             YAAL_INLINE("Cpu::Clock::get")
             freq_t get() {
 #ifdef YAAL_UNSTABLE_F_CPU
+#  ifdef CLKPR
                 return f_clock >> prescaler;
+#  elif defined(XDIV)
+                return f_clock / (129 - prescaler);
+#  else
+#    error "No known cpu prescaler register defined"
+#  endif
 #else
                 return f_cpu;
 #endif
