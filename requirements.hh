@@ -22,6 +22,10 @@
 #  include "common_macros.hh"
 #  include "qualifiers.hh"
 
+// Fixes for avr gcc library
+//  Allow debrecated macros (Some debrecated macros are used inside #ifdef in io/registers)
+#define __AVR_LIBC_DEPRECATED_ENABLE__ 1
+
 // end requirements block
 #endif
 
