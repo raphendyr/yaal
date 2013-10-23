@@ -35,3 +35,8 @@ arduino_mini        atmega168   16000000    eightanaloginputs -         "arduino
 arduino_fio         atmega328p  8000000     eightanaloginputs -         "arduino fio"
 arduino_bt328       atmega328p  16000000    eightanaloginputs -         "arduino bt w/ atmega328"
 arduino_bt          atmega168   16000000    eightanaloginputs -         "arduino bt w/ atmega168"
+
+
+#-------------- Others ----------------
+#  : https://www.olimex.com/Products/AVR/Development/AVR-MT128/
+avr-mt128           atmega128   16000000    -               -           "Olimex's AVR-MT128 development board"

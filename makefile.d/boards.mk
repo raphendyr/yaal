@@ -211,6 +211,12 @@ ifeq ($(BOARD),arduino_bt)
   MCU ?= atmega168
 endif
 
+ifeq ($(BOARD),avr-mt128)
+  BOARD_NAME ?= Olimex's AVR-MT128 development board
+  F_CLOCK ?= 16000000
+  MCU ?= atmega128
+endif
+
 
 #======================================
 
@@ -270,3 +276,4 @@ boards_list:
 	@echo "  arduino_fio          - arduino fio"
 	@echo "  arduino_bt328        - arduino bt w/ atmega328"
 	@echo "  arduino_bt           - arduino bt w/ atmega168"
+	@echo "  avr-mt128            - Olimex's AVR-MT128 development board"
