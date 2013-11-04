@@ -62,7 +62,7 @@ namespace yaal {
             YAAL_INLINE("Serial::setMode")
             static void setMode() {
                 // FIXME: Only asynchronous mode
-                controlC &= ~((1 << UMSEL10) | (1 << UMSEL11));
+                controlC &= ~((1 << UMSEL00) | (1 << UMSEL01));
             }
 
             YAAL_INLINE("Serial::setBaud")
@@ -151,59 +151,59 @@ namespace yaal {
                                 bool enableTX = true)
             {
                 // Enable receiver and transmitter if asked to.
-                controlB = (enableRX ? (1<<RXEN1) : 0)|
-                           (enableTX ? (1<<TXEN1) : 0);
+                controlB = (enableRX ? (1<<RXEN0) : 0)|
+                           (enableTX ? (1<<TXEN0) : 0);
 
                 // Set frame format.
 
                 // Parity bits.
                 if (parity == PARITY_DISABLED)
-                    controlC &= ~((1<<UPM10)|(1<<UPM11));
+                    controlC &= ~((1<<UPM00)|(1<<UPM01));
                 else if (parity == PARITY_EVEN) {
-                    controlC &= ~(1<<UPM10);
-                    controlC |= (1<<UPM11);
+                    controlC &= ~(1<<UPM00);
+                    controlC |= (1<<UPM01);
                 }
                 else
-                    controlC |= (1<<UPM10)|(1<<UPM11);
+                    controlC |= (1<<UPM00)|(1<<UPM01);
 
                 // Stop bits.
                 if (stopbits == STOP_ONE)
-                    controlC &= ~(1<<USBS1);
+                    controlC &= ~(1<<USBS0);
                 else
-                    controlC |= (1<<USBS1);
+                    controlC |= (1<<USBS0);
 
                 // Data bits.
                 if (databits == DATA_NINE) {
-                    controlC |= (1<<UCSZ10)|(1<<UCSZ11)|(1<<UCSZ12);
+                    controlC |= (1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
                 }
                 else if (databits == DATA_EIGHT) {
-                    controlC &= ~(1<<UCSZ12);
-                    controlC |= (1<<UCSZ10)|(1<<UCSZ11);
+                    controlC &= ~(1<<UCSZ02);
+                    controlC |= (1<<UCSZ00)|(1<<UCSZ01);
                 }
                 else if (databits == DATA_SEVEN) {
-                    controlC &= ~((1<<UCSZ10)|(1<<UCSZ12));
-                    controlC |= (1<<UCSZ11);
+                    controlC &= ~((1<<UCSZ00)|(1<<UCSZ02));
+                    controlC |= (1<<UCSZ01);
                 }
                 else if (databits == DATA_SIX) {
-                    controlC &= ~((1<<UCSZ11)|(1<<UCSZ12));
-                    controlC |= (1<<UCSZ10);
+                    controlC &= ~((1<<UCSZ01)|(1<<UCSZ02));
+                    controlC |= (1<<UCSZ00);
                 }
                 else if (databits == DATA_FIVE) {
-                    controlC &= ~(1<<UCSZ10)|(1<<UCSZ11)|(1<<UCSZ12);
+                    controlC &= ~(1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
                 }
             }
 
             YAAL_INLINE("Serial::put")
             void put(uint8_t value) {
-                // XXX: I guess it's OK to use UDRE1 here instead of UDREn?
-                while (!(controlA & (1<<UDRE1)));
+                // XXX: I guess it's OK to use UDRE0 here instead of UDREn?
+                while (!(controlA & (1<<UDRE0)));
                 data = value;
             }
 
             YAAL_INLINE("Serial::get")
             uint8_t get() {
-                // XXX: I guess it's OK to use RXC1 here instead of UDREn?
-                while (!(controlA & (1<<RXC1)));
+                // XXX: I guess it's OK to use RXC0 here instead of RXCn?
+                while (!(controlA & (1<<RXC0)));
                 return data;
             }
 
