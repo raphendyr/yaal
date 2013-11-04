@@ -39,7 +39,7 @@ namespace yaal {
 
         uint8_t& operator[] (uint8_t const i) {
             if (bigendian)
-               return data.bytes[i];
+                return data.bytes[i];
             else
                 return data.bytes[size - 1 - i];
         }
