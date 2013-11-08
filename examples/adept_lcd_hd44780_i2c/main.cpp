@@ -13,11 +13,11 @@ uint16_t byte_to_hex(uint8_t byte) {
 }
 
 // There are two different pin configurations I know of. Pick whichever works.
-// Don't forget to select the correct polarity for the backlight pin. If there
-// is no backlight, toggle the polarity and you'll be fine.
+// If yours is different, you need to specify the pin configuration pin by pin:
+// LcdBackPack<RS, RW, Enable, Data4, Data5, Data6, Data7, Backlight, Backlight_polarity>.
 // Typical I2C addresses are 0x20-0x27 and 0x38-0x3F.
-//typedef LCDInterface_I2C<BackPack_Type2, false, 0x20> I2CInterface;
-typedef LCDInterface_I2C<BackPack_Type1, true, 0x27> I2CInterface;
+//typedef LCDInterface_I2C<LcdBackPack_Type2, 0x20> I2CInterface;
+typedef LCDInterface_I2C<LcdBackPack_Type1, 0x27> I2CInterface;
 typedef LiquidCrystalHD44780<I2CInterface, 2, false> LCD;
 
 void main() {

@@ -1,9 +1,11 @@
 #ifndef __YAAL_DEVICES__LCD_HD44780__
 #define __YAAL_DEVICES__LCD_HD44780__ 1
 #include "../requirements.hh"
-#include <util/delay.h>
-#include <../../communication/i2c_hw.hh>
 #ifdef __YAAL__
+
+#include <util/delay.h>
+#include "../../communication/i2c_hw.hh"
+#include "lcd_backpack.hh"
 
 namespace yaal {
 
@@ -316,7 +318,7 @@ namespace yaal {
 
 
     // Supports PCF8574/PCF8574A based I2C expanders.
-    template<typename Backpack_type, bool Backlight_polarity, uint8_t address, typename SDA = PortC4, typename SCL = PortC5>
+    template<typename Backpack_type, uint8_t address, typename SDA = PortC4, typename SCL = PortC5>
     class LCDInterface_I2C {
 
         SDA sda;
@@ -325,29 +327,29 @@ namespace yaal {
         Backpack_type status;
 
         void commit_status() {
-            autounion<Backpack_type> value(status);
-            I2c_HW.write(address, value[0]);
+            I2c_HW.write(address, status.value);
         }
 
         void read_data() {
-            autounion<Backpack_type> value;
-            value[0] = I2c_HW.read(address);
-            status.data = value.value().data;
+            Backpack_type new_status;
+            new_status.value = I2c_HW.read(address);
+            // Update only data bits.
+            status.bits.data = new_status.bits.data;
         }
 
         void pulse_enable() {
             commit_status(); // This needs to be here because there must be
                              // at least 60 ns between setting RS+RW and Enable.
                              // At 16 MHz, 1 instruction takes 62.5 ns.
-            status.enable = 1;
+            status.bits.enable = 1;
             commit_status();
             _delay_us(1); // >450 ns is a sufficient pulse width.
-            status.enable = 0;
+            status.bits.enable = 0;
             commit_status();
         }
 
         void write_real(uint8_t value) {
-            status.data = value;
+            status.bits.data = value;
             pulse_enable();
         }
 
@@ -355,16 +357,16 @@ namespace yaal {
             commit_status(); // This needs to be here because there must be
                              // at least 60 ns between setting RS+RW and Enable.
                              // At 16 MHz, 1 instruction takes 62.5 ns.
-            status.enable = 1;
-            status.data = 0x0f; // This seems to be needed for the read to work.
+            status.bits.enable = 1;
+            status.bits.data = 0x0f; // This seems to be needed for the read to work.
             commit_status();
             _delay_us(1); // >450 ns is a sufficient pulse width.
                           // This also includes a max 360 ns delay for data.
 
             read_data();
-            uint8_t ret = status.data;
+            uint8_t ret = status.bits.data;
             
-            status.enable = 0;
+            status.bits.enable = 0;
             commit_status();
 
             return ret;
@@ -372,10 +374,10 @@ namespace yaal {
 
         // Wait until the LCD clears the busy flag.
         void wait_busy() {
-            uint8_t old_rs = status.rs;
-            status.rs = 0;
+            uint8_t old_rs = status.bits.rs;
+            status.bits.rs = 0;
             while (read_fast() & 0x80);
-            status.rs = old_rs;
+            status.bits.rs = old_rs;
         }
 
     public:
@@ -395,16 +397,16 @@ namespace yaal {
 
             _delay_ms(50);
 
-            status.rs = 0;
-            status.rw = 0;
-            status.enable = 0;
-            status.backlight = Backlight_polarity; // Always enable backlight.
+            status.bits.rs = 0;
+            status.bits.rw = 0;
+            status.bits.enable = 0;
+            status.bits.backlight = Backpack_type::backlight_polarity; // Always enable backlight.
 
             // Set 4-bit interface in four steps.
             // Effectively, LCD_FUNCTIONSET | LCD_8BITMODE
             // is sent 3 times when the interface length is still 8 bits
             // and finally the interface is set to 4 bits long.
-            status.data = 0x03;
+            status.bits.data = 0x03;
 
             // One.
             pulse_enable();
@@ -419,7 +421,7 @@ namespace yaal {
             _delay_us(50); // >37 us is enough for commands.
 
             // Four: finally set 4-bit mode.
-            status.data = 0x02;
+            status.bits.data = 0x02;
             pulse_enable();
             _delay_us(50); // >37 us is enough for commands.
 
@@ -443,48 +445,23 @@ namespace yaal {
 
         // An 8-bit read without a wait. Used for reading the busy flag.
         uint8_t read_fast() {
-            status.rw = 1;
+            status.bits.rw = 1;
 
             uint8_t ret;
 
             ret = read_real() << static_cast<uint8_t>(4);
             ret |= read_real() & 0x0f;
 
-            status.rw = 0;
+            status.bits.rw = 0;
 
             return ret;
         }
 
         void set_RS(bool value) {
-            status.rs = value ? 1 : 0;
+            status.bits.rs = value ? 1 : 0;
         }
 
     };
-
-    template<uint8_t RS, uint8_t RW, uint8_t Enable, uint8_t Data4, uint8_t Data5, uint8_t Data6, uint8_t Data7, uint8_t Backlight>
-    struct BackPack {
-    };
-
-    template<>
-    struct BackPack<0, 1, 2, 4, 5, 6, 7, 3> {
-        uint8_t rs : 1;
-        uint8_t rw : 1;
-        uint8_t enable : 1;
-        uint8_t backlight : 1;
-        uint8_t data : 4;
-    };
-
-    template<>
-    struct BackPack<6, 5, 4, 0, 1, 2, 3, 7> {
-        uint8_t data : 4;
-        uint8_t enable : 1;
-        uint8_t rw : 1;
-        uint8_t rs : 1;
-        uint8_t backlight : 1;
-    };
-
-    typedef BackPack<0, 1, 2, 4, 5, 6, 7, 3> BackPack_Type1;
-    typedef BackPack<6, 5, 4, 0, 1, 2, 3, 7> BackPack_Type2;
 }
 
 #endif
