@@ -316,43 +316,23 @@ namespace yaal {
 
 
     // Supports PCF8574/PCF8574A based I2C expanders.
-    template<uint8_t RS, uint8_t RW, uint8_t Enable, uint8_t Data4, uint8_t Data5, uint8_t Data6, uint8_t Data7, uint8_t Backlight, bool Backlight_polarity, uint8_t address, typename SDA = PortC4, typename SCL = PortC5>
+    template<typename Backpack_type, bool Backlight_polarity, uint8_t address, typename SDA = PortC4, typename SCL = PortC5>
     class LCDInterface_I2C {
 
         SDA sda;
         SCL scl;
 
-        struct {
-            uint8_t rs : 1;
-            uint8_t rw : 1;
-            uint8_t enable : 1;
-            uint8_t backlight : 1;
-            uint8_t data : 4;
-        } status;
+        Backpack_type status;
 
         void commit_status() {
-            uint8_t tmp = 0;
-            tmp |= status.rs << RS;
-            tmp |= status.rw << RW;
-            tmp |= status.enable << Enable;
-            tmp |= Backlight_polarity << Backlight;
-
-            uint8_t data = status.data;
-            tmp |= ((data >> 3) & 0x01) << Data7;
-            tmp |= ((data >> 2) & 0x01) << Data6;
-            tmp |= ((data >> 1) & 0x01) << Data5;
-            tmp |= (data & 0x01) << Data4;
-
-            I2c_HW.write(address, tmp);
+            autounion<Backpack_type> value(status);
+            I2c_HW.write(address, value[0]);
         }
 
         void read_data() {
-            uint8_t tmp = I2c_HW.read(address);
-
-            status.data  = ((tmp >> Data7) & 0x01) << 3;
-            status.data |= ((tmp >> Data6) & 0x01) << 2;
-            status.data |= ((tmp >> Data5) & 0x01) << 1;
-            status.data |= (tmp >> Data4) & 0x01;
+            autounion<Backpack_type> value;
+            value[0] = I2c_HW.read(address);
+            status.data = value.value().data;
         }
 
         void pulse_enable() {
@@ -480,6 +460,31 @@ namespace yaal {
         }
 
     };
+
+    template<uint8_t RS, uint8_t RW, uint8_t Enable, uint8_t Data4, uint8_t Data5, uint8_t Data6, uint8_t Data7, uint8_t Backlight>
+    struct BackPack {
+    };
+
+    template<>
+    struct BackPack<0, 1, 2, 4, 5, 6, 7, 3> {
+        uint8_t rs : 1;
+        uint8_t rw : 1;
+        uint8_t enable : 1;
+        uint8_t backlight : 1;
+        uint8_t data : 4;
+    };
+
+    template<>
+    struct BackPack<6, 5, 4, 0, 1, 2, 3, 7> {
+        uint8_t data : 4;
+        uint8_t enable : 1;
+        uint8_t rw : 1;
+        uint8_t rs : 1;
+        uint8_t backlight : 1;
+    };
+
+    typedef BackPack<0, 1, 2, 4, 5, 6, 7, 3> BackPack_Type1;
+    typedef BackPack<6, 5, 4, 0, 1, 2, 3, 7> BackPack_Type2;
 }
 
 #endif
