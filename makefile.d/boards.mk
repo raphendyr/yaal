@@ -239,6 +239,9 @@ ifdef BOARD_NAME
 	@echo "BOARD_NAME: $(BOARD_NAME)"
 endif
 	@echo "MCU: $(MCU)"
+ifdef F_CLOCK
+	@echo "F_CLOCK: $(F_CLOCK)"
+endif
 	@echo "F_CPU: $(F_CPU)"
 
 

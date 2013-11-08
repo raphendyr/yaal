@@ -67,7 +67,7 @@ ifdef F_CPU
 CPPFLAGS += -DF_CPU=$(patsubst %kHz,%000,$(patsubst %MHz,%000000,$(F_CPU:%UL=%)))UL
 endif
 ifdef F_CLOCK
-CPPFLAGS += -DF_CLOCK=$(F_CLOCK:%UL=%)UL
+CPPFLAGS += -DF_CLOCK=$(patsubst %kHz,%000,$(patsubst %MHz,%000000,$(F_CLOCK:%UL=%)))UL
 endif
 ifdef YAAL_NO_INIT
 CPPFLAGS += -DYAAL_NO_INIT
