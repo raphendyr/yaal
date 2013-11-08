@@ -88,7 +88,7 @@ namespace yaal {
                         // ERROR: wont fit in 12-bit UBRR register (max value is 4095)
                         return;
                     }
-                    ubrr_val = static_cast<uint32_t>(ubrr_tmp);
+                    ubrr_val = static_cast<uint16_t>(ubrr_tmp);
                 }
 
 #if 1
