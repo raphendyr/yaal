@@ -9,6 +9,58 @@
 #include "../../core/cpu.hh"
 #include "../../types/autounion.hh"
 
+// Some bit definitions for the control registers.
+// Not all chips have USART0, so we try the USART1-specific constants if needed.
+#ifdef UMSEL0
+#   define HAVE_SERIAL
+#   define UMSELX0 UMSEL0
+#   define UMSELX1 UMSEL1
+#   define RXENX RXEN
+#   define TXENX TXEN
+#   define UPMX0 UPM0
+#   define UPMX1 UPM1
+#   define USBSX USBS
+#   define UCSZX0 UCSZ0
+#   define UCSZX1 UCSZ1
+#   define UCSZX2 UCSZ2
+#   define UDREX UDRE
+#   define RXCX RXC
+#   define U2XX U2X
+#elif defined(UMSEL00)
+#   define HAVE_SERIAL
+#   define UMSELX0 UMSEL00
+#   define UMSELX1 UMSEL01
+#   define RXENX RXEN0
+#   define TXENX TXEN0
+#   define UPMX0 UPM00
+#   define UPMX1 UPM01
+#   define USBSX USBS0
+#   define UCSZX0 UCSZ00
+#   define UCSZX1 UCSZ01
+#   define UCSZX2 UCSZ02
+#   define UDREX UDRE0
+#   define RXCX RXC0
+#   define U2XX U2X0
+#elif defined(UMSEL10)
+#   define HAVE_SERIAL
+#   define UMSELX0 UMSEL10
+#   define UMSELX1 UMSEL11
+#   define RXENX RXEN1
+#   define TXENX TXEN1
+#   define UPMX0 UPM10
+#   define UPMX1 UPM11
+#   define USBSX USBS1
+#   define UCSZX0 UCSZ10
+#   define UCSZX1 UCSZ11
+#   define UCSZX2 UCSZ12
+#   define UDREX UDRE1
+#   define RXCX RXC1
+#   define U2XX U2X1
+#else
+#       warning "This chip doesn't seem to have an USART. Serial disabled."
+#endif
+
+#ifdef HAVE_SERIAL
 namespace yaal {
 
     enum Parity {
@@ -62,21 +114,14 @@ namespace yaal {
             YAAL_INLINE("Serial::setMode")
             static void setMode() {
                 // FIXME: Only asynchronous mode
-                controlC &= ~((1 << UMSEL00) | (1 << UMSEL01));
+                controlC &= ~((1 << UMSELX0) | (1 << UMSELX1));
             }
 
             YAAL_INLINE("Serial::setBaud")
             static void setBaud(uint32_t baud) {
                 uint32_t f_cpu = cpu.clock; // get static or dynamic cpu clock frequency
                 bool use_u2x;
-// FIXME
-#if defined(U2X)
-                internal::SingleBit<controlARegister, U2X> u2x;
-#elif defined(U2X0)
-                internal::SingleBit<controlARegister, U2X0> u2x;
-#elif defined(U2X1)
-                internal::SingleBit<controlARegister, U2X1> u2x;
-#endif
+                internal::SingleBit<controlARegister, U2XX> u2x;
 
                 // from datasheet: UBRR = F_CPU / (16UL * BAUD);
                 // from setbaud.h: UBRR = (F_CPU + 8UL * BAUD) / (16UL * BAUD);
@@ -151,59 +196,57 @@ namespace yaal {
                                 bool enableTX = true)
             {
                 // Enable receiver and transmitter if asked to.
-                controlB = (enableRX ? (1<<RXEN0) : 0)|
-                           (enableTX ? (1<<TXEN0) : 0);
+                controlB = (enableRX ? (1<<RXENX) : 0)|
+                           (enableTX ? (1<<TXENX) : 0);
 
                 // Set frame format.
 
                 // Parity bits.
                 if (parity == PARITY_DISABLED)
-                    controlC &= ~((1<<UPM00)|(1<<UPM01));
+                    controlC &= ~((1<<UPMX0)|(1<<UPMX1));
                 else if (parity == PARITY_EVEN) {
-                    controlC &= ~(1<<UPM00);
-                    controlC |= (1<<UPM01);
+                    controlC &= ~(1<<UPMX0);
+                    controlC |= (1<<UPMX1);
                 }
                 else
-                    controlC |= (1<<UPM00)|(1<<UPM01);
+                    controlC |= (1<<UPMX0)|(1<<UPMX1);
 
                 // Stop bits.
                 if (stopbits == STOP_ONE)
-                    controlC &= ~(1<<USBS0);
+                    controlC &= ~(1<<USBSX);
                 else
-                    controlC |= (1<<USBS0);
+                    controlC |= (1<<USBSX);
 
                 // Data bits.
                 if (databits == DATA_NINE) {
-                    controlC |= (1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
+                    controlC |= (1<<UCSZX0)|(1<<UCSZX1)|(1<<UCSZX2);
                 }
                 else if (databits == DATA_EIGHT) {
-                    controlC &= ~(1<<UCSZ02);
-                    controlC |= (1<<UCSZ00)|(1<<UCSZ01);
+                    controlC &= ~(1<<UCSZX2);
+                    controlC |= (1<<UCSZX0)|(1<<UCSZX1);
                 }
                 else if (databits == DATA_SEVEN) {
-                    controlC &= ~((1<<UCSZ00)|(1<<UCSZ02));
-                    controlC |= (1<<UCSZ01);
+                    controlC &= ~((1<<UCSZX0)|(1<<UCSZX2));
+                    controlC |= (1<<UCSZX1);
                 }
                 else if (databits == DATA_SIX) {
-                    controlC &= ~((1<<UCSZ01)|(1<<UCSZ02));
-                    controlC |= (1<<UCSZ00);
+                    controlC &= ~((1<<UCSZX1)|(1<<UCSZX2));
+                    controlC |= (1<<UCSZX0);
                 }
                 else if (databits == DATA_FIVE) {
-                    controlC &= ~(1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
+                    controlC &= ~(1<<UCSZX0)|(1<<UCSZX1)|(1<<UCSZX2);
                 }
             }
 
             YAAL_INLINE("Serial::put")
             void put(uint8_t value) {
-                // XXX: I guess it's OK to use UDRE0 here instead of UDREn?
-                while (!(controlA & (1<<UDRE0)));
+                while (!(controlA & (1<<UDREX)));
                 data = value;
             }
 
             YAAL_INLINE("Serial::get")
             uint8_t get() {
-                // XXX: I guess it's OK to use RXC0 here instead of RXCn?
-                while (!(controlA & (1<<RXC0)));
+                while (!(controlA & (1<<RXCX)));
                 return data;
             }
 
@@ -228,5 +271,6 @@ namespace yaal {
     }
 }
 
+#endif
 #endif
 #endif
