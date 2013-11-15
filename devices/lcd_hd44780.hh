@@ -1,8 +1,11 @@
 #ifndef __YAAL_DEVICES__LCD_HD44780__
 #define __YAAL_DEVICES__LCD_HD44780__ 1
 #include "../requirements.hh"
-#include <util/delay.h>
 #ifdef __YAAL__
+
+#include <util/delay.h>
+#include "../../communication/i2c_hw.hh"
+#include "lcd_backpack.hh"
 
 namespace yaal {
 
@@ -309,6 +312,153 @@ namespace yaal {
 
         void set_RS(bool value) {
             rs_pin = value;
+        }
+
+    };
+
+
+    // Supports PCF8574/PCF8574A based I2C expanders.
+    template<typename Backpack_type, uint8_t address, typename SDA = PortC4, typename SCL = PortC5>
+    class LCDInterface_I2C {
+
+        SDA sda;
+        SCL scl;
+
+        Backpack_type status;
+
+        void commit_status() {
+            I2c_HW.write(address, status.value);
+        }
+
+        void read_data() {
+            Backpack_type new_status;
+            new_status.value = I2c_HW.read(address);
+            // Update only data bits.
+            status.bits.data = new_status.bits.data;
+        }
+
+        void pulse_enable() {
+            commit_status(); // This needs to be here because there must be
+                             // at least 60 ns between setting RS+RW and Enable.
+                             // At 16 MHz, 1 instruction takes 62.5 ns.
+            status.bits.enable = 1;
+            commit_status();
+            _delay_us(1); // >450 ns is a sufficient pulse width.
+            status.bits.enable = 0;
+            commit_status();
+        }
+
+        void write_real(uint8_t value) {
+            status.bits.data = value;
+            pulse_enable();
+        }
+
+        uint8_t read_real() {
+            commit_status(); // This needs to be here because there must be
+                             // at least 60 ns between setting RS+RW and Enable.
+                             // At 16 MHz, 1 instruction takes 62.5 ns.
+            status.bits.enable = 1;
+            status.bits.data = 0x0f; // This seems to be needed for the read to work.
+            commit_status();
+            _delay_us(1); // >450 ns is a sufficient pulse width.
+                          // This also includes a max 360 ns delay for data.
+
+            read_data();
+            uint8_t ret = status.bits.data;
+            
+            status.bits.enable = 0;
+            commit_status();
+
+            return ret;
+        }
+
+        // Wait until the LCD clears the busy flag.
+        void wait_busy() {
+            uint8_t old_rs = status.bits.rs;
+            status.bits.rs = 0;
+            while (read_fast() & 0x80);
+            status.bits.rs = old_rs;
+        }
+
+    public:
+
+        enum BitMode : uint8_t {
+            _4BIT = 4,
+            _8BIT = 8
+        };
+
+        // Returns the correct bit mode.
+        uint8_t setup() {
+            sda.mode = INPUT_PULLUP;
+            scl.mode = INPUT_PULLUP;
+            sei();
+
+            I2c_HW.setup();
+
+            _delay_ms(50);
+
+            status.bits.rs = 0;
+            status.bits.rw = 0;
+            status.bits.enable = 0;
+            status.bits.backlight = Backpack_type::backlight_polarity; // Always enable backlight.
+
+            // Set 4-bit interface in four steps.
+            // Effectively, LCD_FUNCTIONSET | LCD_8BITMODE
+            // is sent 3 times when the interface length is still 8 bits
+            // and finally the interface is set to 4 bits long.
+            status.bits.data = 0x03;
+
+            // One.
+            pulse_enable();
+            _delay_us(4500); // >4.1 ms + >37 us is enough.
+
+            // Two.
+            pulse_enable();
+            _delay_us(150); // >100 us + >37 us is enough.
+
+            // Three.
+            pulse_enable();
+            _delay_us(50); // >37 us is enough for commands.
+
+            // Four: finally set 4-bit mode.
+            status.bits.data = 0x02;
+            pulse_enable();
+            _delay_us(50); // >37 us is enough for commands.
+
+            return _4BIT;
+        }
+
+        // An 8-bit write, with a wait for the busy flag.
+        void write(uint8_t value) {
+            wait_busy();
+            write_real(value >> static_cast<uint8_t>(4));
+            write_real(value);
+        }
+
+        // An 8-bit read, with a wait for the busy flag.
+        // Used for other read commands than reading the busy flag.
+        uint8_t read() {
+            wait_busy();
+            uint8_t ret = read_fast();
+            return ret;
+        }
+
+        // An 8-bit read without a wait. Used for reading the busy flag.
+        uint8_t read_fast() {
+            status.bits.rw = 1;
+
+            uint8_t ret;
+
+            ret = read_real() << static_cast<uint8_t>(4);
+            ret |= read_real() & 0x0f;
+
+            status.bits.rw = 0;
+
+            return ret;
+        }
+
+        void set_RS(bool value) {
+            status.bits.rs = value ? 1 : 0;
         }
 
     };
