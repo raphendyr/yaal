@@ -5,6 +5,9 @@ Or yet another AVR Library
 
 We are in **experimental** state.
 
+Associated projects:
+ * [yaamake](https://github.com/raphendyr/yaamake) - Independent makefile system to ease project building and programming.
+
 About
 -----
 
@@ -38,18 +41,27 @@ Well. Because of the performance. Read more in [why_yaal.md](https://github.com/
 Howto start project using yaal?
 -------------------------------
 
-Run commands from following (change paths and commends to match your liking).
+Run commands from following (change paths and commands to match your liking).
 
 ```sh
 mkdir my_project_path
 cd my_project_path
 git init .
 git submodule add https://github.com/raphendyr/yaal.git vendor/yaal
-./vendor/yaal/init_project.sh
-git commit -m "Project initialization"
+## if you do not want to have yaamake installed (read yaamake's README.md)
+#git submodule add https://github.com/raphendyr/yaamake.git vendor/yaamake
+#(cd vendor/yaamake && make NO_TEENSY=1)
+#./vendor/yaamake/yaamake --init-project --make-initial --yaal=vendor/yaal
+yaamake --init-project --make-initial --yaal=vendor/yaal
+git commit --amend -m "Project initialization"
 ```
 
-You should now edit `Makefile` to match your project and start coding into `main.cpp`.
+Last line is optional as yaamake creates you the initial commit. You should edit the message (the last line) to be more suitable to you.
+
+Then start by editing `Makefile` to match your hardware and write test code into `main.cpp`.
+After that run `make` to build it and `make program` to flash your chip.
+
+If you are using teensy, remove parameter `NO_TEENSY=1` from above (building `teensy_loader_cli` requires libusb-dev or similar package).
 
 License and using
 -----------------
