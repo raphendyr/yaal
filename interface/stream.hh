@@ -227,6 +227,12 @@ namespace yaal {
                 *this << buf;
                 return *this;
             }
+
+            template< typename T >
+            self_type& operator<< (::yaal::internal::StreamActor<T> actor) {
+                actor.runfor(*static_cast<Derived*>(this));
+                return *this;
+            }
         };
 
         template< typename Derived >

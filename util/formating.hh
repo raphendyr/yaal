@@ -49,7 +49,28 @@ namespace yaal {
         return hex;
     }
 
-    constexpr char endl = '\n';
+    namespace internal {
+
+        template< typename T >
+        struct StreamActor {
+            template< typename Stream >
+            void runfor(Stream& stream) { T::runfor(stream); }
+        };
+
+        struct StreamEndline {
+            template< typename Stream >
+            static void runfor(Stream& stream) {
+#             ifdef YAAL_WIN_STYLE_ENDL
+                stream << '\r';
+#             endif
+                stream << '\n';
+                stream.flush();
+            }
+        };
+
+    }
+
+    constexpr internal::StreamActor<internal::StreamEndline> endl;
 }
 
 #endif
