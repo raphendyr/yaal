@@ -1,5 +1,5 @@
-#ifndef __YAAL_INTERFACES__STREAMABLE__
-#define __YAAL_INTERFACES__STREAMABLE__ 1
+#ifndef __YAAL_INTERFACE__STREAMABLE__
+#define __YAAL_INTERFACE__STREAMABLE__ 1
 #include "../requirements.hh"
 #ifdef __YAAL__
 

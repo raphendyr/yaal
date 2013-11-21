@@ -1,5 +1,5 @@
-#ifndef __YAAL_INTERFACES__PINTUPLE__
-#define __YAAL_INTERFACES__PINTUPLE__ 1
+#ifndef __YAAL_INTERFACE__PINTUPLE__
+#define __YAAL_INTERFACE__PINTUPLE__ 1
 #include "../requirements.hh"
 #ifdef __YAAL__
 
