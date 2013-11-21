@@ -1,5 +1,5 @@
-#ifndef __YAAL_INTERFACES__COMMUNICATION__
-#define __YAAL_INTERFACES__COMMUNICATION__ 1
+#ifndef __YAAL_INTERFACE__COMMUNICATION__
+#define __YAAL_INTERFACE__COMMUNICATION__ 1
 #include "../requirements.hh"
 #ifdef __YAAL__
 

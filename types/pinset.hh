@@ -4,7 +4,7 @@
 #ifdef __YAAL__
 
 #include "../io/types/pin.hh"
-#include "../interfaces/pintuple.hh"
+#include "../interface/pintuple.hh"
 
 namespace yaal {
 
