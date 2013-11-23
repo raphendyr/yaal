@@ -274,8 +274,137 @@ namespace yaal {
             } */
         };
 
+        template< typename Communicable >
+        class Communication : public ReadWriteBase<Communication<Communicable>>,
+                              public ReadStream<Communication<Communicable>>,
+                              public WriteStream<Communication<Communicable>> {
+            typedef Communication<Communicable> self_type;
 
+        protected:
+            Communicable* comm;
 
+        public:
+            Communication(Communicable* comm) : comm(comm) {
+                comm->begin();
+            }
+
+            ~Communication() {
+                comm->end();
+            }
+
+            /* Proxy ReadWriteBase methods */
+
+            bool good() const { return comm->good(); }
+            bool bad() const { return comm->bad(); }
+            bool eof() const { return comm->eof(); }
+            bool fail() const { return comm->fail(); }
+            bool operator! () const { return !(*comm); }
+            operator bool () const { return static_cast<bool>(*comm); }
+
+            /* Proxy Writeable methods */
+
+            void put(uint8_t byte) { comm->put(byte); }
+
+            template< typename T >
+            self_type& write(T value) {
+                comm->write(value);
+                return *this;
+            }
+
+            template< typename T, typename Y>
+            self_type& write(T value1, Y value2) {
+                comm->write(value1, value2);
+                return *this;
+            }
+
+            template< typename T>
+            self_type& writebits(T data, uint8_t bits) {
+                comm->writebits(data, bits);
+                return *this;
+            }
+
+            /* Proxy Readable methods */
+
+            uint8_t get() { return comm->get(); }
+
+            template< typename T >
+            self_type& read(T result) {
+                comm->read(result);
+                return *this;
+            }
+
+            template< typename T, typename Y>
+            self_type& read(T result, Y value) {
+                comm->read(result, value);
+                return *this;
+            }
+
+            template< typename T>
+            self_type& readbits(T data, uint8_t bits) {
+                comm->readbits(data, bits);
+                return *this;
+            }
+
+            /* Proxy Transfer methods */
+            template<typename T>
+            T transfer(T data) {
+                return comm->transfer(data);
+            }
+
+            template<typename T>
+            T transferbits(T data, uint8_t bits) {
+                return comm->transferbits(data, bits);
+            }
+        };
+
+        template< typename Derived >
+        class Communicable : protected ReadWriteBase< Derived >,
+                             protected Readable< Derived >,
+                             protected Writeable< Derived > {
+            /* Most of the methods are public, so the user
+             * can't call them directly, but needs to use
+             * the communication proxy
+             *
+             * This enforces use of begin() and end().
+             * Though this doesn't protect from the miss use of the proxy
+             * Following example is the WRONG use:
+             *   { auto chat1 = spi.chat(); // calls begin()
+             *     spi.chat() << "foobar";  // calls begin(), write(), end()
+             *     chat1 << "baz";          // calls write() while line is not in use
+             *   }                          // calls end() for the second time
+             */
+            friend class ReadWriteBase<Derived>;
+            friend class Readable<Derived>;
+            friend class Writeable<Derived>;
+            friend class interface::Communication<Derived>;
+
+        public:
+            /*! chat
+             * Create communication object.
+             * Communication object calls begin() on constructor and
+             * end() on descruction.
+             *
+             * Use following pattern:
+             *   device.chat() << byte1 << byte2;
+             * Or
+             *   { auto chat = device.chat(); chat.write(bytes1); chat.bytes(bytes2); }
+             */
+            Communication<Derived> chat() {
+                Communication<Derived> chat(static_cast<Derived*>(this));
+                return chat;
+            }
+
+        protected:
+            /*! begin
+             * Begin communication (eg. latch SPI)
+             */
+            void begin();
+
+            /*! end
+             * End communication (eg. delatch SPI)
+             */
+            void end();
+        };
 
     }
 

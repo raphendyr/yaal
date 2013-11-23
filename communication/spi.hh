@@ -5,70 +5,98 @@
 
 #include "shift.hh"
 #include "../io/types/pin.hh"
+#include "../interface/stream.hh"
 
 namespace yaal {
 
+# define yaal__SPIType SPI < \
+    ClockPin, \
+    MosiPin, \
+    MisoPin, \
+    SelectPin, \
+    LSBfirst, \
+    ChangeClockFirst >
     template< typename ClockPin,
               typename MosiPin,
               typename MisoPin,
               typename SelectPin,
               bool LSBfirst = true,
               bool ChangeClockFirst = false >
-    struct SPI {
+    class SPI : public interface::Communicable< yaal__SPIType > {
+        friend class interface::Communication< yaal__SPIType >;
+# undef yaal__SPIType
 
-        static YAAL_INLINE("SPI::setup")
+    private:
+        ClockPin clock;
+        MosiPin mosi;
+        MisoPin miso;
+        SelectPin ss;
+
+    public:
+        YAAL_INLINE("SPI::setup")
         void setup(void) {
-            ClockPin clock;
-            MosiPin mosi;
-            MisoPin miso;
-            SelectPin ss;
-
             clock.mode = OUTPUT;
             mosi.mode = OUTPUT;
             miso.mode = OUTPUT;
             ss.mode = OUTPUT;
         }
 
-        template<typename T>
-        static inline
-        T read(void) {
-            LowPeriod<SelectPin> for_this_block;
-            return internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0);
+    protected:
+        /* These protected methods should be used only through Communication interface.
+         * Read more from interface::Communicable
+         */
+
+        void begin() {
+            ss = false;
+        }
+
+        void end() {
+            ss = true;
+        }
+
+        /* Read */
+
+        uint8_t get() {
+            uint8_t data;
+            this->read(data);
+            return data;
         }
 
         template<typename T>
-        static inline
-        T read(uint8_t bits) {
-            LowPeriod<SelectPin> for_this_block;
-            return internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0, bits);
+        void read(T& data) {
+            data = internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0);
         }
 
+        template<typename T>
+        void readbits(T& data, uint8_t bits) {
+            data = internal::shiftBits<T, ClockPin, NullPin, MisoPin, LSBfirst, ChangeClockFirst>(0, bits);
+        }
+
+        /* Write */
+
+        void put(uint8_t byte) {
+            this->write(byte);
+        }
 
         template<typename T>
-        static inline
-        void write(T data) {
-            LowPeriod<SelectPin> for_this_block;
+        void write(T& data) {
             internal::shiftBits<T, ClockPin, MosiPin, NullPin, LSBfirst, ChangeClockFirst>(data);
         }
 
         template<typename T>
-        static inline
-        void write(T data, uint8_t bits) {
-            LowPeriod<SelectPin> for_this_block;
+        void writebits(T& data, uint8_t bits) {
             internal::shiftBits<T, ClockPin, MosiPin, NullPin, LSBfirst, ChangeClockFirst>(data, bits);
         }
 
+        /* Read/Write at same time = Transfer */
+
         template<typename T>
-        static inline
         T transfer(T data) {
-            LowPeriod<SelectPin> for_this_block;
             return internal::shiftBits<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data);
         }
 
         template<typename T>
-        static inline
-        T transfer(T data, uint8_t bits) {
-            LowPeriod<SelectPin> for_this_block;
+        T transferbits(T data, uint8_t bits) {
             return internal::shiftBits<T, ClockPin, MosiPin, MisoPin, LSBfirst, ChangeClockFirst>(data, bits);
         }
     };

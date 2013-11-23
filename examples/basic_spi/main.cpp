@@ -9,12 +9,17 @@ void setup() {
 }
 
 void loop() {
-    uint8_t value;
+    uint8_t value = 0;
 
     // read
-    value = spi.read<uint8_t>();
-    // transfer
-    value = spi.transfer(value);
+    spi.chat() >> value;
+
     // write
-    spi.write(value);
+    spi.chat() << value;
+
+    // transfer
+    {
+        auto communication = spi.chat();
+        value = communication.transfer(value);
+    }
 }
