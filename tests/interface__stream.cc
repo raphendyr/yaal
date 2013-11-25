@@ -52,11 +52,13 @@ int main(void) {
     test << 't';
     test << yaal::endl;
     test << "foobar" << yaal::endl;
+    test << asdec(125) << yaal::endl;
+    test << ashex(0x45) << ashex(0x22);
     test.write("\n", 1);
     {
         string outs = out.str();
         cout << "outs:\n" << outs << std::endl;
-        assert(outs.compare("t\nfoobar\n\n") == 0);
+        assert(outs.compare("t\nfoobar\n125\n4522\n") == 0);
     }
 
     // autounion test
