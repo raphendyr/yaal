@@ -5,6 +5,7 @@
 
 #include "../types/autounion.hh"
 #include "../util/formating.hh"
+#include "../util/ascii.hh"
 
 namespace yaal {
 
