@@ -1,5 +1,3 @@
-TARGET = serial
-SRC = serial.cpp
-BOARD = arduino_mega2560
+BOARD = arduino_nano328
 
 include ../../makefile.ext

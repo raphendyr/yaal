@@ -7,7 +7,7 @@
 #include <avr/io.h>
 #include "register.hh"
 #include "../../core/cpu.hh"
-#include "../../types/autounion.hh"
+#include "../../interface/stream.hh"
 
 // Some bit definitions for the control registers.
 // Not all chips have USART0, so we try the USART1-specific constants if needed.
@@ -85,12 +85,17 @@ namespace yaal {
     namespace internal {
 
         // FIXME: no synchronous mode, no MSPIM mode
+# define yaal__SerialType Serial<dataRegister, controlARegister, controlBRegister, controlCRegister, ubrrRegister>
         template< typename dataRegister,
                   typename controlARegister,
                   typename controlBRegister,
                   typename controlCRegister,
                   typename ubrrRegister >
-        class Serial {
+        class Serial : public interface::ReadWriteBase< yaal__SerialType >,
+                       public interface::Readable< yaal__SerialType >,
+                       public interface::Writeable< yaal__SerialType > {
+ # undef yaal__SerialType
+
             static dataRegister data;
             static controlARegister controlA;
             static controlBRegister controlB;
@@ -249,24 +254,6 @@ namespace yaal {
                 while (!(controlA & (1<<RXCX)));
                 return data;
             }
-
-            template<typename T>
-            YAAL_INLINE("Serial::write")
-            void write(const T value) {
-                autounion<T> data = value;
-                for (uint8_t i = 0; i < data.size; ++i)
-                    put(data[i]);
-            }
-
-            template<typename T>
-            YAAL_INLINE("Serial::read")
-            void read(T& data) {
-                autounion<T> res;
-                for (uint8_t i = 0; i < res.size; i++)
-                    res[i] = get();
-                data = res;
-            }
-
         };
     }
 }
