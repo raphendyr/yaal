@@ -99,17 +99,19 @@ namespace yaal {
     }
 
 
-    /* ProgramMemory String */
+    /* Program Memory String */
 
 # ifdef __AVR__
+//  _T is defined in debug.hh as pass-through macro, so undefine it first
+#   ifdef _T
+#     undef _T
+#   endif
 #   define _T(s) (__extension__({ \
         static const char __attribute__ ((__progmem__,used)) __CONCAT(c_,__LINE__)[] = (s); \
         ::yaal::internal::StreamPgmString __CONCAT(p_,__LINE__); \
         __CONCAT(p_,__LINE__).string = __CONCAT(c_,__LINE__); \
         __CONCAT(p_,__LINE__); \
     }))
-# else
-#   define _T(s) (s)
 # endif
 
 

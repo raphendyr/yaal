@@ -21,6 +21,7 @@
 #  include <stdint.h>
 #  include "common_macros.hh"
 #  include "qualifiers.hh"
+#  include "debug.hh"
 
 // Fixes for avr gcc library
 //  Allow debrecated macros (Some debrecated macros are used inside #ifdef in io/registers)

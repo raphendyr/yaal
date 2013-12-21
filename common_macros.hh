@@ -9,7 +9,8 @@
 
 // src: avr-include/avr/interrupt.h
 #ifndef __STRINGIFY
-#  define __STRINGIFY(x) #x
+#  define __STRINGIFY2(x) #x
+#  define __STRINGIFY(x) __STRINGIFY2(x)
 #endif
 
 #endif

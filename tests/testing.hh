@@ -28,9 +28,10 @@ typedef unsigned long long reg_size_t;
 #define EQ(left, right) ASSERT(left, ==, right)
 
 #define EQ_F2(left, right, mult, accuracy) do { \
-    cout << left << " =?= " << right << endl; \
+    std::cout << left << " <> " << right << "  ->  "; \
     signed long a_ = (signed long)(left * mult); \
     signed long b_ = (signed long)(right * mult); \
+    std::cout << std::dec << a_ << " <> " << std::dec << b_ << std::endl; \
     signed long d_  = a_ - b_; \
     signed long ad_ = d_ < 0 ? -d_ : d_; \
     ASSERT(ad_, < , accuracy); \
@@ -103,5 +104,13 @@ template<>
 void print_hex<float>(std::ostream& out, const float& value) {
     out << "0x" << std::hex << *(int*)&value << " (" << value << ")";
 };
+
+
+// define yDebugImpl so debug messages are outputted
+#ifndef NO_YDEBUG
+#  include <yaal/common_macros.hh>
+#  define yDebugImplPipe std::cout
+#  define yDebugImplEndl std::endl
+#endif
 
 #endif
