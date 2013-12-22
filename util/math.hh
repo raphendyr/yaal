@@ -49,7 +49,7 @@ namespace yaal {
     YAAL_INLINE("log2")
     uint8_t log2_(T value) {
         uint8_t result = 0;
-        for (value >>= 1; result++);
+        for (; value >>= 1; result++);
         return result;
     }
 

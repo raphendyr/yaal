@@ -1,0 +1,11 @@
+* exp
+* log
+* tan
+* atan (required for atan2?)
+* atan2
+* sin
+* asin
+* cos
+* acos
+
+* can std functions be used instead?

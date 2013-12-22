@@ -5,16 +5,18 @@
 
 namespace yaal {
 
-    template<uint8_t bits_on, uint8_t pad = 0>
+    // FIXME: left works only for uint8_t
+
+    template<uint8_t bits_on, uint8_t pad = 0, typename T = uint8_t>
     struct BitMask {
-        static const uint8_t left = BitMask<bits_on - 1, pad>::left | (0x80 >> (bits_on + pad - 1));
-        static const uint8_t right = BitMask<bits_on - 1, pad>::right | (0x01 << (bits_on + pad - 1));
+        static constexpr T left = BitMask<bits_on - 1, pad, T>::left | (0x80 >> (bits_on + pad - 1));
+        static constexpr T right = BitMask<bits_on - 1, pad, T>::right | (0x01 << (bits_on + pad - 1));
     };
 
-    template<uint8_t pad>
-    struct BitMask<1, pad> {
-        static const uint8_t left = 0x80 >> pad;
-        static const uint8_t right = 0x01 << pad;
+    template<uint8_t pad, typename T>
+    struct BitMask<1, pad, T> {
+        static constexpr T left = 0x80 >> pad;
+        static constexpr T right = 0x01 << pad;
     };
 }
 

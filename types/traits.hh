@@ -15,6 +15,7 @@ namespace yaal {
             static constexpr bool biggest = false;
             static constexpr bool smallest = false;
             static constexpr unsigned char bits = sizeof(T) * 8;
+            static constexpr bool is_signed = ((T)-1) < 0;
         };
 
         // helps us to define all primitive types
