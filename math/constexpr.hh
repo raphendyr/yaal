@@ -69,6 +69,7 @@ namespace yaal {
     }
 
     constexpr double log2_ce(double x) {
+        /* FIXME: would __builtin_log2() be ok? */
         // n = left_most_bit(x) | integer part
         // y = log2_fragment(x/(2^n)) | decimal part
         // return n + y
@@ -81,6 +82,7 @@ namespace yaal {
      * based on the log calculation rule log(x) = log(2) * log2(x) and log(2) is constant
      */
     constexpr double log_ce(double x) {
+        /* FIXME: would __builtin_log() be ok? */
         return log2_ce(x) * constants::log_2;
     }
 }
