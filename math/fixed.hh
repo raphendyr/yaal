@@ -30,7 +30,8 @@ namespace yaal {
         static constexpr self_type pi = constants::pi;
 
         static constexpr self_type one = 1;
-        static constexpr self_type maximum = RawValue(BitMask<container_traits::bits>::right);
+        // FIXME: signed container types
+        static constexpr self_type maximum = RawValue(BitMask<container_traits::bits, 0, container_type>::right);
         static constexpr self_type minimum = RawValue(1);
 
 
