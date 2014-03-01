@@ -4,6 +4,7 @@
 #ifdef __YAAL__
 
 #include "../types/traits.hh"
+#include "../types/helpers.hh"
 #include "../bitmask.hh"
 #include "constants.hh"
 
@@ -64,6 +65,25 @@ namespace yaal {
             : value(static_cast<container_type>(o * __one__)) {}
         constexpr FixedDecimal(const long double& o)
             : value(static_cast<container_type>(o * __one__)) {}
+
+        template<uint8_t o_bits, typename o_container_type>
+        FixedDecimal(const FixedDecimal<o_bits, o_container_type>& other) {
+            typename internal::TypeIf<
+                (sizeof(container_type) > sizeof(o_container_type)),
+                container_type,
+                o_container_type
+            >::type tmp;
+
+            tmp = other.raw_value();
+
+            // Correct bits...
+            if (decimal_bits > o_bits)
+                tmp *= 1 << (decimal_bits - o_bits);
+            else
+                tmp /= 1 << (o_bits - decimal_bits);
+
+            value = tmp;
+        }
 
 
         // asingment
