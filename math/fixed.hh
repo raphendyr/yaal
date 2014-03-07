@@ -15,7 +15,7 @@ namespace yaal {
         typedef FixedDecimal<decimal_bits, container_type> self_type;
         typedef type_traits<container_type> container_traits;
 
-        static constexpr container_type __one__ = 1 << decimal_bits;
+        static constexpr container_type __one__ = static_cast<container_type>(1) * (1 << decimal_bits);
 
     public:
         struct RawValue {
@@ -147,7 +147,7 @@ namespace yaal {
 
         template<typename T>
         self_type operator + (const T& o) {
-            self_type copy = *this;
+            self_type copy(*this);
             copy += o;
             return copy;
         }
@@ -168,7 +168,7 @@ namespace yaal {
 
         template<typename T>
         self_type operator - (const T& o) {
-            self_type copy = *this;
+            self_type copy(*this);
             copy -= o;
             return copy;
         }
@@ -201,7 +201,7 @@ namespace yaal {
 
         template<typename T>
         self_type operator * (const T& o) {
-            self_type copy = *this;
+            self_type copy(*this);
             copy *= o;
             return copy;
         }
@@ -238,7 +238,7 @@ namespace yaal {
 
         template<typename T>
         self_type operator / (const T& o) {
-            self_type copy = *this;
+            self_type copy(*this);
             copy /= o;
             return copy;
         }
@@ -297,7 +297,7 @@ namespace yaal {
         }
 
         self_type operator >> (const uint8_t steps) {
-            self_type copy = *this;
+            self_type copy(*this);
             copy >>= steps;
             return copy;
         }
@@ -312,7 +312,7 @@ namespace yaal {
         }
 
         self_type operator << (const uint8_t steps) {
-            self_type copy = *this;
+            self_type copy(*this);
             copy <<= steps;
             return copy;
         }
