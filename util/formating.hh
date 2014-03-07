@@ -14,7 +14,7 @@ namespace yaal {
     // Also give function to put chars directly into stream, instead of reversing
     // That also allows using internal buffer only
     // This might cause performance impact if not inlined
-    char * ntoa(int16_t n, char * s, uint8_t b) {
+    static char * ntoa(int32_t n, char * s, uint8_t b) {
         uint8_t i = 0;
 
         // PART 1 - create string
