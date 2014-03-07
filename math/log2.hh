@@ -14,8 +14,9 @@ namespace yaal {
      * This is basically same as log2 function in libfixmath's fix16_exp.c
      *   https://code.google.com/p/libfixmath/
      */
+    // do not get val with reference, as it's changed in this function
     template<uint8_t bits, typename c_type>
-    FixedDecimal<bits, c_type> log2(FixedDecimal<bits, c_type>& val) {
+    FixedDecimal<bits, c_type> log2(FixedDecimal<bits, c_type> val) {
         typedef ::yaal::FixedDecimal<bits, c_type> fixed_t;
         constexpr fixed_t one = fixed_t::one;
         constexpr fixed_t two = 2;
