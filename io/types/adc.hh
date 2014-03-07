@@ -10,10 +10,15 @@
 #if !defined(ADC) \
   || !defined(ADMUX) || !defined(REFS0) \
   || !defined(ADCSRA) || !defined(ADEN) || !defined(ADSC) \
-  || !defined(ADCSRB) || !defined(MUX5)
+  || !defined(ADCSRB)
 #   ifndef YAAL_ADC_DISABLED
 #       define YAAL_ADC_DISABLED 1
 #   endif
+#endif
+
+// workaround for chips whitout MUX5 definition (io/registers/adc.hh should give correct channel_muc_bits variable)
+#ifndef MUX5
+#  define MUX5 0
 #endif
 
 #ifdef YAAL_ADC_DISABLED
@@ -30,6 +35,8 @@ namespace yaal {
         void sleep();
     }
 
+    // following ablies atleast for atmega32u4
+
     // 10-bits: read 16 bit word read ADCL then ADCH
     //  8-bits: ident to left and read only ADCH
 
@@ -42,14 +49,14 @@ namespace yaal {
     // diff result is 2's complement, 0x200 (-512d) to 0x1ff (+511d)
     // to check positive/negatie, read only polarity bit
 
-    // ADMUX:
+    // ADMUX: (atmega328p doesn't have MUX4, other wise this ablies)
     // REFS1, REFS0, ADLAR, MUX4, MUX3, MUX2, MUX1, MUX0
-    // REFSn: 0,0 - AREF, 0,1 - AVcc, 1,0 - reserved, 1,1 - Internal 2.56V
+    // REFSn: 0,0 - AREF, 0,1 - AVcc, 1,0 - reserved, 1,1 - Internal 2.56V (1.1V on m328p)
     //  - put external capacitor on AREF pin (atleast when using internal or AVcc)
     // ADLAR: Left adjust result will effect ADC valua immediately
     // MUXn: Channel selection
 
-    // ADCSRA
+    // ADCSRA (ablies for atmega328p)
     // ADEN, ADSC, ADATE, ADIF, ADIE, ADPS2, ADPS1, ADPS0
     // ADEN: ADC enabled
     // ADSC: start conversion
@@ -66,7 +73,7 @@ namespace yaal {
     //  - 110 clk/64
     //  - 111 clk/128
 
-    // ADCSRB
+    // ADCSRB (atmega328p doesn't have ADHSM, MUX5, ADTS3)
     // ADHSM, ACME, MUX5, -, ADTS3, ADTS2, ADTS1, ADTS0
     // ADHSM: high speed mode
     // MUX5: mux bit
@@ -78,6 +85,7 @@ namespace yaal {
     // DIDR2
     // digital input disable, ADC13D ... ADC8D
 
+    template<uint8_t channel_mux_bits>
     class AnalogDigitalConverter {
         friend void ::yaal::sleep();
 
@@ -100,11 +108,12 @@ namespace yaal {
 
         class Reference {
         public:
+            // POWER and INTERNAL expects that there is capacitor in AREF pin
             enum Source {
                 EXTERNAL = 0 << REFS0, // AREF
                 POWER    = 1 << REFS0, // AVcc
                 RESERVED = 2 << REFS0,
-                INTERNAL = 3 << REFS0, // Internal 2.56V
+                INTERNAL = 3 << REFS0, // Internal 2.56V (atmega32u4), 1.1V (atmega328p)
                 ANY      = 255,
             };
 
@@ -163,23 +172,30 @@ namespace yaal {
         } prescaler;
 
         class Channel {
+            static constexpr uint8_t admux_mask = BitMask<(channel_mux_bits>5?5:channel_mux_bits)>::right;
+
         public:
             YAAL_INLINE("AnalogDigitalConverter::Channel::set")
             void set(uint8_t mux) {
                 Atomic block;
-                if (mux & (1 << MUX5))
-                    ADCSRB |= (1 << MUX5);
-                else
-                    ADCSRB &= ~(1 << MUX5);
-                ADMUX = (ADMUX & ~BitMask<5>::right) | (mux & BitMask<5>::right); // MUX0 .. MUX4
+                if (channel_mux_bits > 5) {
+                    if (mux & (1 << MUX5))
+                        ADCSRB |= (1 << MUX5);
+                    else
+                        ADCSRB &= ~(1 << MUX5);
+                }
+                // MUX0 .. MUX4 (or less)
+                ADMUX = (ADMUX & ~admux_mask) | (mux & admux_mask);
             }
 
             YAAL_INLINE("AnalogDigitalConverter::Channel::set")
             uint8_t get() {
                 Atomic block;
-                uint8_t mux = ADMUX & BitMask<5>::right;
-                if (ADCSRB & (1 << MUX5))
-                    mux |= (1 << MUX5);
+                uint8_t mux = ADMUX & admux_mask;
+                if (channel_mux_bits > 5) {
+                    if (ADCSRB & (1 << MUX5))
+                        mux |= (1 << MUX5);
+                }
                 return mux;
             }
 
@@ -258,7 +274,7 @@ namespace yaal {
                 return single_conversion();
             } else {
                 // When adc has special reference, apply it
-                Reference::Source old = reference;
+                typename Reference::Source old = reference;
                 reference = adc.aref;
                 uint16_t result = single_conversion();
                 reference = old;
@@ -278,13 +294,13 @@ namespace yaal {
     */
 
     template<uint8_t adc_mux, typename AdcUnitClass,
-            AnalogDigitalConverter::Reference::Source aref_src = AnalogDigitalConverter::Reference::ANY>
+            typename AdcUnitClass::Reference::Source aref_src = AdcUnitClass::Reference::ANY>
     class AdcSingleChannel {
     public:
         typedef AdcUnitClass Unit;
 
         static constexpr uint8_t mux = adc_mux;
-        static constexpr AnalogDigitalConverter::Reference::Source aref = aref_src;
+        static constexpr typename AdcUnitClass::Reference::Source aref = aref_src;
         AdcUnitClass unit;
 
         YAAL_INLINE("AdcSingleChannel::get")
