@@ -1,5 +1,5 @@
-#ifndef __YAAL_REQUIREMENTS_H__
-#define __YAAL_REQUIREMENTS_H__ 1
+#ifndef __YAAL_REQUIREMENTS_hh__
+#define __YAAL_REQUIREMENTS_hh__ 1
 
 // This is c++ code, need c++ compiler
 #if !defined(__cplusplus)
@@ -19,12 +19,13 @@
 
 // common includes
 #  include <stdint.h>
-#  include "common_macros.hh"
-#  include "qualifiers.hh"
+#  include "macro/common.h"
+#  include "macro/function_attributes.h"
 #  include "debug.hh"
 
 // Fixes for avr gcc library
 //  Allow debrecated macros (Some debrecated macros are used inside #ifdef in io/registers)
+// FIXME: drop avr-libc dependency
 #define __AVR_LIBC_DEPRECATED_ENABLE__ 1
 
 // end requirements block

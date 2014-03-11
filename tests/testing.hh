@@ -108,7 +108,7 @@ void print_hex<float>(std::ostream& out, const float& value) {
 
 // define yDebugImpl so debug messages are outputted
 #ifndef NO_YDEBUG
-#  include <yaal/common_macros.hh>
+#  include <yaal/macro/common.h>
 #  define yDebugImplPipe std::cout
 #  define yDebugImplEndl std::endl
 #endif

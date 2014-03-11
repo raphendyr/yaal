@@ -1,7 +1,7 @@
 #ifndef __YAAL_DEBUG__
 #define __YAAL_DEBUG__ 1
 
-#include "common_macros.hh"
+#include "macro/common.h"
 
 // Some ideas of yDebug come from QDebug and KDebug
 
