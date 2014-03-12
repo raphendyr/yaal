@@ -12,17 +12,23 @@ typedef unsigned long long reg_size_t;
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
+#include <type_traits>
+#include <typeinfo>
 #include <assert.h>
 
 
 // helpers...
+#define UNSIGNED_NON_CV(var) \
+    std::make_unsigned< std::remove_cv< std::remove_reference< decltype(var) >::type >::type >::type
 #define ASSERT(left, test, right) do { \
+    UNSIGNED_NON_CV(left) l_ = left; \
+    UNSIGNED_NON_CV(right) r_ = right; \
     std::cout << "assert("; \
-    print_hex(std::cout, left); \
+    print_hex(std::cout, l_); \
     std::cout << " " #test " "; \
-    print_hex(std::cout, right); \
+    print_hex(std::cout, r_); \
     std::cout << ");" << std::endl; \
-    assert(left test right); \
+    assert(l_ test r_); \
 } while (0)
 
 #define EQ(left, right) ASSERT(left, ==, right)
@@ -79,21 +85,26 @@ static void test_reg_start() {
     }
 }
 
+
 // print formatters for different types
 template<typename T>
 void print_hex(std::ostream& out, const T& value) {
-    out << "?" << value;
+    out << typeid(T).name() << ":" << value;
 };
 template<>
-void print_hex<int>(std::ostream& out, const int& value) {
-    out << "0x" << std::hex << value;
+void print_hex<unsigned char>(std::ostream& out, const unsigned char& value) {
+    out << "0x" << std::hex << (unsigned int)value;
 };
 template<>
-void print_hex<short int>(std::ostream& out, const short int& value) {
+void print_hex<unsigned short>(std::ostream& out, const unsigned short& value) {
     out << "0x" << std::hex << (int)value;
 };
 template<>
-void print_hex<long>(std::ostream& out, const long& value) {
+void print_hex<unsigned int>(std::ostream& out, const unsigned int& value) {
+    out << "0x" << std::hex << value;
+};
+template<>
+void print_hex<unsigned long>(std::ostream& out, const unsigned long& value) {
     out << "0x" << std::hex << value;
 };
 template<>
@@ -104,7 +115,6 @@ template<>
 void print_hex<float>(std::ostream& out, const float& value) {
     out << "0x" << std::hex << *(int*)&value << " (" << value << ")";
 };
-
 
 // define yDebugImpl so debug messages are outputted
 #ifndef NO_YDEBUG

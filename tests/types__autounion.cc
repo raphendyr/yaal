@@ -36,22 +36,23 @@ int main() {
     // read as int
     {
         autounion<uint16_t> a = 0xbeaf;
-        EQ(a, 0xbeaf);
+        EQ((uint16_t)a, 0xbeaf);
     }
     // editing as int
     {
         autounion<uint16_t> a = 0xbeaf;
+        uint16_t val;
         a += 10;
-        EQ(a, (0xbeaf + 10));
+        EQ((uint16_t)a, (0xbeaf + 10));
         a -= 20;
-        EQ(a, (0xbeaf - 10));
+        EQ((uint16_t)a, (0xbeaf - 10));
     }
     // building a new
     {
         autounion<uint16_t> a;
         a[1] = 0xaf;
         a[0] = 0xbe;
-        EQ(a, 0xbeaf);
+        EQ((uint16_t)a, 0xbeaf);
     }
     // as reference parameter
     {
