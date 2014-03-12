@@ -22,6 +22,7 @@
 #  include "macro/common.h"
 #  include "macro/avr.h"
 #  include "macro/function_attributes.h"
+#  include "macro/crtp.hh"
 #  include "debug.hh"
 
 // Fixes for avr gcc library
