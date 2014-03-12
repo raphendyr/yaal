@@ -4,8 +4,8 @@
 
 // yaal stuff
 typedef unsigned long long reg_size_t;
-#define YAAL_SMALL_REG_SIZE reg_size_t
-#define YAAL_BIG_REG_SIZE reg_size_t
+#define YAAL_WORD_REGISTER_TYPE reg_size_t
+#define YAAL_DWORD_REGISTER_TYPE reg_size_t
 
 
 // std stuff

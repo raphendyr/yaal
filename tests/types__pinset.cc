@@ -8,9 +8,9 @@ using namespace std;
 #define ddr  REG1
 #define port REG2
 
-typedef Register<ADDR(port), uint8_t> port_reg;
-typedef Register<ADDR(ddr), uint8_t> ddr_reg;
-typedef Register<ADDR(pin), uint8_t> pin_reg;
+typedef internal::Register<ADDR(port), uint8_t> port_reg;
+typedef internal::Register<ADDR(ddr), uint8_t> ddr_reg;
+typedef internal::Register<ADDR(pin), uint8_t> pin_reg;
 
 typedef Port<port_reg, ddr_reg, pin_reg> TPort;
 typedef Pin<TPort, 0> TPin0;

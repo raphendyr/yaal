@@ -28,10 +28,10 @@
 #define YAAL_CRTP_ARGUMENT Derived
 
 /* Template argument to be used in template argument list */
-#define YAAL_CRTP_TEMPLATE_ARG typename YAAL_CRTP_ARGUMENT = NoType
+#define YAAL_CRTP_TEMPLATE_ARG typename YAAL_CRTP_ARGUMENT = ::yaal::internal::NoType
 
 /* Select Derived if it is not NoType else use class it self */
-#define YAAL_CRTP_DERIVED typename TypeIfValid<YAAL_CRTP_ARGUMENT, YAAL_CRTP_CLASS>::type
+#define YAAL_CRTP_DERIVED typename ::yaal::internal::TypeIfValid<YAAL_CRTP_ARGUMENT, YAAL_CRTP_CLASS>::type
 
 
 #endif

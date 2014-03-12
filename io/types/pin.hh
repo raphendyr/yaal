@@ -7,9 +7,8 @@
  * Pin abstration classes
  */
 
-// FIXME: why we need this include?
+#include "../../types/register.hh"
 #include "port.hh"
-#include "register.hh"
 
 namespace yaal {
 

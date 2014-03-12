@@ -5,7 +5,7 @@
 
 // FIXME: should not need avr/io.hh here.
 #include <avr/io.h>
-#include "register.hh"
+#include "../../types/register.hh"
 #include "../../core/cpu.hh"
 #include "../../interface/stream.hh"
 

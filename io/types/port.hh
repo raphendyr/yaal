@@ -7,10 +7,7 @@
  * Port abstration classes
  */
 
-// For some magical reason this needs to be included before following classes
-// FIXME: find out why
-#include "register.hh"
-
+#include "../../types/register.hh"
 #include "../../util/constexpr.hh"
 
 namespace yaal {
@@ -93,7 +90,7 @@ namespace yaal {
     };
 
     /* NullPort */
-    typedef Port<NullRegister, NullRegister, NullRegister, 0> NullPort;
+    typedef Port<internal::NullRegister, internal::NullRegister, internal::NullRegister, 0> NullPort;
 }
 
 #endif
