@@ -11,8 +11,9 @@ void setup() {
 
     sensor.mode = INPUT;
     auto adcu = sensor.analog.unit; // Analog Digital Conversion Unit
-    adcu.reference = AnalogDigitalConverter::Reference::POWER;
-    adcu.prescaler = AnalogDigitalConverter::Prescaler::FAST;
+    // FIXME: remove need for decltype()
+    adcu.reference = decltype(adcu.reference)::POWER;
+    adcu.prescaler = AdcUnit0::Prescaler::FAST;
     adcu.enable();
 }
 
