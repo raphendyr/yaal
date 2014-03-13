@@ -42,6 +42,29 @@ namespace yaal {
             }
         };
 
+        template< typename reg_size, typename Derived >
+        class NamedRegisterWithOperators : public NamedRegister<reg_size, Derived> {
+            typedef NamedRegister<reg_size, Derived> super_type;
+
+        public:
+            typedef reg_size size_type;
+
+            YAAL_CRTP_ASSIGNMENT(size_type, Derived, super_type);
+
+#define     YAAL_NAMEDREGISTER_OPERATOR(_op_) \
+            YAAL_INLINE("NamedRegisterWithOperators::operator oper ()") \
+            Derived& operator _op_ (const size_type value) { \
+                static_cast<Derived*>(this)->reference() _op_ value; \
+                return *static_cast<Derived*>(this); \
+            }
+            YAAL_NAMEDREGISTER_OPERATOR(|=);
+            YAAL_NAMEDREGISTER_OPERATOR(&=);
+            YAAL_NAMEDREGISTER_OPERATOR(+=);
+            YAAL_NAMEDREGISTER_OPERATOR(-=);
+#undef      YAAL_NAMEDREGISTER_OPERATOR
+
+        };
+
         template< typename Derived >
         class NamedBit {
         public:
