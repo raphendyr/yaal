@@ -43,12 +43,16 @@ namespace yaal {
             void input(bool pullup = false) {
                 output_type out;
                 direction_type dir;
-                // TODO: order of operations? order by variable? should we even touch on output bit?
-                if (!pullup)
-                    out = false;
+
+                /* If output is 1, pullup will we enable first and thus level on pin stays the same
+                 * If output is 0, input will be enabled and will start floating from the ground
+                 * In either case if pullup is enabled, it will
+                 *   a) stay the same, as it remains enabled from the output state
+                 *   b) pull up the floating pin (which is probably in ground level)
+                 * So this order should not brake any circuits
+                 */
                 dir = false;
-                if (pullup)
-                    out = true;
+                out = pullup;
             }
 
             YAAL_INLINE("PinMode operation")
