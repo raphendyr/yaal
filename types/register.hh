@@ -83,7 +83,12 @@ namespace yaal {
                 return static_cast<derived_type*>(this)->reference();
             }
 
-            YAAL_CRTP_ASSIGNMENTS(derived_type, super)
+            // FIXME: why example/adept_touchscreen4d fails, if we use assignment redirect?
+            //YAAL_CRTP_ASSIGNMENTS(derived_type, super)
+            derived_type& operator= (size_type value) {
+                static_cast<derived_type*>(this)->set(value);
+                return *static_cast<derived_type*>(this);
+            }
         };
 
 
