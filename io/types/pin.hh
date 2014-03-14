@@ -253,41 +253,18 @@ namespace yaal {
     };
 
     /* Floating<Pin> */
-    template< typename Pin,
-              bool pullup = false >
-    class Floating {
-        typedef Floating<Pin> self_type;
-        typedef Pin super;
+    template< typename PinClass, bool pullup = false >
+    class Floating : public PinClass::template Inherit<Floating<PinClass, pullup>> {
+        typedef Floating<PinClass, pullup> self_type;
+        typedef typename PinClass::template Inherit<Floating<PinClass, pullup>> super;
 
     public:
-        YAAL_INLINE("Floating pin operation")
+        YAAL_INLINE("Floating::set(state)")
         void set(bool state = true) {
-            if (state)
-                super::mode = OUTPUT;
-            else
-                super::mode = pullup ? INPUT_PULLUP : INPUT;
+            this->mode.set(state, pullup);
         }
 
-        YAAL_INLINE("Floating pin operation")
-        void clear() {
-            set(false);
-        }
-
-        YAAL_INLINE("Floating pin operation")
-        bool get() const {
-            return !super::get();
-        }
-
-        YAAL_INLINE("Floating pin operation")
-        self_type& operator= (bool state) {
-            set(state);
-            return *this;
-        }
-
-        YAAL_INLINE("Floating pin operation")
-        operator bool () {
-            return get();
-        }
+        YAAL_CRTP_ASSIGNMENTS(self_type, super);
     };
 
     template<typename Pin>
