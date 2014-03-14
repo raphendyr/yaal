@@ -163,52 +163,49 @@ namespace yaal {
     template<typename PinClass>
     class Reversed;
 
-/* assignment operator is not inherited */
-#   define YAAL_PIN_ASSINGMENT_OPER(classname, valuetype) \
-        YAAL_INLINE(classname " assingment operation") \
-        self_type& operator= (valuetype state) { \
-            this->set(state); \
-            return *this; \
-        }
-
 
     /* Pin<Port, bit> */
-    template<typename PortClass, bit_t bit>
-    class Pin : public internal::SingleBit<PortClass, bit> {
-        typedef Pin<PortClass, bit> self_type;
-        typedef internal::SingleBit<PortClass, bit> super;
-
-        internal::SingleBit<typename PortClass::input_type, bit> pin_reg;
+#define YAAL_CRTP_CLASS Pin<PortClass, bitnumber, YAAL_CRTP_ARGUMENT>
+    template< typename PortClass, bit_index_type bitnumber, YAAL_CRTP_TEMPLATE_ARG >
+    class Pin : public internal::SingleBit<PortClass, bitnumber, YAAL_CRTP_DERIVED> {
+        typedef YAAL_CRTP_DERIVED derived_type;
+        typedef YAAL_CRTP_CLASS self_type;
+        typedef internal::SingleBit<PortClass, bitnumber, YAAL_CRTP_DERIVED> super;
+#undef  YAAL_CRTP_CLASS
 
     public:
         PortClass port;
-        internal::PinMode<PortClass, bit> mode;
-        internal::SingleBit<typename PortClass::input_type, bit> input;
-        internal::SingleBit<typename PortClass::output_type, bit> output;
-        internal::SingleBit<typename PortClass::direction_type, bit> direction;
+        internal::PinMode<PortClass, bitnumber> mode;
+        internal::SingleBit<typename PortClass::input_type, bitnumber> input;
+        internal::SingleBit<typename PortClass::output_type, bitnumber> output;
+        internal::SingleBit<typename PortClass::direction_type, bitnumber> direction;
 
-        YAAL_PIN_ASSINGMENT_OPER("Pin", bool)
+        YAAL_CRTP_ASSIGNMENTS(derived_type, super);
 
         YAAL_INLINE("Pin Reversed wrapper")
-        Reversed<self_type> reversed() {
-            return Reversed<self_type>();
+        Reversed<derived_type> reversed() {
+            return Reversed<derived_type>();
         }
 
         YAAL_INLINE("Pin RAII wrapper")
-        internal::RAIIPin<self_type> as(Mode mode) {
-            return internal::RAIIPin<self_type>(mode);
+        internal::RAIIPin<derived_type> as(Mode mode) {
+            return internal::RAIIPin<derived_type>(mode);
         }
 
         /* Hardware pin toggle */
-        YAAL_INLINE("Pin operation")
+        YAAL_INLINE("Pin::toggle()")
 #       ifdef AVR_WITHOUT_PIN_TOGGLE
-            __attribute__ ((deprecated ("Your board doesn't support hardware toggling.")))
+            YAAL_DERPECATED("Your board doesn't support hardware toggling.")
 #       endif
         void toggle() {
 #           ifndef AVR_WITHOUT_PIN_TOGGLE
-                pin_reg = true;
+                // 2 clock cycles (2 sbi)
+                direction = true;
 #           else
-                set(!output.get());
+                // 4 clock cycles (1 in, 1 ldi, 1 eor, 1 out)
+                port ^= this->mask;
+                // ~10 clock cycles (2.5 sbic, 2 rjmp, 2 sbi, 2 rjmp, 2 cbi)
+                //set(!output.get());
 #           endif
         }
     };
@@ -217,16 +214,19 @@ namespace yaal {
     typedef Pin<NullPort, 0xff> NullPin;
 
     /* PinWithAdc */
-    template<typename PortClass, bit_t bit, typename AdcClass>
-    class PinWithAdc : public Pin<PortClass, bit> {
-        typedef PinWithAdc<PortClass, bit, AdcClass> self_type;
-        typedef Pin<PortClass, bit> super;
+#define YAAL_CRTP_CLASS PinWithAdc<PortClass, bitnumber, AdcClass, YAAL_CRTP_ARGUMENT>
+    template< typename PortClass, bit_index_type bitnumber, typename AdcClass, YAAL_CRTP_TEMPLATE_ARG >
+    class PinWithAdc : public Pin<PortClass, bitnumber, YAAL_CRTP_DERIVED> {
+        typedef YAAL_CRTP_DERIVED derived_type;
+        typedef YAAL_CRTP_CLASS self_type;
+        typedef Pin<PortClass, bitnumber, YAAL_CRTP_DERIVED> super;
+#undef  YAAL_CRTP_CLASS
 
     public:
         typedef AdcClass Analog;
         AdcClass analog;
 
-        YAAL_PIN_ASSINGMENT_OPER("PinWithAdc", bool)
+        YAAL_CRTP_ASSIGNMENTS(derived_type, super);
     };
 
     /* Reversed<Pin> */
@@ -241,7 +241,6 @@ namespace yaal {
             super::set(!state);
         }
 
-        YAAL_PIN_ASSINGMENT_OPER("Reversed", bool)
 
         YAAL_INLINE("Reversed pin operation")
         void clear() {
@@ -267,6 +266,8 @@ namespace yaal {
         internal::RAIIPin<self_type> as(Mode mode) {
             return internal::RAIIPin<self_type>(mode);
         }
+
+        YAAL_CRTP_ASSIGNMENT(bool, self_type, super);
     };
 
     /* Floating<Pin> */
