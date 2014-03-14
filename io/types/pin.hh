@@ -174,6 +174,9 @@ namespace yaal {
 #undef  YAAL_CRTP_CLASS
 
     public:
+        template< typename SubClass >
+        using Inherit = Pin<PortClass, bitnumber, SubClass>;
+
         PortClass port;
         internal::PinMode<PortClass, bitnumber> mode;
         internal::SingleBit<typename PortClass::input_type, bitnumber> input;
@@ -230,44 +233,23 @@ namespace yaal {
     };
 
     /* Reversed<Pin> */
-    template<typename PinClass>
-    class Reversed : public PinClass {
+    template< typename PinClass >
+    class Reversed : public PinClass::template Inherit<Reversed<PinClass>> {
         typedef Reversed<PinClass> self_type;
-        typedef PinClass super;
+        typedef typename PinClass::template Inherit<Reversed<PinClass>> super;
 
     public:
-        YAAL_INLINE("Reversed pin operation")
+        YAAL_INLINE("Reversed::set(state)")
         void set(bool state = true) {
             super::set(!state);
         }
 
-
-        YAAL_INLINE("Reversed pin operation")
-        void clear() {
-            set(false);
-        }
-
-        YAAL_INLINE("Reversed pin operation")
+        YAAL_INLINE("Reversed::get()")
         bool get() const {
             return !super::get();
         }
 
-        YAAL_INLINE("Reversed pin operation")
-        operator bool () {
-            return get();
-        }
-
-        YAAL_INLINE("Reversed pin reversed wrapper")
-        PinClass reversed() {
-            return PinClass();
-        }
-
-        YAAL_INLINE("Reversed pin RAII wrapper")
-        internal::RAIIPin<self_type> as(Mode mode) {
-            return internal::RAIIPin<self_type>(mode);
-        }
-
-        YAAL_CRTP_ASSIGNMENT(bool, self_type, super);
+        YAAL_CRTP_ASSIGNMENTS(self_type, super);
     };
 
     /* Floating<Pin> */
