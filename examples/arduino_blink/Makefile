@@ -1,2 +1,2 @@
-BOARD = arduino_leonardo
+BOARD = arduino_nano328
 include ../../makefile.ext
