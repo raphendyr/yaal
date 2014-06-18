@@ -3,57 +3,80 @@
 #include "../requirements.hh"
 #ifdef __YAAL__
 
+#include "../io/registers/spi.hh"
 namespace yaal {
 
-    template< typename Derived >
+    template< typename SpiRegisters,
+              typename MisoPin,
+              typename MosiPin,
+              typename SckPin,
+              typename SsPin >
     struct HWSPI : public interface::SycronousPointToPoint<Derived> {
+        SpiRegisters regs;
 
-        void setup(void) {
-            // implement
-            SPCR |= _BV(MSTR); // ?
-            SPCR |= _BV(SPE);  // ?
+        enum SpiMode : uint8_t { Master, Slave }
+        enum DataMode : uint8_t {
+            MSB = 0x01, LSB = 0x00,
+            SAMPLE_TRAILING = 0x02, SAMLE_LEADING = 0x00,
+            CLOCK_INVERTED = 0x03, CLOCK_NORMAL = 0x00,
         }
 
-        void teardown(void) {
-            SPCR &= ~_BV(SPE); // ?
+        void setup(freq_q speed = foobar,
+                   SpiMode spimode = Master,
+                   DataMode datamode = SAMPLE_LEADING | CLOCK_NORMAL | LSB) {
+            set_clock_speed(speed)
+            set_spi_mode(spimode);
+            set_data_mode(datamode);
+            regs.enable = true;
         }
 
-        void SPIClass::setBitOrder(uint8_t bitOrder)
-        {
-            if(bitOrder == LSBFIRST) {
-                SPCR |= _BV(DORD);
+        void set_spi_mode(SpiMode mode) {
+            if (mode == Master) {
+                regs.master_mode = true;
+                MosiPin().mode = OUTPUT;
+                SckPin().mode = OUTPUT;
             } else {
-                SPCR &= ~(_BV(DORD));
+                regs.master_mode = false;
+                MisoPin().mode = OUTPUT;
+                // read: wait for SPIF, then read SPDR
             }
         }
 
-        void SPIClass::setDataMode(uint8_t mode)
-        {
-            SPCR = (SPCR & ~SPI_MODE_MASK) | mode;
+        void set_data_mode(DataMode mode) {
+            regs.clock_polarity = (CLOCK_INVERTED & mode);
+            regs.clock_phase = (SAMPLE_TRAILING & mode);
+            regs.data_order = (MSB & mode);
         }
 
-        void SPIClass::setClockDivider(uint8_t rate)
-        {
-            SPCR = (SPCR & ~SPI_CLOCK_MASK) | (rate & SPI_CLOCK_MASK);
-            SPSR = (SPSR & ~SPI_2XCLOCK_MASK) | ((rate >> 2) & SPI_2XCLOCK_MASK);
+        void set_speed(freq_t speed) {
+            // TODO
+        }
+
+        void enable_module(void) {
+            PRR0 &= ~_BV(PRSPI); // enable power to SPI
+            regs.enable = true;
+        }
+
+        void teardown(void) {
+            regs.enable = false;
         }
 
         bool transfer_complete(void) {
-            return SPSR & _BV(SPIF);
+            return regs.interrupt_flag;
         }
 
         uint8_t transfer(uint8_t data) {
-            SPDR = data;
+            regs.data = data;
             while (!transfer_complete());
-            return SPDR;
+            return regs.data;
         }
 
         void SPIClass::attachInterrupt() {
-            SPCR |= _BV(SPIE);
+            regs.interrupt_enable = true;
         }
 
         void SPIClass::detachInterrupt() {
-            SPCR &= ~_BV(SPIE);
+            regs.interrupt_enable = false;
         }
 
 
