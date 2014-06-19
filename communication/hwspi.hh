@@ -11,8 +11,25 @@ namespace yaal {
               typename MosiPin,
               typename SckPin,
               typename SsPin >
-    struct HWSPI : public interface::SycronousPointToPoint<Derived> {
-        SpiRegisters regs;
+    class HWSPI : public interface::SycronousPointToPoint<Derived> {
+        typename SpiRegisters::Data data;
+
+        struct {
+            typename SpiRegisters::DataOrser data_order;
+            typename SpiRegisters::MasterMode master_mode;
+            typename SpiRegisters::InterruptEnable interrupt_enable;
+            typename SpiRegisters::InterrputFlag interrupt_flag;
+            typename SpiRegisters::WriteCollisionFlag write_collision_flag;
+            typename SpiRegisters::ClockPolarity clock_polarity;
+            typename SpiRegisters::ClockPhase clock_phase;
+            typename SpiRegisters::ClockRate0 clock_rate0;
+            typename SpiRegisters::ClockRate1 clock_rate1;
+            typename SpiRegisters::ClockRate2x clock_rate2x;
+        } controlbits;
+
+    public:
+        typename SpiRegisters::Power power;
+        typename SpiRegisters::Enable enable;
 
         enum SpiMode : uint8_t { Master, Slave }
         enum DataMode : uint8_t {
@@ -21,62 +38,64 @@ namespace yaal {
             CLOCK_INVERTED = 0x03, CLOCK_NORMAL = 0x00,
         }
 
+
         void setup(freq_q speed = foobar,
                    SpiMode spimode = Master,
                    DataMode datamode = SAMPLE_LEADING | CLOCK_NORMAL | LSB) {
+            power = true;
             set_clock_speed(speed)
             set_spi_mode(spimode);
             set_data_mode(datamode);
-            regs.enable = true;
+            enable = true;
+        }
+
+        bool fail(void) {
+            return controlbits.write_collision_flag;
         }
 
         void set_spi_mode(SpiMode mode) {
             if (mode == Master) {
-                regs.master_mode = true;
+                controlbits.master_mode = true;
                 MosiPin().mode = OUTPUT;
                 SckPin().mode = OUTPUT;
             } else {
-                regs.master_mode = false;
+                controlbits.master_mode = false;
                 MisoPin().mode = OUTPUT;
                 // read: wait for SPIF, then read SPDR
             }
         }
 
         void set_data_mode(DataMode mode) {
-            regs.clock_polarity = (CLOCK_INVERTED & mode);
-            regs.clock_phase = (SAMPLE_TRAILING & mode);
-            regs.data_order = (MSB & mode);
+            controlbits.clock_polarity = (CLOCK_INVERTED & mode);
+            controlbits.clock_phase = (SAMPLE_TRAILING & mode);
+            controlbits.data_order = (MSB & mode);
         }
 
         void set_speed(freq_t speed) {
             // TODO
         }
 
-        void enable_module(void) {
-            PRR0 &= ~_BV(PRSPI); // enable power to SPI
-            regs.enable = true;
-        }
-
         void teardown(void) {
-            regs.enable = false;
+            enable = false;
+            power = false;
         }
 
         bool transfer_complete(void) {
-            return regs.interrupt_flag;
+            return controlbits.interrupt_flag;
         }
 
         uint8_t transfer(uint8_t data) {
-            regs.data = data;
+            data = data;
             while (!transfer_complete());
-            return regs.data;
+            return data;
         }
 
-        void SPIClass::attachInterrupt() {
-            regs.interrupt_enable = true;
+        void attachInterrupt() {
+            controlbits.interrupt_enable = true;
         }
 
-        void SPIClass::detachInterrupt() {
-            regs.interrupt_enable = false;
+        void detachInterrupt() {
+            controlbits.interrupt_enable = false;
         }
 
 
