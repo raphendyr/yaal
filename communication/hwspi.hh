@@ -6,6 +6,69 @@
 #include "../io/registers/spi.hh"
 namespace yaal {
 
+    namespace interface {
+        template< typename Derived >
+        class ClockPrescaler {
+        public:
+
+            // IMPLEMENT
+            void set(uint8_t divider);
+
+            YAAL_ASSIGNMENT_OPER(Derived, set, uint8_t);
+
+            // IMPLEMENT
+            uint8_t get(void):
+
+            operator uint8_t () {
+                return static_cast<Derived*>(this)->get();
+            }
+        };
+
+        template< typename Derived >
+        class Clock {
+        public:
+            void set(freq_t frequency);
+
+            freq_t get(void);
+        };
+    }
+
+#define YAAL_CRTP_CLASS SpiClockPrescaler2x<Rate2x, Rate1, Rate0>
+    template< typename Rate2x, typename Rate1, typename Rate0 >
+    class SpiClockPrescaler2x : public interface::ClockPrescaler<YAAL_CRTP_CLASS> {
+        typedef YAAL_CRTP_CLASS self_type;
+        typedef interface::ClockPrescaler<self_type> super;
+#undef YAAL_CRTP_CLASS
+
+    public:
+        void set(uint8_t divider) {
+            Rate2x() = divider & 0x4;
+            if (internal::TypesMatch<Rate1::Register, Rate0::Register>::value) {
+                // Control register
+                Rate1::Register reg;
+                Rate1::Register::size_type cur = reg & ~(Rate1::mask | Rate0::mask);
+                cur |= ((divider & 0x2)?Rate1::mask:0)|((divider & 0x1)?Rate0::mask:0);
+                reg = cur;
+            } else {
+                // Don't knoe how to optimize
+                Rate1() = divider & 0x2;
+                Rate0() = divider & 0x1;
+            }
+        }
+
+        YAAL_CRTP_ASSIGNMENTS(self_type, super);
+    };
+
+#define YAAL_CRTP_CLASS SpiClock<Prescaler>
+    template< typename Prescaler >
+    class SpiClock : public interface::Clock<YAAL_CRTP_CLASS> {
+        typedef YAAL_CRTP_CLASS self_type;
+        typedef interface::Clock<self_type> super;
+#undef YAAL_CRTP_CLASS
+
+    public:
+    };
+
     template< typename SpiRegisters,
               typename MisoPin,
               typename MosiPin,
