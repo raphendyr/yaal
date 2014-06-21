@@ -8,13 +8,13 @@
  */
 
 /* Helpers to map assignment operator to method calls */
-#define YAAL_ASSIGNEMNT_OPER(derived_type, method, argument_type) \
+#define YAAL_ASSIGNMENT_OPER(derived_type, method, argument_type) \
     derived_type& operator= (argument_type value) { \
         static_cast<derived_type*>(this)->method(value); \
         return *static_cast<derived_type*>(this); \
     }
 
-#define YAAL_ASSIGNEMNT_OPERS(derived_type, method) \
+#define YAAL_ASSIGNMENT_OPERS(derived_type, method) \
     template< typename T > \
     derived_type& operator= (T value) { \
         static_cast<derived_type*>(this)->method(value); \

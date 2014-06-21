@@ -137,7 +137,7 @@ namespace yaal {
         public:
             typedef RegisterClass Register;
             constexpr static bit_index_type bit_index = bitnumber;
-e           constexpr static uint8_t mask = mask_for_bit<uint8_t>(bitnumber);
+            constexpr static uint8_t mask = mask_for_bit<uint8_t>(bitnumber);
 
             YAAL_INLINE("SingleBit::set(bool)")
             void set(bool state = true) {

@@ -3,6 +3,9 @@
 #include "../../requirements.hh"
 #ifdef __YAAL__
 
+#include "../../interface/clock.hh"
+#include "../../interface/communication.hh"
+
 namespace yaal {
 
     namespace internal {
@@ -17,10 +20,10 @@ namespace yaal {
         public:
             void set(uint8_t divider) {
                 Rate2x() = divider & 0x4;
-                if (internal::TypesMatch<Rate1::Register, Rate0::Register>::value) {
+                if (internal::TypesMatch<typename Rate1::Register, typename Rate0::Register>::value) {
                     // Control register
-                    Rate1::Register reg;
-                    Rate1::Register::size_type cur = reg & ~(Rate1::mask | Rate0::mask);
+                    typename Rate1::Register reg;
+                    typename Rate1::Register::size_type cur = reg & ~(Rate1::mask | Rate0::mask);
                     cur |= ((divider & 0x2)?Rate1::mask:0)|((divider & 0x1)?Rate0::mask:0);
                     reg = cur;
                 } else {
@@ -40,9 +43,11 @@ namespace yaal {
             typedef interface::Clock<self_type> super;
 #undef YAAL_CRTP_CLASS
 
-            Prescaler prescaler;
+            constexpr static freq_t f_osc = F_CLOCK;
 
         public:
+            Prescaler prescaler;
+
             void set(freq_t frequency) {
                 /* map:
                  *  0 = F_OSC / 4
@@ -70,21 +75,28 @@ namespace yaal {
                     prescaler = 3;
                 }
             }
+
+            YAAL_CRTP_ASSIGNMENTS(self_type, super);
         };
 
+#define YAAL_CRTP_CLASS SpiBus<SpiRegisters, SckPin, MosiPin, MisoPin, SsPin>
         template< typename SpiRegisters,
                   typename SckPin,
                   typename MosiPin,
                   typename MisoPin,
                   typename SsPin >
-        class SpiBus : public interface::SycronousPointToPoint<Derived> {
+        class SpiBus : public interface::SyncronousPointToPoint<YAAL_CRTP_CLASS> {
+            typedef YAAL_CRTP_CLASS self_type;
+            typedef interface::SyncronousPointToPoint<self_type> super;
+#undef YAAL_CRTP_CLASS
+
             typename SpiRegisters::Data data;
 
             struct {
-                typename SpiRegisters::DataOrser data_order;
+                typename SpiRegisters::DataOrder data_order;
                 typename SpiRegisters::MasterMode master_mode;
                 typename SpiRegisters::InterruptEnable interrupt_enable;
-                typename SpiRegisters::InterrputFlag interrupt_flag;
+                typename SpiRegisters::InterruptFlag interrupt_flag;
                 typename SpiRegisters::WriteCollisionFlag write_collision_flag;
                 typename SpiRegisters::ClockPolarity clock_polarity;
                 typename SpiRegisters::ClockPhase clock_phase;
@@ -95,19 +107,19 @@ namespace yaal {
             typename SpiRegisters::Enable enable;
             typename SpiRegisters::Clock clock;
 
-            enum SpiMode : uint8_t { Master, Slave }
+            enum SpiMode : uint8_t { Master, Slave };
             enum DataMode : uint8_t {
                 MSB = 0x01, LSB = 0x00,
-                SAMPLE_TRAILING = 0x02, SAMLE_LEADING = 0x00,
+                SAMPLE_TRAILING = 0x02, SAMPLE_LEADING = 0x00,
                 CLOCK_INVERTED = 0x03, CLOCK_NORMAL = 0x00,
-            }
+            };
 
 
-            void setup(freq_q speed = foobar,
+            void setup(freq_t speed = F_CLOCK / 4,
                        SpiMode spimode = Master,
-                       DataMode datamode = SAMPLE_LEADING | CLOCK_NORMAL | LSB) {
+                       DataMode datamode = static_cast<DataMode>(SAMPLE_LEADING | CLOCK_NORMAL | LSB)) {
                 power = true;
-                set_clock_speed(speed)
+                clock = speed;
                 set_spi_mode(spimode);
                 set_data_mode(datamode);
                 enable = true;
@@ -135,10 +147,6 @@ namespace yaal {
                 controlbits.data_order = (MSB & mode);
             }
 
-            void set_speed(freq_t speed) {
-                // TODO
-            }
-
             void teardown(void) {
                 enable = false;
                 power = false;
@@ -148,8 +156,8 @@ namespace yaal {
                 return controlbits.interrupt_flag;
             }
 
-            uint8_t transfer(uint8_t data) {
-                data = data;
+            uint8_t transfer(uint8_t value) {
+                data = value;
                 while (!transfer_complete());
                 return data;
             }
@@ -164,9 +172,11 @@ namespace yaal {
 
 
             uint8_t get(void) {
+                return transfer(0);
             }
 
             void put(uint8_t data) {
+                transfer(data);
             }
 
 

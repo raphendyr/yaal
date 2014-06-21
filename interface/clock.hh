@@ -5,6 +5,9 @@
 
 namespace yaal {
 
+    // TODO: use these interfaces in core/cpu.hh
+    //typedef unsigned long long freq_t;
+
     namespace interface {
 
         template< typename Derived >
@@ -17,7 +20,7 @@ namespace yaal {
             YAAL_ASSIGNMENT_OPER(Derived, set, uint8_t);
 
             // IMPLEMENT
-            uint8_t get(void):
+            uint8_t get(void);
 
             operator uint8_t () {
                 return static_cast<Derived*>(this)->get();

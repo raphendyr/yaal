@@ -22,7 +22,7 @@ namespace yaal {
         template< typename Derived >
         class SyncronousPointToPoint : public ReadWriteBase<Derived>,
                                        public Writeable<Derived>,
-                                       public Readable<Derived>,
+                                       public Readable<Derived>
         {
             /*! Setup connection
              */
@@ -49,9 +49,9 @@ namespace yaal {
             T transfer(const T data_to_be_written, uint8_t amount_of_bits);
 
             template<typename T>
-            void exchange(T& data)
+            void exchange(T& data);
 
-            template<typename T
+            template<typename T>
             void exchange(T& data, uint8_t amount_of_bits);
 
         };
