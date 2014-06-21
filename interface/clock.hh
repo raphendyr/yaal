@@ -1,5 +1,5 @@
-#ifndef __YAAL_INTERFACE__CLOCK__
-#define __YAAL_INTERFACE__CLOCK__ 1
+#ifndef __YAAL_INTERFACE__CLOCK_hh__
+#define __YAAL_INTERFACE__CLOCK_hh__ 1
 #include "../requirements.hh"
 #ifdef __YAAL__
 

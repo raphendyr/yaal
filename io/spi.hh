@@ -1,5 +1,5 @@
-#ifndef __YAAL_IO__SPI__
-#define __YAAL_IO__SPI__ 1
+#ifndef __YAAL_IO__SPI_hh__
+#define __YAAL_IO__SPI_hh__ 1
 #include "../requirements.hh"
 #ifdef __YAAL__
 
