@@ -20,12 +20,12 @@ namespace yaal {
             typedef SingleBit<ControlRegister, 2> ClockPhase;
             typedef SingleBit<ControlRegister, 1> ClockRate1;
             typedef SingleBit<ControlRegister, 0> ClockRate0;
-    
+
             typedef Register<YAAL_ADDR(SPSR)> StatusRegister;
             typedef SingleBit<StatusRegister, 7> InterruptFlag;
             typedef SingleBit<StatusRegister, 6> WriteCollisionFlag;
             typedef SingleBit<StatusRegister, 0> ClockRate2x;
-    
+
             typedef Register<YAAL_ADDR(SPDR)> Data;
 
             typedef SingleBit<Register<YAAL_ADDR(PRR0)>, PRSPI> Power;
