@@ -17,8 +17,9 @@ fi
 
 file=$1
 name=$file
+ext=${name##*.}
 name=${name#./}
-name=${name%.hh}
+name=${name%.*}
 if [ "${name#/}" != "$name" ]; then
     echo "ERROR: absolute paths are not ok."
     exit 1
@@ -38,8 +39,8 @@ if [ "$dir"] && ! [ -d "$dir" ]; then
 fi
 
 cat > "$file" <<EOF
-#ifndef __YAAL_${upper}__
-#define __YAAL_${upper}__ 1
+#ifndef __YAAL_${upper}_${ext}__
+#define __YAAL_${upper}_${ext}__ 1
 #include "${prefix}requirements.hh"
 #ifdef __YAAL__
 
