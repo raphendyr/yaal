@@ -3,6 +3,8 @@
 #include "../../requirements.hh"
 #ifdef __YAAL__
 
+#define "../../communication/hwspi.hh"
+
 namespace yaal {
 
     namespace internal {
@@ -26,6 +28,10 @@ namespace yaal {
             typedef Register<YAAL_ADDR(SPDR)> Data;
 
             typedef SingelBit<Register<YAAL_ADDR(PRR0)>, PRSPI> Power;
+
+
+            typedef SpiClockPrescaler2x<ClockRate2x, ClockRate1, ClockRate0> ClockPrescaler;
+            typedef SpiClock<ClockPrescaler> Clock;
         }
 
     }
