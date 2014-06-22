@@ -9,7 +9,7 @@ namespace yaal {
 
     namespace interface {
 
-        /*! Syncronous point-to-point communication interface
+        /*! Synchronous point-to-point communication interface
          *
          * All this kind of communication connections should implement
          * this interface.
@@ -20,14 +20,27 @@ namespace yaal {
          * FIXME: implement a way to know that is implemented.
          */
         template< typename Derived >
-        class SyncronousPointToPoint : public ReadWriteBase<Derived>,
-                                       public Writeable<Derived>,
-                                       public Readable<Derived>
+        class SynchronousPointToPoint : public ReadWriteBase<Derived>,
+                                        public Writeable<Derived>,
+                                        public Readable<Derived>
         {
+        public:
+
             /*! Setup connection
              */
             // IMPLEMENT
-            void setup();
+            void setup(void);
+
+            /*! Begin communication sequence
+             */
+            // IMPLEMENT if needed
+            void begin(void) {}
+
+            /*! End communication sequence
+             */
+            // IMPLEMENT if needed
+            void end(void) {}
+
 
 
             /** Optional methods **/
@@ -55,6 +68,48 @@ namespace yaal {
             void exchange(T& data, uint8_t amount_of_bits);
 
         };
+
+        template< typename SynchronousPointToPointInterface >
+        class SynchronousPointToPointSequence : public ReadWriteBase<Derived>,
+                                                public Writeable<Derived>,
+                                                public Readable<Derived>
+        {
+            SynchronousPointToPointInterface interface;
+
+            SynchronousPointToPointSequence() {
+                interface.begin();
+            }
+
+            ~SynchronousPointToPointSequence() {
+                interface.end();
+            }
+        };
+
+
+        template< typename Derived >
+        class SynchronousBus : public ReadWriteBase<Derived>,
+                               public Writeable<Derived>,
+                               public Readable<Derived>
+        {
+            /*! Setup bus
+             */
+            // IMPLEMENT
+            void setup();
+        };
+
+        template< typename Bus, typename Activator, typename Derived >
+        class SynchronousBusDevice : public SynchronousPointToPoint<Derived> {
+            Activator activator;
+
+            void begin(void) {
+                activator = true;
+            }
+
+            void end(void) {
+                activator = false;
+            }
+        };
+
 
     }
 

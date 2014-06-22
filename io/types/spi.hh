@@ -85,9 +85,9 @@ namespace yaal {
                   typename MosiPin,
                   typename MisoPin,
                   typename SsPin >
-        class SpiBus : public interface::SyncronousPointToPoint<YAAL_CRTP_CLASS> {
+        class SpiBus : public interface::SynchronousPointToPoint<YAAL_CRTP_CLASS> {
             typedef YAAL_CRTP_CLASS self_type;
-            typedef interface::SyncronousPointToPoint<self_type> super;
+            typedef interface::SynchronousPointToPoint<self_type> super;
 #undef YAAL_CRTP_CLASS
 
             typename SpiRegisters::Data data;
