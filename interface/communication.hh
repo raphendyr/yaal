@@ -9,6 +9,22 @@ namespace yaal {
 
     namespace interface {
 
+        template< typename SynchronousPointToPointInterface >
+        class SynchronousPointToPointSequence : public ReadWriteBase<Derived>,
+                                                public Writeable<Derived>,
+                                                public Readable<Derived>
+        {
+            SynchronousPointToPointInterface interface;
+
+            SynchronousPointToPointSequence() {
+                interface.begin();
+            }
+
+            ~SynchronousPointToPointSequence() {
+                interface.end();
+            }
+        };
+
         /*! Synchronous point-to-point communication interface
          *
          * All this kind of communication connections should implement
@@ -25,6 +41,7 @@ namespace yaal {
                                         public Readable<Derived>
         {
         public:
+            typedef SynchronousPointToPointSequence<Derived> Sequence;
 
             /*! Setup connection
              */
@@ -41,6 +58,9 @@ namespace yaal {
             // IMPLEMENT if needed
             void end(void) {}
 
+            Sequence sequence(void) {
+                return {};
+            }
 
 
             /** Optional methods **/
@@ -68,23 +88,6 @@ namespace yaal {
             void exchange(T& data, uint8_t amount_of_bits);
 
         };
-
-        template< typename SynchronousPointToPointInterface >
-        class SynchronousPointToPointSequence : public ReadWriteBase<Derived>,
-                                                public Writeable<Derived>,
-                                                public Readable<Derived>
-        {
-            SynchronousPointToPointInterface interface;
-
-            SynchronousPointToPointSequence() {
-                interface.begin();
-            }
-
-            ~SynchronousPointToPointSequence() {
-                interface.end();
-            }
-        };
-
 
         template< typename Derived >
         class SynchronousBus : public ReadWriteBase<Derived>,
