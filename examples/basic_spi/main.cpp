@@ -12,7 +12,7 @@ void setup() {
 }
 
 void loop() {
-    uint8_t value;
+    uint8_t value1 = 1, value2;
 
     // read
     //value = spi.read<uint8_t>();
@@ -21,6 +21,6 @@ void loop() {
     // write
     //spi.write(value);
 
-
-    value = hwspi.transfer(value);
+    hwspi.sequence() << (uint8_t)0x01 >> value1 >> value2;
+    hwspi.sequence() << (value1 + value2);
 }

@@ -10,10 +10,11 @@ namespace yaal {
     namespace interface {
 
         template< typename SynchronousPointToPointInterface >
-        class SynchronousPointToPointSequence : public ReadWriteBase<Derived>,
-                                                public Writeable<Derived>,
-                                                public Readable<Derived>
+        class SynchronousPointToPointSequence : public ReadWriteBase<SynchronousPointToPointInterface>,
+                                                public Writeable<SynchronousPointToPointInterface>,
+                                                public Readable<SynchronousPointToPointInterface>
         {
+        public:
             SynchronousPointToPointInterface interface;
 
             SynchronousPointToPointSequence() {
@@ -76,16 +77,23 @@ namespace yaal {
             /** Protocol specific **/
 
             template<typename T>
-            T transfer(const T data_to_be_written);
+            T transfer(const T data) {
+                static_cast<Derived*>(this)->put(data);
+                return static_cast<Derived*>(this)->get();
+            }
 
             template<typename T>
-            T transfer(const T data_to_be_written, uint8_t amount_of_bits);
+            T transfer(const T data, uint8_t amount);
 
             template<typename T>
-            void exchange(T& data);
+            void exchange(T& data) {
+                data = static_cast<Derived*>(this)->transfer(data);
+            }
 
             template<typename T>
-            void exchange(T& data, uint8_t amount_of_bits);
+            void exchange(T& data, uint8_t amount_of_bits) {
+                data = static_cast<Derived*>(this)->transfer(data, amount_of_bits);
+            }
 
         };
 
@@ -94,6 +102,7 @@ namespace yaal {
                                public Writeable<Derived>,
                                public Readable<Derived>
         {
+        public:
             /*! Setup bus
              */
             // IMPLEMENT
@@ -102,6 +111,7 @@ namespace yaal {
 
         template< typename Bus, typename Activator, typename Derived >
         class SynchronousBusDevice : public SynchronousPointToPoint<Derived> {
+        public:
             Activator activator;
 
             void begin(void) {

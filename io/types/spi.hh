@@ -152,14 +152,17 @@ namespace yaal {
                 power = false;
             }
 
-            bool transfer_complete(void) {
+            bool available() {
                 return controlbits.interrupt_flag;
             }
 
-            uint8_t transfer(uint8_t value) {
-                data = value;
-                while (!transfer_complete());
+            uint8_t get(void) {
+                while (!available());
                 return data;
+            }
+
+            void put(uint8_t value) {
+                data = value;
             }
 
             void attachInterrupt() {
@@ -168,26 +171,6 @@ namespace yaal {
 
             void detachInterrupt() {
                 controlbits.interrupt_enable = false;
-            }
-
-
-            uint8_t get(void) {
-                return transfer(0);
-            }
-
-            void put(uint8_t data) {
-                transfer(data);
-            }
-
-
-            template<typename T>
-            static inline
-            T transfer(T data) {
-            }
-
-            template<typename T>
-            static inline
-            T transfer(T data, uint8_t bits) {
             }
         };
 
