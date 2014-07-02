@@ -9,23 +9,6 @@ namespace yaal {
 
     namespace interface {
 
-        template< typename SynchronousPointToPointInterface >
-        class SynchronousPointToPointSequence : public ReadWriteBase<SynchronousPointToPointInterface>,
-                                                public Writeable<SynchronousPointToPointInterface>,
-                                                public Readable<SynchronousPointToPointInterface>
-        {
-        public:
-            SynchronousPointToPointInterface interface;
-
-            SynchronousPointToPointSequence() {
-                interface.begin();
-            }
-
-            ~SynchronousPointToPointSequence() {
-                interface.end();
-            }
-        };
-
         /*! Synchronous point-to-point communication interface
          *
          * All this kind of communication connections should implement
@@ -42,37 +25,20 @@ namespace yaal {
                                         public Readable<Derived>
         {
         public:
-            typedef SynchronousPointToPointSequence<Derived> Sequence;
 
             /*! Setup connection
              */
             // IMPLEMENT
             void setup(void);
 
-            /*! Begin communication sequence
-             */
-            // IMPLEMENT if needed
-            void begin(void) {}
-
-            /*! End communication sequence
-             */
-            // IMPLEMENT if needed
-            void end(void) {}
-
-            Sequence sequence(void) {
-                return {};
-            }
-
-
+     
             /** Optional methods **/
 
-            template<typename T>
-            T read(uint8_t amount_of_bits);
+            //template<typename T>
+            //T read(uint8_t amount_of_bits);
 
-            template<typename T>
-            void write(const T data_to_be_written, uint8_t amount_of_bits);
-
-
+            //template<typename T>
+            //void write(const T data_to_be_written, uint8_t amount_of_bits);
 
             /** Protocol specific **/
 
@@ -97,6 +63,25 @@ namespace yaal {
 
         };
 
+
+        template< typename SynchronousPointToPointInterface >
+        class SynchronousPointToPointSequence : public ReadWriteBase<SynchronousPointToPointInterface>,
+                                                public Writeable<SynchronousPointToPointInterface>,
+                                                public Readable<SynchronousPointToPointInterface>
+        {
+        public:
+            SynchronousPointToPointInterface interface;
+
+            SynchronousPointToPointSequence() {
+                interface.begin();
+            }
+
+            ~SynchronousPointToPointSequence() {
+                interface.end();
+            }
+        };
+
+
         template< typename Derived >
         class SynchronousBus : public ReadWriteBase<Derived>,
                                public Writeable<Derived>,
@@ -112,14 +97,27 @@ namespace yaal {
         template< typename Bus, typename Activator, typename Derived >
         class SynchronousBusDevice : public SynchronousPointToPoint<Derived> {
         public:
+            typedef SynchronousPointToPointSequence<Derived> Sequence;
+
             Activator activator;
 
+
+            /*! Begin communication sequence
+             */
+            // IMPLEMENT if needed
             void begin(void) {
                 activator = true;
             }
 
+            /*! End communication sequence
+             */
+            // IMPLEMENT if needed
             void end(void) {
                 activator = false;
+            }
+
+            Sequence sequence(void) {
+                return {};
             }
         };
 
