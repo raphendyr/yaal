@@ -64,28 +64,41 @@ namespace yaal {
         };
 
 
-        template< typename SynchronousPointToPointInterface >
-        class SynchronousPointToPointSequence : public ReadWriteBase<SynchronousPointToPointInterface>,
-                                                public Writeable<SynchronousPointToPointInterface>,
-                                                public Readable<SynchronousPointToPointInterface>
+        // Sequence represents one communication sequnce
+        // Sequence implements streamable interface (readable + writeable)
+#define YAAL_CRTP_CLASS SynchronousPointToPointSequence<Derived>
+        template< typename SynchronousPointToPointDevice, typename Derived >
+        class SynchronousPointToPointSequence : public ReadWriteBase<YAAL_CRTP_CLASS>,
+                                                public Writeable<YAAL_CRTP_CLASS>,
+                                                public Readable<YAAL_CRTP_CLASS>
         {
+            typedef YAAL_CRTP_CLASS self_type;
+
+#undef YAAL_CRTP_CLASS
         public:
-            SynchronousPointToPointInterface interface;
+            typedef SynchronousPointToPointDevice Device;
+            Device device;
 
             SynchronousPointToPointSequence() {
-                interface.begin();
+                device.begin_sequence();
             }
 
             ~SynchronousPointToPointSequence() {
-                interface.end();
+                device.end_sequence();
+            }
+
+            void put(uint8_t value) {
+                device.put(value);
+            }
+
+            uint8_t get(void) {
+                return device.get();
             }
         };
 
 
         template< typename Derived >
-        class SynchronousBus : public ReadWriteBase<Derived>,
-                               public Writeable<Derived>,
-                               public Readable<Derived>
+        class SynchronousBus
         {
         public:
             /*! Setup bus
@@ -94,32 +107,36 @@ namespace yaal {
             void setup();
         };
 
-        template< typename Bus, typename Activator, typename Derived >
-        class SynchronousBusDevice : public SynchronousPointToPoint<Derived> {
+        template< typename Bus, typename Sequence, typename Activator >
+        class SynchronousBusDevice
+        {
         public:
-            typedef SynchronousPointToPointSequence<Derived> Sequence;
-
             Activator activator;
 
 
             /*! Begin communication sequence
              */
             // IMPLEMENT if needed
-            void begin(void) {
+            void begin_sequence(void) {
                 activator = true;
             }
 
             /*! End communication sequence
              */
             // IMPLEMENT if needed
-            void end(void) {
+            void end_sequence(void) {
                 activator = false;
             }
+        };
 
+        template< typename Sequnce >
+        class BusDevice
+        {
+        public:
             Sequence sequence(void) {
                 return {};
-            }
-        };
+            } 
+        }
 
 
     }

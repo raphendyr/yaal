@@ -174,6 +174,18 @@ namespace yaal {
             }
         };
 
+#define YAAL_CRTP_CLASS SpiBus< SsPin >
+        template< typename SsPin >
+        class SpiSequence : public SynchronousPointToPointSequence<>
+        {
+            typedef YAAL_CRTP_CLASS self_type;
+            typedef interface::SynchronousPointToPoint<self_type> super;
+#undef YAAL_CRTP_CLASS
+        public:
+        }
+
+        template< typename SpiBus, typename Pin >
+        using SpiDevice = BusDevice<SpiSequence<>>;
     }
 
 }
