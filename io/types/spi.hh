@@ -12,7 +12,7 @@ namespace yaal {
 
 #define YAAL_CRTP_CLASS SpiBusDevice< SpiBus, SsPin >
         template< typename SpiBus, typename SsPin >
-        class SpiBusDevice : public interface::SynchronousBusDevice
+        class SpiBusDevice : public interface::SynchronousBusDevice<SpiBus>
         {
             typedef YAAL_CRTP_CLASS self_type;
         public:
