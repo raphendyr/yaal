@@ -68,13 +68,13 @@ namespace yaal {
         // Sequence implements streamable interface (readable + writeable)
 #define YAAL_CRTP_CLASS SynchronousPointToPointSequence<Derived>
         template< typename SynchronousPointToPointDevice, typename Derived >
-        class SynchronousPointToPointSequence : public ReadWriteBase<YAAL_CRTP_CLASS>,
-                                                public Writeable<YAAL_CRTP_CLASS>,
-                                                public Readable<YAAL_CRTP_CLASS>
+        class SynchronousPointToPointSequence : public ReadWriteBase<Derived>,
+                                                public Writeable<Derived>,
+                                                public Readable<Derived>
         {
             typedef YAAL_CRTP_CLASS self_type;
-
 #undef YAAL_CRTP_CLASS
+
         public:
             typedef SynchronousPointToPointDevice Device;
             Device device;
@@ -107,29 +107,33 @@ namespace yaal {
             void setup();
         };
 
-        template< typename Bus, typename Sequence, typename Activator >
+        template< typename SynchronousBus >
         class SynchronousBusDevice
         {
         public:
-            Activator activator;
-
+            typedef SynchronousBus Bus;
+            Bus bus;
 
             /*! Begin communication sequence
              */
-            // IMPLEMENT if needed
-            void begin_sequence(void) {
-                activator = true;
-            }
+            // IMPLEMENT
+            void begin_sequence(void);
 
             /*! End communication sequence
              */
-            // IMPLEMENT if needed
-            void end_sequence(void) {
-                activator = false;
+            // IMPLEMENT
+            void end_sequence(void);
+
+            void put(uint8_t value) {
+                bus.put(value);
+            }
+
+            uint8_t get(void) {
+                return bus.get();
             }
         };
 
-        template< typename Sequnce >
+        template< typename Sequence >
         class BusDevice
         {
         public:

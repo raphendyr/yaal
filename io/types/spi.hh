@@ -10,6 +10,39 @@ namespace yaal {
 
     namespace internal {
 
+#define YAAL_CRTP_CLASS SpiBusDevice< SpiBus, SsPin >
+        template< typename SpiBus, typename SsPin >
+        class SpiBusDevice : public interface::SynchronousBusDevice
+        {
+            typedef YAAL_CRTP_CLASS self_type;
+        public:
+#undef YAAL_CRTP_CLASS
+            SsPin pin;
+
+            void begin_sequence(void) {
+                pin.mode = OUTPUT;
+            }
+
+            void end_sequence(void) {
+                pin.mode = INPUT;
+            }
+        }
+
+#define YAAL_CRTP_CLASS SpiSequence< SpiBusDevice >
+        template< typename SpiBusDevice >
+        class SpiSequence : public SynchronousPointToPointSequence<SpiBusDevice, YAAL_CRTP_CLASS>
+        {
+            typedef YAAL_CRTP_CLASS self_type;
+#undef YAAL_CRTP_CLASS
+
+        public:
+        }
+
+        template< typename SpiBus, typename SsPin >
+        using SpiDevice = BusDevice<SpiSequence<SpiBusDevice<SpiBus, SsPin>>>;
+
+
+
 #define YAAL_CRTP_CLASS SpiClockPrescaler2x<Rate2x, Rate1, Rate0>
         template< typename Rate2x, typename Rate1, typename Rate0 >
         class SpiClockPrescaler2x : public interface::ClockPrescaler<YAAL_CRTP_CLASS> {
@@ -79,6 +112,8 @@ namespace yaal {
             YAAL_CRTP_ASSIGNMENTS(self_type, super);
         };
 
+
+
 #define YAAL_CRTP_CLASS SpiBus<SpiRegisters, SckPin, MosiPin, MisoPin, SsPin>
         template< typename SpiRegisters,
                   typename SckPin,
@@ -113,6 +148,9 @@ namespace yaal {
                 SAMPLE_TRAILING = 0x02, SAMPLE_LEADING = 0x00,
                 CLOCK_INVERTED = 0x03, CLOCK_NORMAL = 0x00,
             };
+
+            template< typename CsPin >
+            using Device = SpiDevice<self_type, CsPin>;
 
 
             void setup(freq_t speed = F_CLOCK / 4,
@@ -174,18 +212,6 @@ namespace yaal {
             }
         };
 
-#define YAAL_CRTP_CLASS SpiBus< SsPin >
-        template< typename SsPin >
-        class SpiSequence : public SynchronousPointToPointSequence<>
-        {
-            typedef YAAL_CRTP_CLASS self_type;
-            typedef interface::SynchronousPointToPoint<self_type> super;
-#undef YAAL_CRTP_CLASS
-        public:
-        }
-
-        template< typename SpiBus, typename Pin >
-        using SpiDevice = BusDevice<SpiSequence<>>;
     }
 
 }
