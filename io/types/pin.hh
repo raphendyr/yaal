@@ -160,8 +160,14 @@ namespace yaal {
         };
     }
 
+    /* Pin specializations
+     * required here, so we can implement conversion methods in Pin
+     */
     template<typename PinClass>
     class Reversed;
+
+    template<typename PinClass, bool pullup = false>
+    class Floating;
 
 
     /* Pin<Port, bit> */
@@ -185,15 +191,19 @@ namespace yaal {
 
         YAAL_CRTP_ASSIGNMENTS(derived_type, super);
 
+        /* Wrappe methods to convert to specialized versionds of a Pin
+         * should be used like:
+         *  auto reversed = led.reversed();
+         */
         YAAL_INLINE("Pin Reversed wrapper")
-        Reversed<derived_type> reversed() {
-            return Reversed<derived_type>();
-        }
+        Reversed<derived_type> reversed() { return {}; }
+
+        template< bool pullup = false >
+        YAAL_INLINE("Pin Floating wrapper")
+        Floating<derived_type, pullup> floating() { return {}; }
 
         YAAL_INLINE("Pin RAII wrapper")
-        internal::RAIIPin<derived_type> as(Mode mode) {
-            return internal::RAIIPin<derived_type>(mode);
-        }
+        internal::RAIIPin<derived_type> as(Mode mode) { return mode; }
 
         /* Hardware pin toggle */
         YAAL_INLINE("Pin::toggle()")
@@ -252,8 +262,13 @@ namespace yaal {
         YAAL_CRTP_ASSIGNMENTS(self_type, super);
     };
 
-    /* Floating<Pin> */
-    template< typename PinClass, bool pullup = false >
+    /*! Floating<Pin>
+     * Floating is specialization of a Pin, which is floating high by external resistor or
+     * internal (if pullup) when it reads zero (0) and grounded when it reads one (1).
+     * This matches to signaling used in I2C
+     * FIXME: should the logic be around? Above logic could then be achieved using Reversed<Floating<Pin>>
+     */
+    template< typename PinClass, bool pullup >
     class Floating : public PinClass::template Inherit<Floating<PinClass, pullup>> {
         typedef Floating<PinClass, pullup> self_type;
         typedef typename PinClass::template Inherit<Floating<PinClass, pullup>> super;
@@ -262,6 +277,11 @@ namespace yaal {
         YAAL_INLINE("Floating::set(state)")
         void set(bool state = true) {
             this->mode.set(state, pullup);
+        }
+
+        YAAL_INLINE("Floating::get()")
+        bool get() const {
+            return !super::get();
         }
 
         YAAL_CRTP_ASSIGNMENTS(self_type, super);

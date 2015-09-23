@@ -13,15 +13,20 @@ PortB1 redLed;
 // For reversed pin HIGH/true means 0V in pin
 Reversed<PortB2> grnLed;
 
+Floating<PortB7> f;
+
+void setup() {
+    // set pins in output mode
+/*    redLed.mode = OUTPUT;
+    grnLed.mode.output(); */
+}
 
 void main() {
-
-    // set pins in output mode
-    redLed.mode = OUTPUT;
-    grnLed.mode.output();
-
     for (;;) {
-        // blink red
+        auto foo = redLed.floating<true>();
+        auto bar = foo.reversed();
+        bar = true;
+    /*    // blink red
         redLed = HIGH;
         delay();
         redLed = LOW;
@@ -39,6 +44,6 @@ void main() {
         delay();
         redLed.clear();
         grnLed.clear();
-        delay();
+        delay(); */
     }
 }
