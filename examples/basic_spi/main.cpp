@@ -4,7 +4,8 @@
 using namespace yaal;
 
 //SPI<PortD1, PortD2, PortD3, PortD0> spi;
-HWSPI hwspi;
+HWSPI spi;
+HWSPI.Device<PortC1> dev;
 
 void setup() {
     //spi.setup();

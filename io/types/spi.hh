@@ -21,6 +21,7 @@ namespace yaal {
 
             void begin_sequence(void) {
                 pin.mode = OUTPUT;
+                pin = true;
             }
 
             void end_sequence(void) {
