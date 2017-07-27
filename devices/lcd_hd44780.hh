@@ -107,7 +107,8 @@ namespace yaal {
         void entry_mode(IncDec id, bool shift) {
             interface.set_RS(false); // Select instruction register.
             interface.write(LCD_ENTRYMODESET |
-                           (id == INCREMENT ? LCD_ENTRYINCREMENT : LCD_ENTRYDECREMENT) |
+                           (id == INCREMENT ? LCD_ENTRYINCREMENT
+                                            : LCD_ENTRYDECREMENT) |
                            (shift ? LCD_ENTRYSHIFT : LCD_ENTRYNOSHIFT));
         }
 
@@ -233,7 +234,7 @@ namespace yaal {
 
                 // One.
                 pulse_enable();
-                _delay_us(4500); // >4.1 ms + >37 us is enough.
+                _delay_us(4300); // >4.1 ms + >37 us is enough.
 
                 // Two.
                 pulse_enable();
@@ -256,7 +257,7 @@ namespace yaal {
 
                 // One.
                 pulse_enable();
-                _delay_us(4500); // >4.1 ms + >37 us is enough.
+                _delay_us(4300); // >4.1 ms + >37 us is enough.
 
                 // Two.
                 pulse_enable();
@@ -286,8 +287,7 @@ namespace yaal {
         // Used for other read commands than reading the busy flag.
         uint8_t read() {
             wait_busy();
-            uint8_t ret = read_fast();
-            return ret;
+            return read_fast();
         }
 
         // An 8-bit read without a wait. Used for reading the busy flag.
@@ -343,7 +343,7 @@ namespace yaal {
                              // At 16 MHz, 1 instruction takes 62.5 ns.
             status.bits.enable = 1;
             commit_status();
-            _delay_us(1); // >450 ns is a sufficient pulse width.
+            _delay_us(.6); // >450 ns is a sufficient pulse width.
             status.bits.enable = 0;
             commit_status();
         }
@@ -410,7 +410,7 @@ namespace yaal {
 
             // One.
             pulse_enable();
-            _delay_us(4500); // >4.1 ms + >37 us is enough.
+            _delay_us(4300); // >4.1 ms + >37 us is enough.
 
             // Two.
             pulse_enable();
