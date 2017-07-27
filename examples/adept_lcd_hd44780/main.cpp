@@ -82,14 +82,14 @@ void main() {
     // Borrowed the glyph from the CustomCharacter
     // Arduino sketch.
     uint8_t heart[8] = {
-            0b00000,
-            0b01010,
-            0b11111,
-            0b11111,
-            0b11111,
-            0b01110,
-            0b00100,
-            0b00000
+        0b00000,
+        0b01010,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b01110,
+        0b00100,
+        0b00000
     };
 
     // Set the first glyph in CGRAM.
