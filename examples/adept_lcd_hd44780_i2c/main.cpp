@@ -17,7 +17,7 @@ uint16_t byte_to_hex(uint8_t byte) {
 // LcdBackPack<RS, RW, Enable, Data4, Data5, Data6, Data7, Backlight, Backlight_polarity>.
 // Typical I2C addresses are 0x20-0x27 and 0x38-0x3F.
 //typedef LCDInterface_I2C<LcdBackPack_Type2, 0x20> I2CInterface;
-typedef LCDInterface_I2C<LcdBackPack_Type1, 0x27> I2CInterface;
+typedef LCDInterface_I2C<LcdBackPack_Type1, 0x27, PortC4, PortC5> I2CInterface;
 typedef LiquidCrystalHD44780<I2CInterface, 2, false> LCD;
 
 void main() {
@@ -86,14 +86,14 @@ void main() {
     // Borrowed the glyph from the CustomCharacter
     // Arduino sketch.
     uint8_t heart[8] = {
-            0b00000,
-            0b01010,
-            0b11111,
-            0b11111,
-            0b11111,
-            0b01110,
-            0b00100,
-            0b00000
+        0b00000,
+        0b01010,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b01110,
+        0b00100,
+        0b00000
     };
 
     // Set the first glyph in CGRAM.
