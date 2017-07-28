@@ -4,7 +4,7 @@
 #ifdef __YAAL__
 
 #include <util/delay.h>
-#include "../../communication/i2c_hw.hh"
+#include "../communication/i2c_hw.hh"
 #include "lcd_backpack.hh"
 
 namespace yaal {
