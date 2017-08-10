@@ -176,7 +176,7 @@ namespace yaal {
 
         void pulse_enable() {
             enable_pin = true;
-            _delay_us(1); // >450 ns is a sufficient pulse width.
+            _delay_us(.6); // >450 ns is a sufficient pulse width.
             enable_pin = false;
         }
 
