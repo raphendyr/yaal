@@ -9,6 +9,37 @@
 
 namespace yaal {
 
+    template<typename PIN, bool polarity = true>
+    class PowerPin {
+        PIN pin;
+
+    public:
+        PowerPin() {
+            pin.mode = OUTPUT;
+            pin = polarity; // Initially on
+        }
+
+        void power(bool on) {
+            /*
+             * Truth table:
+             *
+             * polarity |  on | polarity ^ on | pin | power
+             * ---------+-----+---------------+-----+------
+             *     T    |  T  |       F       |  T  |  ON
+             *     T    |  F  |       T       |  F  |  OFF
+             *     F    |  T  |       T       |  F  |  ON
+             *     F    |  F  |       F       |  T  |  OFF
+             *
+             */
+            pin = !(polarity ^ on);
+        }
+    };
+
+    class DummyPowerPin {
+    public:
+        void power(bool) { }
+    };
+
     template<typename Interface, uint8_t lines = 2, bool bigfont = false>
     class LiquidCrystalHD44780 {
         // The constants below are mostly borrowed from the Arduino
@@ -75,6 +106,14 @@ namespace yaal {
             RIGHT,
             LEFT
         };
+
+        void set_backlight(bool on) {
+            interface.set_backlight(on);
+        }
+
+        void set_power(bool on) {
+            interface.set_power(on);
+        }
 
         void setup() {
             // Function set: set bitmode, # of lines and font.
@@ -164,7 +203,8 @@ namespace yaal {
         }
     };
 
-    template<typename RS, typename RW, typename Enable, typename DataSet>
+    template<typename RS, typename RW, typename Enable, typename DataSet,
+             typename Backlight = DummyPowerPin, typename Power = DummyPowerPin>
     class LCDInterface {
         static_assert(DataSet::size == 4 || DataSet::size == 8,
                       "Only DataSet with size of 4 or 8 is supported.");
@@ -173,6 +213,8 @@ namespace yaal {
         RW rw_pin;
         Enable enable_pin;
         DataSet data;
+        Backlight backlight;
+        Power power;
 
         void pulse_enable() {
             enable_pin = true;
@@ -207,6 +249,26 @@ namespace yaal {
 
     public:
 
+        void set_backlight(bool on) {
+            backlight.power(on);
+        }
+
+        void set_power(bool on) {
+            power.power(on);
+
+            if (!on) {
+                // Make sure the LCD is not powered by any of the I/O pins.
+                rs_pin.mode = OUTPUT;
+                rw_pin.mode = OUTPUT;
+                enable_pin.mode = OUTPUT;
+                data.set_output();
+                rs_pin = false;
+                rw_pin = false;
+                enable_pin = false;
+                data = 0x00;
+            }
+        }
+
         enum BitMode : uint8_t {
             _4BIT = 4,
             _8BIT = 8
@@ -224,6 +286,7 @@ namespace yaal {
             rs_pin = false;
             rw_pin = false;
             enable_pin = false;
+            set_backlight(true); // Always enable backlight.
 
             if (DataSet::size == 4) {
                 // Set 4-bit interface in four steps.
@@ -318,11 +381,14 @@ namespace yaal {
 
 
     // Supports PCF8574/PCF8574A based I2C expanders.
-    template<typename Backpack_type, uint8_t address, typename SDA, typename SCL>
+    template<typename Backpack_type, uint8_t address, typename SDA, typename SCL,
+             typename Power = DummyPowerPin>
     class LCDInterface_I2C {
 
         SDA sda;
         SCL scl;
+        bool i2c_up = false;
+        Power power;
 
         Backpack_type status;
 
@@ -394,6 +460,7 @@ namespace yaal {
             sei();
 
             I2c_HW.setup();
+            i2c_up = true;
 
             _delay_ms(50);
 
@@ -426,6 +493,26 @@ namespace yaal {
             _delay_us(50); // >37 us is enough for commands.
 
             return _4BIT;
+        }
+
+        void set_backlight(bool on) {
+            status.bits.backlight = !(Backpack_type::backlight_polarity ^ on);
+            if (i2c_up)
+                commit_status();
+        }
+
+        void set_power(bool on) {
+            power.power(on);
+
+            if (!on) {
+                // Make sure the LCD is not powered by any of the I/O pins.
+                status.bits.rs = 0;
+                status.bits.rw = 0;
+                status.bits.enable = 0;
+                status.bits.data = 0x00;
+                if (i2c_up)
+                    commit_status();
+            }
         }
 
         // An 8-bit write, with a wait for the busy flag.
